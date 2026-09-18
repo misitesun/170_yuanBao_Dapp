@@ -1,0 +1,8 @@
+.countdown {
+    color: var(--app-text);
+    &__digits { margin-top: 28px; color: var(--app-pink); font-variant-numeric: tabular-nums; }
+    &__digit { width: 88px; height: 88px; background: url('@/assets/countdown/digit-pink.png') center / 100% 100% no-repeat; font-size: 48px; font-weight: 500; }
+    &__separator { width: 28px; text-align: center; font-size: 48px; }
+    &--cyan &__digits { color: var(--app-cyan); }
+    &--cyan &__digit { background-image: url('@/assets/countdown/digit-cyan.png'); }
+}

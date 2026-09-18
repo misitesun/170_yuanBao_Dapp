@@ -1,0 +1,146 @@
+@use '../../../styles/mixins.scss' as *;
+
+.otc-page {
+    --otc-market-cyan: #00D3FF;
+    --otc-market-up: #58F45B;
+    --otc-market-down: #FF5A7A;
+    padding: 120px 0 30px;
+
+    &__asset-swiper {
+        padding: 0 30px;
+
+        .swiper-slide { width: 464px; }
+        .swiper-slide.otc-page__asset-art-slide { width: 210px; }
+    }
+
+    &__asset-art {
+        @include gradient-card(32px, linear-gradient(180deg, rgb(249 52 255 / 20%), rgb(255 255 255 / 4%)), linear-gradient(180deg, #F934FF, #5039FE, #41DEFF));
+        width: 200px;
+        height: 244px;
+        overflow: hidden;
+    }
+
+    &__asset-art-image {
+        display: block;
+        width: 200px;
+        height: 200px;
+        overflow: hidden;
+
+        img {
+            width: 222.422px;
+            max-width: none;
+            height: 222.422px;
+            object-fit: contain;
+            transform: translate(-12.556px, -5.792px);
+        }
+    }
+
+    &__market-card {
+        width: 100%;
+        border: 1px solid transparent;
+        border-radius: 32px;
+        height: 244px;
+        padding: 26px 30px;
+        background:
+            radial-gradient(circle at 10% 5%, rgb(57 146 255 / 40%), transparent 56%) padding-box,
+            linear-gradient(rgb(0 0 0 / 10%), rgb(0 0 0 / 10%)) padding-box,
+            linear-gradient(135deg, rgb(255 255 255 / 40%), rgb(255 255 255 / 0%)) border-box;
+        color: var(--app-text);
+        text-align: left;
+        appearance: none;
+        transition: transform 140ms ease-out;
+
+        &:active { transform: scale(.985); }
+    }
+
+    &__market-card--down {
+        background:
+            radial-gradient(circle at 10% 5%, rgb(249 52 255 / 40%), transparent 56%) padding-box,
+            linear-gradient(rgb(0 0 0 / 10%), rgb(0 0 0 / 10%)) padding-box,
+            linear-gradient(135deg, rgb(255 255 255 / 40%), rgb(255 255 255 / 0%)) border-box;
+    }
+
+    &__market-heading > div { gap: 12px; color: var(--app-text-secondary); }
+    &__market-heading img { width: 60px; height: 60px; border-radius: 50%; object-fit: contain; }
+    &__market-link { width: 48px; height: 48px; color: var(--app-text); }
+    &__market-link svg { width: 36px; height: 36px; }
+    &__market-body { grid-template-columns: minmax(0, 1fr) 158px; gap: 10px; align-items: end; margin-top: 32px; }
+    &__market-price { line-height: normal; white-space: nowrap; }
+    &__market-change { margin-top: 8px; }
+    &__market-change--up { color: var(--otc-market-up); }
+    &__market-change--down { color: var(--otc-market-down); }
+    &__sparkline { width: 158px; height: 69px; color: var(--otc-market-up); overflow: visible; }
+    &__market-card--down &__sparkline { color: var(--app-color); }
+    &__asset-status { width: 1px; height: 1px; overflow: hidden; }
+
+    &__market { padding: 0 30px; }
+    &__section-heading { margin-top: 40px; }
+    &__section-heading h1 { line-height: normal; }
+    &__subtitle { margin-top: 8px; color: var(--app-text-muted); }
+    &__heading-actions { gap: 18px; }
+    &__orders { width: 52px; height: 52px; color: var(--app-text); }
+    &__orders svg { width: 40px; height: 40px; }
+    &__post-buy {
+        min-width: 138px;
+        height: 60px;
+        gap: 10px;
+        padding: 0 24px;
+        border: 2px solid transparent;
+        border-radius: 999px;
+        background:
+            linear-gradient(121deg, rgb(0 255 230 / 50%) 4.19%, rgb(31 0 99 / 50%) 39.81%, rgb(200 80 255 / 50%) 75.43%) padding-box,
+            linear-gradient(121deg, #C850FF, #0069BF, #00FFE6) border-box;
+        color: var(--app-text);
+        transition: transform 140ms ease-out;
+
+        &:active { transform: scale(.97); }
+    }
+    &__plus { width: 32px; height: 32px; border: 1px solid var(--app-text); border-radius: 50%; line-height: 1; }
+
+    &__orders-list { margin-top: 40px; gap: 20px; }
+    &__order-card {
+        min-height: 260px;
+        padding: 30px;
+        border: 1px solid var(--app-border-medium);
+        border-radius: 30px;
+        background: var(--app-surface-subtle);
+    }
+    &__account { gap: 20px; }
+    &__account-mark { width: 68px; height: 68px; flex: none; border-radius: 50%; background: var(--app-text); }
+    &__account-mark img { width: 40px; filter: brightness(0); }
+    &__account-label { margin-bottom: 4px; color: var(--app-text-muted); }
+    &__sell.action-button { width: 120px; min-height: 60px; padding: 6px 18px; font-size: 26px; }
+    &__unit-price { margin-top: 28px; gap: 10px; color: var(--otc-market-cyan); }
+    &__unit-price img { width: 40px; height: 40px; }
+    &__unit-price small { color: var(--app-text-secondary); }
+    &__remaining { margin-top: 18px; color: var(--app-text-muted); }
+    &__remaining strong { color: var(--app-text); font-weight: 600; }
+
+    &__sell-popup {
+        border: 1px solid var(--app-border-medium);
+        background:
+            radial-gradient(circle at 100% 0, rgb(65 222 255 / 10%), transparent 42%),
+            linear-gradient(135deg, #302761, #201B50 64%, #1B1848);
+        box-shadow: 0 24px 70px rgb(0 0 0 / 36%);
+    }
+    &__sell-popup-body { padding-top: 24px; }
+    &__sell-price span { color: var(--otc-market-cyan); }
+    &__sell-price small { margin-left: 2px; font-size: 20px; color: var(--app-text-secondary); }
+    &__sell-field-heading { margin-top: 28px; }
+    &__sell-field-heading button { color: var(--app-cyan); }
+    &__sell-field { margin-top: 16px; }
+    &__sell-field .app-input {
+        --app-input-background: var(--app-box-bg);
+    }
+    &__sell-details { gap: 18px; margin: 28px 0; color: var(--app-text-muted); }
+    &__sell-details dd { margin: 0; color: var(--app-text); }
+    &__sell-details &__sell-remaining { color: var(--app-pink); }
+    &__sell-confirm.action-button { font-size: 28px; }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__market-card { transition: none; }
+        &__market-card:active { transform: none; }
+        &__post-buy { transition: none; }
+        &__post-buy:active { transform: none; }
+    }
+}

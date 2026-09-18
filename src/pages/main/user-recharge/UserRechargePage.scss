@@ -1,0 +1,106 @@
+.user-recharge-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--app-bg);
+
+    &__main { padding: 18px 30px 95px; }
+
+    &__records {
+        width: 64px;
+        height: 64px;
+        flex: none;
+        padding: 0;
+        border: 0;
+        appearance: none;
+        background: transparent;
+    }
+    &__records img {
+        width: 66px;
+        height: 66px;
+        margin: -1px;
+        object-fit: contain;
+    }
+
+    &__method {
+        height: 291px;
+        padding: 40px 30px 41px;
+        border: 1px solid var(--app-border-medium);
+        border-radius: 16px;
+        background: var(--app-surface-subtle);
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+    &__selector {
+        width: 100%;
+        height: 39px;
+        padding: 0;
+        border: 0;
+        appearance: none;
+        color: var(--app-text);
+        background: transparent;
+        text-align: left;
+        font-size: 28px;
+        line-height: 39px;
+    }
+    &__method-label {
+        color: var(--app-text-muted);
+        font-size: 28px;
+        line-height: 39px;
+    }
+    &__selector-value { gap: 12px; }
+    &__selector-value img {
+        width: 14px;
+        height: 14px;
+        flex: none;
+        object-fit: contain;
+    }
+
+    &__address-row { min-height: 72px; }
+    &__address-value {
+        width: 447px;
+        color: var(--app-text-muted);
+    }
+    &__address-value p {
+        width: 407px;
+        font-size: 26px;
+        line-height: 36px;
+        text-align: right;
+    }
+    &__address-value p span { display: block; }
+    &__copy {
+        width: 24px;
+        height: 24px;
+        flex: none;
+        padding: 0;
+        border: 0;
+        appearance: none;
+        background: transparent;
+    }
+    &__copy img { width: 24px; height: 24px; object-fit: contain; }
+
+    &__qr {
+        width: 480px;
+        height: 480px;
+        margin: 101px auto 0;
+        display: grid;
+        place-items: center;
+    }
+    &__qr-frame,
+    &__qr-backdrop,
+    &__qr-code { grid-area: 1 / 1; }
+    &__qr-frame { width: 480px; height: 480px; object-fit: contain; }
+    &__qr-backdrop { width: 360px; height: 360px; object-fit: contain; }
+    &__qr-code { width: 300px; height: 300px; object-fit: contain; }
+
+    &__form { margin-top: 100px; }
+    // Keep the shared Input visuals unchanged; this page only controls external spacing.
+    &__submit.action-button { margin-top: 45px; font-size: 28px; }
+
+    &__warning {
+        margin-top: 60px;
+        color: #FF2D2D;
+        font-size: 24px;
+        line-height: 36px;
+    }
+}

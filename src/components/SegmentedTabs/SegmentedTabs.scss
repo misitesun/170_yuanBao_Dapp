@@ -1,0 +1,60 @@
+.segmented-tabs {
+    width: 100%;
+    gap: 20px;
+
+    &__item {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+        min-height: 68px;
+        padding: 10px 20px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: var(--app-tab-bg);
+        cursor: pointer;
+        transition: color 220ms ease, transform 140ms ease-out;
+
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--app-action-gradient);
+            opacity: 0;
+            transition: opacity 220ms ease;
+            pointer-events: none;
+        }
+
+        span {
+            position: relative;
+        }
+
+        &--active::before {
+            opacity: 1;
+        }
+
+        &:active:not(:disabled) {
+            transform: scale(.97);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--app-cyan);
+            outline-offset: 4px;
+        }
+
+        &:disabled {
+            cursor: default;
+            opacity: .5;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__item,
+        &__item::before {
+            transition: none;
+        }
+
+        &__item:active:not(:disabled) {
+            transform: none;
+        }
+    }
+}

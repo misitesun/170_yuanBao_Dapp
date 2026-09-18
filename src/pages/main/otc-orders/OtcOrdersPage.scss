@@ -1,0 +1,14 @@
+.otc-orders-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--app-bg);
+
+    &__main {
+        padding: 30px 30px 64px;
+    }
+
+    &__list {
+        gap: 20px;
+        margin-top: 30px;
+    }
+}

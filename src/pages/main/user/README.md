@@ -1,0 +1,9 @@
+# User page
+
+Figma source: `NVwAAv12WZx1LiCTqPMNWD / 29421:2865`. The first phase is a static UI reproduction with local fixtures only. Device status chrome is omitted, and the design's banned withdrawal wording is rendered as the approved project term `提取`.
+
+Normal flow: identity and level badges → USDT balance and quick actions → HU and points cards → power balance → partner banner → team entry. Shared MainLayout, HeaderBar, TabbarMenu, ActionButton, Toast, PagePullRefresh, color tokens and utility classes are reused. The shared HeaderBar displays the same masked authenticated wallet address used by the other four first-level pages; the profile address remains part of the page content. The supplied transparent PNG assets, including the 750×888 profile header glow, are stored under `src/assets/user/` with semantic names. The partner badge uses the design's dark purple fill and purple-to-gold border gradients. No page content is positioned out of flow.
+
+Balance visibility, invitation-code copy and every action are local interactions. Pull refresh awaits a mock profile reload. Recharge navigates to `/user/recharge`, extraction navigates to `/user/withdraw`, and orders show explicit static-demo Toast feedback. Each asset's market button opens the shared bottom `MarketPopup`; only the points variant displays `积分兑换算力` and navigates to `/points/convert-power`, while both variants reserve a blank chart region for later public market data. The partner banner navigates to `/user/partner`, and the team entry navigates to `/user/team`; there is no API, wallet, transaction or translation integration.
+
+Validation: focused user-page tests, `pnpm lint`, `pnpm test`, `pnpm exec tsc -b`, direct Vite production build, and mobile-browser checks for balance visibility, copy feedback, action feedback, refresh and preview tabbar navigation.

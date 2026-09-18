@@ -1,0 +1,8 @@
+.app-toast {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    pointer-events: none;
+    padding: 40px;
+    &__message { max-width: 620px; padding: 24px 32px; border-radius: 20px; color: var(--app-text); background: var(--app-toast-bg); border: 1px solid var(--app-border); box-shadow: var(--app-toast-shadow); line-height: 1.5; overflow-wrap: anywhere; }
+}

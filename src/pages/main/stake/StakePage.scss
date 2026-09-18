@@ -1,0 +1,52 @@
+.stake-page {
+    background: url('@/assets/stake/background.png') center -40px / 100% auto no-repeat;
+    padding: 120px 30px 64px;
+    &__hero { background: url('@/assets/stake/hero-glow.svg') center center / 100% 100% no-repeat; }
+    &__hero-art { position: relative; width: 400px; height: 346px; overflow: hidden; }
+    &__coins { width: 360px; height: 360px; margin: -6px 0 0 21px; }
+    &__star {
+        /* layout-exception: background-art small stars decorate the staking illustration */
+        position: absolute;
+        pointer-events: none;
+    }
+    &__star--right { width: 85px; height: 89px; top: 5px; right: -9px; }
+    &__star--left { width: 69px; height: 71px; top: 89px; left: -7px; transform: scaleX(-1); }
+    &__title { font-size: 56px; line-height: normal; margin-top: 10px; }
+    &__form { margin-top: 40px; }
+    &__assets { border: 0; min-width: 0; gap: 20px; }
+    &__legend { width: 1px; height: 1px; padding: 0; clip-path: inset(50%); overflow: hidden; }
+    &__asset { position: relative; min-height: 133px; padding: 20px 30px; gap: 20px; border: 1px solid var(--app-border-medium); border-radius: 20px; background: var(--app-surface-subtle); cursor: pointer; transition: border-color 220ms ease; }
+    &__asset::before {
+        content: '';
+        /* layout-exception: background-art selected asset gradient sits behind the in-flow label content */
+        position: absolute;
+        inset: -1px; border-radius: inherit; background: var(--app-action-soft-gradient); opacity: 0; transition: opacity 220ms ease; pointer-events: none;
+    }
+    &__asset::after {
+        content: '';
+        /* layout-exception: background-art decorative selection ring follows the asset card border */
+        position: absolute;
+        inset: -1px; border-radius: inherit; padding: 1px; background: var(--app-action-gradient); opacity: 0; transition: opacity 220ms ease; pointer-events: none;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor; mask-composite: exclude;
+    }
+    &__asset--selected { border-color: transparent; }
+    &__asset--selected::before, &__asset--selected::after { opacity: 1; }
+    &__asset-details, &__balance, .app-radio { position: relative; }
+    &__asset-details { gap: 26px; flex: 1; }
+    &__symbol { gap: 10px; transition: color 220ms ease; }
+    &__symbol img { width: 40px; height: 40px; border-radius: 50%; }
+    &__asset--selected &__symbol { color: var(--app-color); }
+    &__balance { gap: 10px; }
+    &__muted { color: var(--app-text-muted); }
+    .app-input__suffix img { border-radius: 50%; }
+    &__amount-heading { margin-top: 40px; margin-bottom: 26px; }
+    &__max { color: var(--app-cyan); cursor: pointer; }
+    &__estimate { margin-top: 20px; padding-right: 10px; }
+    &__actions { margin-top: 40px; gap: 20px; }
+    &__arrow { width: 20px; height: 20px; }
+    @media (prefers-reduced-motion: reduce) {
+        &__asset, &__asset::before, &__asset::after, &__symbol { transition: none; }
+    }
+}

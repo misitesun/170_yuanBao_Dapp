@@ -1,0 +1,92 @@
+@use '../../styles/mixins.scss' as *;
+
+.market-popup {
+    &__panel {
+        @include hu-popup-surface(40px);
+        width: calc(100% - 40px);
+        max-width: 710px;
+        height: 1200px;
+        max-height: calc(100dvh - 40px);
+        margin-bottom: 20px;
+        padding: 30px;
+        box-shadow: 0 -24px 70px rgb(0 0 0 / 32%);
+        color: var(--app-text);
+        overflow-y: auto;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar { display: none; }
+    }
+
+    &__content { min-height: 100%; }
+
+    &__header { flex: none; }
+
+    &__title {
+        min-width: 182px;
+        height: 72px;
+        gap: 10px;
+        padding: 0 30px;
+        border: 1px solid rgb(255 255 255 / 20%);
+        border-radius: 999px;
+        background: rgb(255 255 255 / 4%);
+        color: rgb(255 255 255 / 80%);
+    }
+
+    &__title img { width: 30px; height: 30px; object-fit: contain; }
+    &__title h2 { line-height: normal; }
+
+    &__close {
+        width: 72px;
+        height: 72px;
+        flex: none;
+        border: 1px solid rgb(255 255 255 / 20%);
+        border-radius: 50%;
+        background: rgb(255 255 255 / 6%);
+        color: var(--app-text);
+        transition: transform 140ms ease-out;
+
+        &:active { transform: scale(.94); }
+    }
+
+    &__summary { flex: none; margin-top: 30px; }
+
+    &__asset-badge {
+        width: 132px;
+        height: 132px;
+        flex: none;
+        place-items: center;
+    }
+
+    &__asset-ring,
+    &__asset-icon { grid-area: 1 / 1; }
+    &__asset-ring { width: 132px; height: 132px; }
+    &__asset-icon { width: 88px; height: 88px; object-fit: contain; }
+    &__asset-label { margin-top: 30px; color: var(--app-text-muted); }
+    &__price { margin-top: 16px; line-height: normal; white-space: nowrap; }
+
+    &__change {
+        min-width: 122px;
+        min-height: 45px;
+        margin-top: 16px;
+        padding: 7px 18px;
+        border-radius: 999px;
+        line-height: normal;
+        text-align: center;
+    }
+
+    &__change--up { background: rgb(21 255 0 / 10%); color: #15FF00; }
+    &__change--down { background: rgb(255 90 122 / 10%); color: #FF5A7A; }
+
+    &__chart-placeholder {
+        min-height: 380px;
+        flex: 1 0 380px;
+        margin-top: 70px;
+    }
+
+    &__convert.action-button { flex: none; margin-top: 30px; font-size: 30px; }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__close { transition: none; }
+        &__close:active { transform: none; }
+    }
+}
