@@ -2,23 +2,20 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 
-test('header bar only renders a masked wallet address after wallet login', async () => {
+test('header bar renders a masked connected wallet address without auth coupling', async () => {
     const component = await readFile('src/pages/main/layout/HeaderBar/HeaderBar.tsx', 'utf8')
 
-    assert.match(component, /APP_CONFIG/)
-    assert.match(component, /APP_LOGIN_MODE/)
     assert.match(component, /import \{ LanguageSwitch \} from '@\/components\/LanguageSwitch'/)
     assert.doesNotMatch(component, /headerLangUrl/)
     assert.match(component, /<LanguageSwitch className=/)
     assert.match(component, /useDappStore/)
-    assert.match(component, /useUserStore/)
+    assert.doesNotMatch(component, /useUserStore/)
     assert.match(component, /maskWalletAddress/)
     assert.match(component, /className="auto-btn size-24 bold-6 ml-20"/)
     assert.match(
         component,
-        /APP_CONFIG\.loginMode !== APP_LOGIN_MODE\.account/,
+        /!staticPreview && walletAddress/,
     )
-    assert.match(component, /isAuthenticated\s*&&\s*walletAddress/)
     assert.match(component, /\{maskWalletAddress\(walletAddress\)\}/)
     assert.doesNotMatch(component, /t\('链接'\)/)
 })
@@ -48,9 +45,9 @@ test('header menu icon only renders in sidebar layout mode', async () => {
     assert.match(component, /onSidebarMenuClick\?: \(\) => void/)
     assert.match(component, /showSidebarMenu = false/)
     assert.match(component, /showSidebarMenu \? \(/)
-    assert.match(component, /src=\{headerMenuUrl\}/)
+    assert.match(component, /name="menu"/)
     assert.match(component, /onClick=\{onSidebarMenuClick\}/)
-    assert.match(component, /alt="Menu"/)
+    assert.match(component, /aria-label="Menu"/)
     assert.match(layout, /<HeaderBar/)
     assert.match(layout, /showSidebarMenu=\{isSidebarLayout\}/)
     assert.match(layout, /onSidebarMenuClick=\{handleOpenSidebarMenu\}/)

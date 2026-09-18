@@ -21,7 +21,6 @@ export {
     shouldUseErc20MaxAllowance,
     type DappEnv,
     type DappProviderStatus,
-    type DappSignMessage,
 } from './config.ts'
 export {
     addDappChain,
@@ -79,12 +78,6 @@ export {
     writeErc20Transfer,
     writeErc20TransferFrom,
 } from './erc20.ts'
-export {
-    UNISWAP_V2_ROUTER_ABI,
-    readUniswapV2RouterAmountsIn,
-    readUniswapV2RouterAmountsOut,
-    readUniswapV2RouterWeth,
-} from './uniswapV2Router.ts'
 export {
     getDappBatchStatus,
     sendDappBatchCalls,

@@ -1,11 +1,8 @@
 import axios from 'axios'
 
 import { APP_CONFIG } from '../../config/index.ts'
-import { logout } from '../../features/auth/session.ts'
 import { getRequestLanguage } from '../../i18n/getRequestLanguage.ts'
-import { isDappEnvironment } from '../platform/runtime.ts'
-import { getWalletAddress } from '../storage/common.ts'
-import { getToken } from '../storage/token.ts'
+import { getToken, removeToken } from '../storage/token.ts'
 import { isFormDataBody } from './body.ts'
 import {
     HTTP_AUTH,
@@ -21,18 +18,31 @@ export const httpClient = axios.create({
     timeout: HTTP_CONFIG.timeout,
 })
 
+export type HttpUnauthorizedHandler = () => void
+
+let unauthorizedHandler: HttpUnauthorizedHandler | undefined
+
+/** Registers the project-owned reaction to a 401 response. */
+export function registerHttpUnauthorizedHandler(
+    handler: HttpUnauthorizedHandler,
+): () => void {
+    unauthorizedHandler = handler
+
+    return () => {
+        if (unauthorizedHandler === handler) unauthorizedHandler = undefined
+    }
+}
+
 httpClient.interceptors.request.use((config) => {
     const token = getToken()
 
-    config.headers.set(
-        HTTP_HEADER.authorization,
-        `${HTTP_AUTH.scheme} ${token}`,
-    )
-
-    if (isDappEnvironment()) {
-        config.headers.set(HTTP_HEADER.walletAddress, getWalletAddress())
+    if (token) {
+        config.headers.set(
+            HTTP_HEADER.authorization,
+            `${HTTP_AUTH.scheme} ${token}`,
+        )
     } else {
-        config.headers.delete(HTTP_HEADER.walletAddress)
+        config.headers.delete(HTTP_HEADER.authorization)
     }
 
     if (APP_CONFIG.enableI18n) {
@@ -56,7 +66,8 @@ httpClient.interceptors.response.use(
         const httpError = toHttpError(error)
 
         if (httpError.status === HTTP_STATUS.unauthorized) {
-            logout()
+            removeToken()
+            unauthorizedHandler?.()
         }
 
         // TODO(http): Show request errors through the shared message module after it is ready.

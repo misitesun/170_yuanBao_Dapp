@@ -25,14 +25,15 @@ test('main layout brand extracts the shared logo and app name block', async () =
     assert.match(brand, /APP_CONFIG\.routeBase/)
     assert.match(brand, /brand\/app-logo\.png/)
     assert.match(brand, /className="app-brand__logo"/)
-    assert.match(brand, /\{APP_CONFIG\.name\}/)
-    assert.match(brand, /alt=\{APP_CONFIG\.name\}/)
+    assert.match(brand, /APP_CONFIG\.name \|\| 'DApp'/)
+    assert.match(brand, /alt=""/)
     assert.match(brand, /import '\.\/AppBrand\.scss'/)
     assert.match(styles, /cursor:\s*pointer/)
 
     assert.match(header, /import \{ AppBrand \} from '\.\.\/AppBrand\/AppBrand\.tsx'/)
-    assert.match(header, /<AppBrand appearance="hu-chain"/)
+    assert.match(header, /<AppBrand staticPreview=\{staticPreview\}/)
     assert.doesNotMatch(header, /headerLogoUrl/)
+    assert.doesNotMatch(header, /hu-chain/i)
     assert.doesNotMatch(header, /LAYOUT_HEADER_TITLE/)
 
     assert.match(entry, /export \{ AppBrand \} from '\.\/AppBrand\/AppBrand\.tsx'/)

@@ -28,13 +28,11 @@
     --app-border-strong: rgb(255 255 255 / 40%);
     --app-header-bg: rgb(20 19 63 / 35%);
     --app-cyan-soft: rgb(65 222 255 / 20%);
-    --app-miner-border: rgb(130 141 255 / 50%);
     --app-text-shadow: 0 4px 10px rgb(0 0 0 / 30%);
     --app-action-gradient: linear-gradient(90deg, var(--app-color), var(--app-violet) 50%, var(--app-cyan));
     --app-heading-accent-gradient: linear-gradient(180deg, var(--app-color) 0%, var(--app-violet) 50%, var(--app-cyan) 100%);
     --app-action-soft-gradient: linear-gradient(90deg, rgb(249 52 255 / 10%), rgb(80 57 254 / 10%) 50%, rgb(65 222 255 / 10%));
     --app-tabbar-gradient: linear-gradient(180deg, #2D2B6F, #07062F);
-    --app-miner-gradient: linear-gradient(180deg, rgb(54 71 254 / 20%), rgb(54 71 254 / 0%));
     --app-divider-gradient: linear-gradient(90deg, var(--app-border), var(--app-text), var(--app-border));
 }
 body { background-color: var(--app-bg); color: var(--app-text); }

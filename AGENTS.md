@@ -151,14 +151,11 @@ Do not treat template defaults as confirmed project decisions.
 Read `PROJECT_TERMS.md` before copying visible text from Figma or old project code.
 从 Figma 或旧项目代码复制可见文案前，先阅读 `PROJECT_TERMS.md`。
 
-If Figma uses a banned term, replace it with the approved term in source code.
-如果 Figma 使用了禁用词，源码中必须替换为推荐术语。
+The base template defines no product vocabulary. Add a source term, approved term, scope and reason only after the developer confirms a project-specific rule.
+基础模板不预置产品词汇。只有开发者确认项目专属规则后，才添加原词、推荐词、适用范围和原因。
 
-Do not use `提现` in user-facing UI source; replace only this banned term with `提取`.
-面向用户的 UI 源码中不要使用 `提现`；只把这个禁用词替换为 `提取`。
-
-Do not replace valid business words such as `领取`, `赎回` or `取回` unless they are explicitly added to `PROJECT_TERMS.md` as banned terms later.
-不要替换 `领取`、`赎回` 或 `取回` 这类有效业务词，除非后续它们被明确加入 `PROJECT_TERMS.md` 禁用词表。
+If Figma or legacy code conflicts with a confirmed term, use the approved term in UI source and record the mismatch in the implementation checklist.
+如果 Figma 或旧代码与已确认术语冲突，UI 源码使用推荐词，并在实现清单中记录差异。
 
 ## Production API origin
 ## 生产接口地址
@@ -307,8 +304,8 @@ If the checklist is incomplete or required assets are missing, pause and report 
 ## Page data refresh
 ## 页面数据刷新
 
-Authenticated business routes are wrapped by `PagePullRefresh`; splash, login and other flow pages must not be wrapped.
-已登录业务路由由 `PagePullRefresh` 包裹；开屏页、登录页和其他流程页不能包裹下拉刷新。
+Business routes that need whole-screen refresh may be wrapped by `PagePullRefresh`; splash, login and other flow pages must not be wrapped. The blank template route is not wrapped until real data loading exists.
+需要整屏刷新的业务路由可由 `PagePullRefresh` 包裹；开屏页、登录页和其他流程页不能包裹下拉刷新。空白模板路由在没有真实数据加载前不包裹刷新组件。
 
 Pages that support pull refresh must register a real refresh function with `usePageRefresh()`.
 支持下拉刷新的页面必须通过 `usePageRefresh()` 注册真实刷新函数。
@@ -328,20 +325,20 @@ After API or contract integration, use `useLatestRequest()` or `AbortController`
 When a page has timers, manual pull refresh and post-write refresh should reuse the same screen refresh function and guard timer restart with mounted or lifecycle tokens.
 页面存在定时器时，手动下拉刷新和写入成功后的刷新应复用同一个整屏刷新函数，并用 mounted 或生命周期 token 防止离页后旧异步重启定时器。
 
-## Auth startup
-## 认证启动
+## Authentication integration
+## 鉴权集成
 
-Splash animation is the shared startup gate. If startup logic runs while the browser path is splash or referral, wait for `waitForSplashAnimation()` before authentication recovery or login branching.
-开屏动画是统一启动门槛。如果启动逻辑运行时浏览器路径仍是开屏页或邀请页，认证恢复或登录分流前必须等待 `waitForSplashAnimation()`。
+The blank template does not implement splash, login, referral, backend session recovery or protected routes. Do not invent these flows from deleted demo code or template defaults.
+空白模板不实现开屏、登录、邀请、后端会话恢复或受保护路由。不要根据已删除演示代码或模板默认值猜测这些流程。
 
-In DApp login modes, an existing token must validate and resume the current wallet account before authenticated APIs such as `/api/users/my` are requested.
-在 DApp 登录模式中，已有 Token 必须先校验并恢复当前钱包账号，再请求 `/api/users/my` 等鉴权接口。
+Implement authentication only after the current PHP Markdown confirms endpoints, request and response fields, challenge/message source, nonce or timestamp semantics, signature encoding, token storage, account-change behavior and redirect rules.
+只有当前 PHP Markdown 明确接口、请求与响应字段、challenge/message 来源、nonce 或时间戳语义、签名编码、Token 存储、账户切换行为和跳转规则后，才能实现鉴权。
 
-If the cached token and wallet address belong to a different current wallet account during splash startup, clear the stale auth session and immediately start DApp login again in the same startup flow.
-开屏启动时如果缓存 Token 与钱包地址属于旧账号，应清理旧登录态，并在同一轮启动流程中立即重新发起 DApp 登录。
+`signDappMessage()` signs the exact caller-supplied message. Never append a prefix, timestamp or nonce unless the confirmed backend contract requires the caller to construct that exact text.
+`signDappMessage()` 原样签署调用方传入的消息。除非已确认后端契约要求调用方构造该确切文本，否则不得自行拼接前缀、时间戳或 nonce。
 
-Use `clearAuthSession()` when stale auth state must be cleared without forcing a route replacement; use `logout()` when the user should be redirected to splash.
-需要清理旧登录态但不强制替换路由时使用 `clearAuthSession()`；需要用户回到开屏页时使用 `logout()`。
+When DApp session recovery is implemented, validate and resume the current wallet account before authenticated APIs run. A cached token belonging to another wallet must be cleared before starting the documented login flow.
+实现 DApp 会话恢复后，必须先校验并恢复当前钱包账号，再请求鉴权接口。缓存 Token 属于其他钱包时，应先清理旧会话，再执行文档化的登录流程。
 
 ## History route fallback
 ## history 路由 fallback

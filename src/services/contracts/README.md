@@ -4,8 +4,8 @@
 Use this directory for project-specific contract wrappers.
 项目专属合约封装放在本目录。
 
-`src/services/dapp` owns generic wallet, chain, ERC20 and common router capabilities.
-`src/services/dapp` 只负责通用钱包、链、ERC20 和通用 Router 能力。
+`src/services/dapp` owns generic wallet, chain and ERC20 capabilities.
+`src/services/dapp` 只负责通用钱包、链和 ERC20 能力。
 
 Project ABI files, contract addresses and page-facing contract methods should live here instead of polluting the generic DApp module.
 项目 ABI、合约地址和页面会调用的合约业务方法应放在这里，不要污染通用 DApp 模块。
@@ -20,8 +20,8 @@ Recommended files:
 - `index.ts`: re-exports project contract wrappers.
 - `index.ts`：统一导出项目合约封装。
 
-Common ABI can be imported from `src/services/dapp`, for example `ERC20_ABI` and `UNISWAP_V2_ROUTER_ABI`.
-通用 ABI 从 `src/services/dapp` 引入，例如 `ERC20_ABI` 和 `UNISWAP_V2_ROUTER_ABI`。
+The standards-only `ERC20_ABI` can be imported from `src/services/dapp`. Protocol-specific router ABIs belong here.
+标准化的 `ERC20_ABI` 可以从 `src/services/dapp` 引入；协议专用 Router ABI 应放在本目录。
 
 ## Project integration boundary
 ## 项目联调边界

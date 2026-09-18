@@ -59,5 +59,5 @@ test('router uses AppBrowserRouter instead of strict BrowserRouter basename', as
     assert.match(appBrowserRouter, /unstable_HistoryRouter/)
     assert.match(appBrowserRouter, /createAppBrowserHistory/)
     assert.match(routerReadme, /AppBrowserRouter/)
-    assert.match(routerReadme, /without the `\/h5` prefix/)
+    assert.match(routerReadme, /with and without the configured `\/h5` prefix/)
 })

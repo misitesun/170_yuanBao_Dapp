@@ -13,7 +13,7 @@ test('language switch keeps its reusable children wrapper while using Dropdown',
     ])
 
     assert.match(component, /children\?:\s*ReactNode/)
-    assert.match(component, /languageIconUrl from '@\/assets\/layout\/headbar\/lang\.svg'/)
+    assert.match(component, /import \{ Icon \} from '@\/components\/Icon'/)
     assert.match(component, /APP_CONFIG\.enableI18n/)
     assert.match(component, /style=\{\{ display: 'none' \}\}/)
     assert.match(component, /function LanguageSwitchContent/)
@@ -44,7 +44,7 @@ test('language switch keeps its reusable children wrapper while using Dropdown',
     assert.match(component, /window\.location\.reload\(\)/)
     assert.match(component, /const triggerContent = children === undefined \?/)
     assert.match(component, /language-switch__default/)
-    assert.match(component, /<img src=\{languageIconUrl\}/)
+    assert.match(component, /<Icon name="language"/)
     assert.doesNotMatch(component, /<Icon name="arrow-down"/)
     assert.match(component, /\{triggerContent\}/)
     assert.match(entry, /export \{ LanguageSwitch \} from '\.\/LanguageSwitch\.tsx'/)

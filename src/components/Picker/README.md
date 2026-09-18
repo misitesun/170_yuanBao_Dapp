@@ -93,7 +93,7 @@ import { useState } from 'react'
 import { Picker, type PickerOption } from '@/components/Picker'
 
 const coinOptions: PickerOption[] = [
-    { label: 'USDT', value: 'USDT' },
+    { label: 'USDC', value: 'USDC' },
     { label: 'BNB', value: 'BNB' },
     { label: 'ETH', value: 'ETH' },
 ]

@@ -29,7 +29,7 @@ test('enables the five project languages with standard language codes', () => {
     assert.equal(findAppLanguage('unsupported'), undefined)
 })
 
-test('all enabled common locales translate the splash welcome template', async () => {
+test('all enabled common locales contain the business-neutral UI baseline', async () => {
     const messages = await Promise.all(
         APP_LANGUAGES.map(async ({ code }) => JSON.parse(
             await readFile(`src/i18n/locales/common/${code}.json`, 'utf8'),
@@ -37,7 +37,11 @@ test('all enabled common locales translate the splash welcome template', async (
     )
 
     assert.equal(
-        messages.every((message) => typeof message['欢迎来到{{name}}'] === 'string'),
+        messages.every((message) => (
+            typeof message['切换语言'] === 'string'
+            && typeof message['请选择'] === 'string'
+            && message['欢迎来到{{name}}'] === undefined
+        )),
         true,
     )
 })

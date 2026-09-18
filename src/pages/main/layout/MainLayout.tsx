@@ -1,13 +1,11 @@
 import { useState, type ReactNode } from 'react'
-import { Outlet, useLocation } from 'react-router'
+import { Outlet } from 'react-router'
 
 import {
     DEFAULT_LAYOUT_MENU_TYPE,
     LAYOUT_MENU_TYPE,
     type LayoutMenuType,
 } from '@/router/config'
-
-import { ROUTE_PATH } from '@/router/routes'
 
 import { HeaderBar } from './HeaderBar/HeaderBar.tsx'
 import { SidebarMenu } from './SidebarMenu.tsx'
@@ -25,7 +23,6 @@ export function MainLayout({
     staticPreview = false,
     children,
 }: MainLayoutProps) {
-    const location = useLocation()
     const [showSidebarMenu, setShowSidebarMenu] = useState(false)
     const isSidebarLayout = menuType === LAYOUT_MENU_TYPE.sidebar
     const isTabbarLayout = menuType === LAYOUT_MENU_TYPE.tabbar
@@ -45,7 +42,7 @@ export function MainLayout({
         <div className={appLayoutClassName}>
             <HeaderBar
                 staticPreview={staticPreview}
-                showGap={!staticPreview && location.pathname !== ROUTE_PATH.home && location.pathname !== ROUTE_PATH.stake && location.pathname !== ROUTE_PATH.presale && location.pathname !== ROUTE_PATH.otc && location.pathname !== ROUTE_PATH.user}
+                showGap={!staticPreview}
                 showSidebarMenu={isSidebarLayout}
                 onSidebarMenuClick={handleOpenSidebarMenu}
             />
@@ -62,7 +59,7 @@ export function MainLayout({
                     onClose={handleCloseSidebarMenu}
                 />
             ) : null}
-            {isTabbarLayout ? <TabbarMenu staticPreview={staticPreview} /> : null}
+            {isTabbarLayout ? <TabbarMenu /> : null}
         </div>
     )
 }

@@ -5,7 +5,6 @@ import {
     DAPP_CURRENT_CHAIN,
     DAPP_ERROR_MESSAGE,
     DAPP_PROVIDER_STATUS,
-    type DappSignMessage,
 } from './config.ts'
 import {
     ensureDappChain,
@@ -117,21 +116,18 @@ export function disconnectDappWallet(): void {
 }
 
 export async function signDappMessage(
-    message: DappSignMessage | string,
+    message: string,
 ): Promise<DappSignResult> {
     const walletClient = getDappWalletClient()
     const address = await getConnectedDappAddress()
-    const timestamp = Math.floor(Date.now() / 1000)
-    const signMessage = `${message}-${timestamp}`
     const signature = await walletClient.signMessage({
         account: address,
-        message: signMessage,
+        message,
     })
 
     return {
         signature,
-        timestamp,
-        message: signMessage,
+        message,
     }
 }
 

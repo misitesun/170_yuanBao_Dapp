@@ -17,18 +17,6 @@ export function removeWalletAddress(): void {
     removeLocalStorage(STORAGE_KEY.walletAddress)
 }
 
-export function getReferralCode(): string {
-    return readLocalStorage(STORAGE_KEY.referralCode)
-}
-
-export function setReferralCode(referralCode: string): void {
-    writeLocalStorage(STORAGE_KEY.referralCode, referralCode)
-}
-
-export function removeReferralCode(): void {
-    removeLocalStorage(STORAGE_KEY.referralCode)
-}
-
 export function getLanguage(): string {
     return readLocalStorage(STORAGE_KEY.language, STORAGE_DEFAULT.language)
 }
@@ -39,16 +27,4 @@ export function setLanguage(language: string): void {
 
 export function removeLanguage(): void {
     removeLocalStorage(STORAGE_KEY.language)
-}
-
-export function getLoginAccount(): string {
-    return readLocalStorage(STORAGE_KEY.loginAccount)
-}
-
-export function setLoginAccount(loginAccount: string): void {
-    writeLocalStorage(STORAGE_KEY.loginAccount, loginAccount)
-}
-
-export function removeLoginAccount(): void {
-    removeLocalStorage(STORAGE_KEY.loginAccount)
 }

@@ -28,11 +28,11 @@ test('builds internal route paths with query and hash', () => {
 test('preserves and merges object route search params', () => {
     assert.deepEqual(
         buildRoutePath(
-            { pathname: ROUTE_PATH.user, search: '?from=home', hash: '#old' },
+            { pathname: '/settings', search: '?from=home', hash: '#old' },
             { query: { tab: 'assets' }, hash: 'top' },
         ),
         {
-            pathname: ROUTE_PATH.user,
+            pathname: '/settings',
             search: '?from=home&tab=assets',
             hash: '#top',
         },
@@ -55,14 +55,14 @@ test('wraps router navigation into project-friendly helpers', () => {
     const router = createRouteNavigator(navigate)
 
     router.pushRoute(ROUTE_PATH.home, { state: { from: 'test' } })
-    router.replaceRoute(ROUTE_PATH.user, { query: { tab: 1 } })
+    router.replaceRoute('/settings', { query: { tab: 1 } })
     router.backRoute()
     router.forwardRoute(2)
     router.goRoute(-3)
 
     assert.deepEqual(calls, [
         ['/home', { state: { from: 'test' } }],
-        ['/user?tab=1', { replace: true }],
+        ['/settings?tab=1', { replace: true }],
         [-1],
         [2],
         [-3],

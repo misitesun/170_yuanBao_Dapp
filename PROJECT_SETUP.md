@@ -110,8 +110,8 @@ When presenting this pack, always include the default value, Available options a
 1. `.env.development` 中的开发接口地址 `VITE_BASE_URL`。
 2. Development RPC URL in `.env.development` `VITE_RPC_URL`.
 2. `.env.development` 中的开发 RPC 地址 `VITE_RPC_URL`。
-3. Token and contract addresses such as `VITE_USDT`.
-3. Token 与合约地址，例如 `VITE_USDT`。
+3. Token and contract addresses using keys defined by the confirmed contract documentation.
+3. 按已确认合约文档定义对应的 Token 与合约地址键。
 4. Social share meta values.
 4. 社交分享 meta 配置。
 
@@ -140,8 +140,8 @@ When presenting this pack, always include the default value, Available options a
 3. 使用 `useLatestRequest()` 或 `AbortController` 防止旧请求回写旧数据。
 4. Revisit large page files and move data orchestration into page hooks or same-directory services.
 4. 复盘体积较大的页面文件，将数据编排回收到页面 hook 或同目录 service 中。
-5. Confirm DApp logged-in startup validates the current wallet account before authenticated APIs.
-5. 确认 DApp 已登录启动会在请求鉴权接口前校验当前钱包账号。
+5. If authentication is added, verify its startup gate, wallet-account recovery and authenticated API ordering against the confirmed backend contract.
+5. 如果新增鉴权，按已确认后端契约验证启动门槛、钱包账号恢复与鉴权接口请求顺序。
 
 ## Status file
 ## 状态文件

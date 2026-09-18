@@ -5,15 +5,16 @@ Build the local package from the template repository.
 先从模板仓库生成本地包。
 
 ```bash
-cd /Users/jcy/React/template
+git clone https://github.com/misitesun/react_dapp_demo.git
+cd react_dapp_demo
 pnpm create:local
 ```
 
-Create a project in an empty directory.
-在空目录中创建项目。
+Create a sibling project directory from the generated package.
+使用生成的包创建同级项目目录。
 
 ```bash
-pnpm dlx /Users/jcy/React/template/packages/create-template-react/jcy-create-template-react-0.1.0.tgz .
+pnpm dlx ./packages/create-template-react/jcy-create-template-react-0.1.0.tgz ../my-dapp
 ```
 
 Then install dependencies and start the project.

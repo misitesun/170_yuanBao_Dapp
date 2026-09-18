@@ -11,7 +11,7 @@ export function GradientTextShowcasePage() {
             </section>
             <section className="app-card">
                 <p className="size-24 mb-20">渐变边框 · 悬停暂停</p>
-                <GradientText animationSpeed={3} showBorder pauseOnHover className="size-40" data-testid="gradient-border">HU CHAIN</GradientText>
+                <GradientText animationSpeed={3} showBorder pauseOnHover className="size-40" data-testid="gradient-border">DApp Template</GradientText>
             </section>
             <section className="app-card">
                 <p className="size-24 mb-20">纵向渐变</p>

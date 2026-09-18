@@ -7,8 +7,8 @@ This directory stores reusable UI components that are shared by multiple busines
 Keep business-specific components inside their feature or page directory until they are reused.
 业务专属组件先放在对应 feature 或页面目录中，直到确实被复用后再抽到这里。
 
-`PagePullRefresh` is the authenticated business route pull-refresh container. Pages opt in by registering `usePageRefresh()`.
-`PagePullRefresh` 是已登录业务路由的下拉刷新容器，页面通过注册 `usePageRefresh()` 启用刷新。
+`PagePullRefresh` is the page-level pull-refresh and load-more container. Add it only when a real page registers asynchronous work through `usePageRefresh()` or `usePageLoadMore()`.
+`PagePullRefresh` 是页面级下拉刷新与上拉加载容器。只有真实页面通过 `usePageRefresh()` 或 `usePageLoadMore()` 注册异步任务后才接入。
 
 `Dropdown` is an anchored option or action menu with a viewport-clamped glass mask. Use it for lightweight local choices; use `Picker` or `Popup` when the interaction needs a bottom sheet or full-screen overlay.
 `Dropdown` 是带视口边界约束和玻璃遮罩的锚定式选项或操作菜单。轻量本地选择使用它；需要底部面板或全屏覆盖层时使用 `Picker` 或 `Popup`。

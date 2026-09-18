@@ -10,8 +10,9 @@ export interface SelectImageOptions {
 
 export interface UploadFileOptions {
     file: File
-    url?: string
+    url: string
     fieldName?: string
     fields?: Record<string, string | Blob>
+    timeout?: number
     onProgress?: (percent: number) => void
 }

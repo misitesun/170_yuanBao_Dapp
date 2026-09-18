@@ -132,23 +132,17 @@ test('new project setup guide records template bootstrapping decisions', () => {
     assert.match(agentRules, /PROJECT_TERMS\.md/)
 })
 
-test('project terminology bans wrong user-facing words from source code', () => {
+test('project terminology starts business-neutral and documents the confirmation workflow', () => {
     const terms = readFileSync('PROJECT_TERMS.md', 'utf8')
     const agentRules = readFileSync('AGENTS.md', 'utf8')
     const files = collectSourceFiles('src')
-    const sourceWithBannedTerm = files.filter((file) => (
-        !file.includes('/vendor/')
-        && readFileSync(file, 'utf8').includes('提现')
-    ))
 
-    assert.match(terms, /提现/)
-    assert.match(terms, /提取/)
-    assert.match(agentRules, /不要使用 `提现`/)
-    assert.match(terms, /Only replace the banned term `提现`/)
-    assert.match(terms, /只替换禁用词 `提现`/)
-    assert.doesNotMatch(terms, /领取、取回、赎回类动作统一使用/)
-    assert.doesNotMatch(agentRules, /领取、取回、赎回类动作统一使用/)
-    assert.deepEqual(sourceWithBannedTerm, [])
+    assert.match(terms, /intentionally defines no product terms or banned words/)
+    assert.match(terms, /基础模板有意不预置任何产品术语或禁用词/)
+    assert.match(terms, /None yet/)
+    assert.match(agentRules, /base template defines no product vocabulary/)
+    assert.match(agentRules, /基础模板不预置产品词汇/)
+    assert.equal(files.length > 0, true)
 })
 
 test('template provides a single public brand logo for project replacement', () => {

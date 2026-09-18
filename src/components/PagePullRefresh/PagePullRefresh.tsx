@@ -23,6 +23,7 @@ export interface PagePullRefreshProps {
     enabled?: boolean
     className?: string
     bottomInset?: 'none' | 'tabbar'
+    onError?: (error: unknown) => void
 }
 
 type PagePullRefreshStatus =
@@ -80,6 +81,7 @@ export function PagePullRefresh(props: PagePullRefreshProps) {
         enabled = true,
         className,
         bottomInset = 'none',
+        onError,
     } = props
     const [status, setStatus] = useState<PagePullRefreshStatus>('idle')
     const [loadMoreRegistration, setLoadMoreRegistration] = useState<PageLoadMoreRegistration | null>(null)
@@ -149,6 +151,8 @@ export function PagePullRefresh(props: PagePullRefreshProps) {
 
         try {
             await refreshHandler()
+        } catch (error) {
+            onError?.(error)
         } finally {
             const elapsed = Date.now() - startTime
             const remainingDelay = Math.max(PULL_REFRESH_MIN_LOADING_MS - elapsed, 0)
@@ -160,7 +164,7 @@ export function PagePullRefresh(props: PagePullRefreshProps) {
             isRefreshingRef.current = false
             settleIndicator()
         }
-    }, [settleIndicator, updateIndicator])
+    }, [onError, settleIndicator, updateIndicator])
 
     const registerPageRefresh = useCallback((handler: PageRefreshHandler) => {
         refreshHandlerRef.current = handler
@@ -198,11 +202,13 @@ export function PagePullRefresh(props: PagePullRefreshProps) {
 
         try {
             await loadMoreRegistration.handler()
+        } catch (error) {
+            onError?.(error)
         } finally {
             isLoadingMoreRef.current = false
             setIsLoadingMore(false)
         }
-    }, [loadMoreRegistration])
+    }, [loadMoreRegistration, onError])
 
     const handleTouchStart = useCallback((event: TouchEvent<HTMLDivElement>) => {
         if (!enabled || refreshHandlerRef.current === undefined || isRefreshingRef.current || isLoadingMoreRef.current) return

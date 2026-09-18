@@ -15,7 +15,6 @@ export interface DappWalletConnection {
 
 export interface DappSignResult {
     signature: Hash
-    timestamp: number
     message: string
 }
 

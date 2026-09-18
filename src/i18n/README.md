@@ -51,8 +51,8 @@ When i18n is enabled, development defaults to `zh-Hans`, and production defaults
 When `enableI18n` is `false`, initialization, local storage and the app store are fixed to `zh-Hans`. Translation calls remain available, but language switching and the request `lang` header are disabled.
 当 `enableI18n` 为 `false` 时，初始化、本地缓存和 app store 都固定为 `zh-Hans`。翻译调用仍可正常使用，但语言切换和请求 `lang` 头会关闭。
 
-Locale files for other languages remain available for future use, but languages absent from `APP_LANGUAGES` are not shown or generated as language chunks.
-其他语言的 locale 文件继续保留以备后续启用；未加入 `APP_LANGUAGES` 的语言不会展示，也不会生成对应语言 chunk。
+Only enabled language files are retained in the base template. Add another locale only when the project confirms that language and translates every shared key.
+基础模板只保留已启用语言文件。项目确认新增语言、并补齐全部共享 key 后再添加 locale。
 
 Language codes use standard values such as `zh-Hans`, `zh-Hant`, `ja`, `ko` and `en`.
 语言代码使用标准值，例如 `zh-Hans`、`zh-Hant`、`ja`、`ko` 和 `en`。

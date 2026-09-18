@@ -1,4 +1,13 @@
-# HU Chain layout
-HeaderBar reuses AppBrand and LanguageSwitch, with the supplied brand/notification/language PNGs. No simulated device status bar. `staticPreview` shows inert controls without language or wallet actions.
-TabbarMenu presents five entries; home, stake, presale, OTC and user navigate in both authenticated and development-preview flows. Missing screens stay inert rather than inventing business pages. The fixed shared header/tabbar maintain existing app chrome behavior. Normal page content remains in flow. After wallet authentication, all five first-level pages use the same masked wallet-address chip in the shared header; HeaderBar no longer exposes a per-route address-suppression option.
-公共导航已按 HU Chain 设计适配，第一版预览只展示视觉，不接入通知或语言逻辑。底部安全区保留为真实设备适配，不是设计图状态栏占位。
+# Main application layout
+
+`MainLayout` is the reusable first-level shell. It combines the project brand, language switch, optional wallet-address chip, and exactly one navigation mode: `tabbar` or `sidebar`.
+
+`MainLayout` 是可复用的一级页面外壳，组合项目品牌、多语言切换、可选钱包地址摘要，以及 `tabbar` 或 `sidebar` 二选一的导航模式。
+
+Both menus read `MAIN_PAGE_ITEMS`; add each confirmed first-level page there once instead of maintaining separate route lists. Items use the local `Icon` registry and must not depend on product artwork.
+
+两种菜单统一读取 `MAIN_PAGE_ITEMS`；每个已确认的一级页面只需在该配置中添加一次。菜单图标使用本地 `Icon` 注册表，不依赖业务切图。
+
+`staticPreview` disables brand navigation and wallet data for isolated visual checks. It does not emulate device chrome or a real authentication state.
+
+`staticPreview` 仅用于隔离视觉检查时关闭品牌跳转和钱包数据，不模拟设备外壳或真实登录态。

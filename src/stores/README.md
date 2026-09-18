@@ -1,32 +1,15 @@
 # Stores
-全局状态。
 
-This directory stores client-side state that must be shared across components.
-这个目录存放需要跨组件共享的客户端状态。
+Shared client state uses Zustand and is split by ownership. The blank template ships only `app` state for language/application concerns and `dapp` state for provider status, wallet address, chain ID and global contract loading.
 
-The template uses Zustand as a lightweight state library.
-当前模板使用 Zustand 作为轻量状态库。
+共享客户端状态使用 Zustand，并按归属拆分。空白模板仅提供 `app`（语言和应用级状态）与 `dapp`（Provider、钱包地址、链 ID、全局合约 Loading）两个 store。
 
-Store modules are split by ownership.
-store 模块按状态归属划分。
+Add feature or user stores only when confirmed page and API contracts require cross-component state. Export stable stores from `src/stores/index.ts`, and use selectors in components so they subscribe only to required fields.
 
-- `app`: application-level state such as layout, global dialogs and startup status.
-- `app`：应用级状态，例如 layout、全局弹层和启动状态。
-- `user`: user-level state such as profile and derived sign-in state.
-- `user`：用户级状态，例如用户资料和登录态衍生状态。
-- `dapp`: wallet and on-chain state such as wallet address, chain ID and connection status.
-- `dapp`：钱包和链上状态，例如钱包地址、链 ID 和连接状态。
-
-Business components should import stores from `src/stores/index.ts`.
-业务组件应优先从 `src/stores/index.ts` 导入 store。
+只有已确认的页面与接口契约确实需要跨组件状态时，才新增 feature 或 user store。稳定 store 从 `src/stores/index.ts` 导出；组件中使用 selector，只订阅所需字段。
 
 ```ts
-import { useUserStore } from '../stores/index.ts'
-```
+import { useDappStore } from '@/stores'
 
-Use selectors inside components so each component only subscribes to the fields it needs.
-组件内使用 selector，让组件只订阅自己真正需要的字段。
-
-```ts
-const userInfo = useUserStore((state) => state.userInfo)
+const walletAddress = useDappStore((state) => state.walletAddress)
 ```

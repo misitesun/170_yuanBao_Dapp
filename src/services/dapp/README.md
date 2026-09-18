@@ -46,11 +46,11 @@ Do not introduce `ethers` or AppKit into the base template.
 Wallet operations must use the injected `window.ethereum` provider.
 钱包操作必须使用注入的 `window.ethereum` provider。
 
-Provider detection can wait up to five seconds for a delayed injected wallet object through `@metamask/detect-provider`. Startup login mode decides whether it waits; a Flutter host can also pre-set `window.__EXPECT_DAPP_PROVIDER__ = true` to explicitly request this wait.
-Provider 检测可通过 `@metamask/detect-provider` 最多等待五秒以兼容延迟注入的钱包对象。是否等待由启动登录模式决定；Flutter 宿主也可以预先设置 `window.__EXPECT_DAPP_PROVIDER__ = true` 来明确要求等待。
+Provider detection can wait up to five seconds for a delayed injected wallet object through `@metamask/detect-provider`. The calling flow chooses whether to wait; a Flutter host can also pre-set `window.__EXPECT_DAPP_PROVIDER__ = true` to explicitly request this wait.
+Provider 检测可通过 `@metamask/detect-provider` 最多等待五秒以兼容延迟注入的钱包对象。是否等待由调用流程决定；Flutter 宿主也可以预先设置 `window.__EXPECT_DAPP_PROVIDER__ = true` 来明确要求等待。
 
-Without a detected provider, `dapp` startup retries once and shows the wallet-environment prompt, while `hybrid` continues to account login.
-未检测到 Provider 时，`dapp` 启动会额外重试一次并显示钱包环境提示，`hybrid` 则继续进入账号登录。
+Provider detection is a low-level capability. A real project decides whether to retry, show a wallet prompt, or offer another login method after its authentication contract is confirmed.
+Provider 检测只是底层能力。真实项目应在鉴权契约确认后，自行决定重试、显示钱包提示或提供其他登录方式。
 
 Do not create an HTTP public client for wallet flows.
 钱包流程不要创建 HTTP public client。
@@ -103,11 +103,8 @@ This is enabled by default, so insufficient allowance approves the maximum amoun
 When disabled, it only approves the passed specific amount.
 关闭时，只授权传入的具体数值。
 
-`UNISWAP_V2_ROUTER_ABI` is provided as a common router ABI for swap-style projects.
-`UNISWAP_V2_ROUTER_ABI` 作为 swap 类项目常用的通用 Router ABI 提供。
-
-Project-specific router addresses and page-facing methods should live in `src/services/contracts`.
-项目专属 Router 地址和页面会调用的方法应放在 `src/services/contracts`。
+Swap router ABIs and all other protocol-specific contracts belong in `src/services/contracts` after their exact version and address are confirmed.
+Swap Router ABI 与其他协议专用合约都应在版本和地址确认后放入 `src/services/contracts`。
 
 Do not omit `account` only because a contract call is a `view` / `pure` read.
 不要只因为合约调用是 `view` / `pure` 读取就省略 `account`。
@@ -148,8 +145,8 @@ For networks or assets with other decimals, set `DAPP_CONFIG.amountDecimals` to 
 ## Files
 ## 文件职责
 
-- `config.ts`: chain config, provider status, delayed-detection timeout, sign message names, approval amount and gas defaults.
-- `config.ts`：链配置、钱包状态、延迟检测超时、签名前缀、授权额度和 gas 默认配置。
+- `config.ts`: chain config, provider status, delayed-detection timeout, approval amount and gas defaults.
+- `config.ts`：链配置、钱包状态、延迟检测超时、授权额度和 gas 默认配置。
 - `provider.ts`: waits for and caches the injected provider, then creates the local wallet client.
 - `provider.ts`：等待并缓存注入 provider，然后创建本地钱包客户端。
 - `wallet.ts`: connects wallet, clears local wallet state, signs messages and manages wallet listeners.
@@ -162,8 +159,6 @@ For networks or assets with other decimals, set `DAPP_CONFIG.amountDecimals` to 
 - `units.ts`：按配置的小数位转换展示金额和链上整数单位。
 - `erc20.ts`: wraps common ERC20 balance, allowance, approve and transfer operations.
 - `erc20.ts`：封装常用 ERC20 信息读取、余额、授权额度、自动补授权、授权和转账操作。
-- `uniswapV2Router.ts`: exports common Uniswap V2 Router ABI and read helpers.
-- `uniswapV2Router.ts`：导出通用 Uniswap V2 Router ABI 和读取辅助方法。
 - `contractRefresh.ts`: centralizes the post-write data-sync wait.
 - `contractRefresh.ts`：统一封装写合约后的数据同步等待。
 - `batch.ts`: keeps low-level `wallet_sendCalls` and `wallet_getCallsStatus` helpers for future 7702-style flows.
@@ -200,13 +195,14 @@ import {
 
 await initializeDappWallet()
 await connectDappWallet()
-const signInfo = await signDappMessage('Login')
+const challenge = await requestProjectWalletChallenge()
+const signInfo = await signDappMessage(challenge.message)
 
 const rawAmount = parseDappAmountUnits('1.23')
 const displayAmount = formatDappAmountUnits(rawAmount)
 
-await ensureErc20Allowance(spenderAddress, rawAmount)
+await ensureErc20Allowance(spenderAddress, rawAmount, tokenAddress)
 ```
 
-Business login should be built on top of these helpers later.
-后续业务登录应该基于这些基础方法继续封装。
+`signDappMessage()` signs the supplied text exactly; it never invents a prefix, timestamp or nonce. Business login should be built only after the backend authentication contract is documented.
+`signDappMessage()` 会原样签署传入文本，不会自行拼接前缀、时间戳或 nonce。业务登录只能在后端鉴权契约文档确认后继续封装。

@@ -15,6 +15,7 @@ test('page pull refresh exposes a page-level refresh registration contract', asy
     assert.match(component, /children:\s*ReactNode/)
     assert.match(component, /enabled\?: boolean/)
     assert.match(component, /bottomInset\?: 'none' \| 'tabbar'/)
+    assert.match(component, /onError\?: \(error: unknown\) => void/)
     assert.match(component, /refreshHandlerRef/)
     assert.match(component, /await refreshHandler\(\)/)
     assert.match(component, /isRefreshingRef/)
@@ -59,16 +60,10 @@ test('page pull refresh exposes a page-level refresh registration contract', asy
     assert.match(readme, /usePageLoadMore\(loadNextPage/)
 })
 
-test('authenticated business routes are wrapped by page pull refresh', async () => {
+test('blank route table does not simulate data refresh before pages exist', async () => {
     const router = await readFile('src/router/AppRouter.tsx', 'utf8')
 
-    assert.match(router, /import \{ PagePullRefresh \} from '@\/components\/PagePullRefresh'/)
-    assert.match(router, /function PullRefreshRouteOutlet\(\)/)
-    assert.match(router, /<PagePullRefresh bottomInset=\{DEFAULT_LAYOUT_MENU_TYPE === LAYOUT_MENU_TYPE\.tabbar \? 'tabbar' : 'none'\}>[\s\S]*<Outlet \/>[\s\S]*<\/PagePullRefresh>/)
-    assert.match(
-        router,
-        /<Route element=\{<RequireAuthentication \/>\}>[\s\S]*<Route element=\{<PullRefreshRouteOutlet \/>\}>[\s\S]*<Route element=\{<MainLayout \/>\}>/,
-    )
-    assert.doesNotMatch(router, /<Route path=\{ROUTE_PATH\.root\} element=\{<PagePullRefresh>/)
-    assert.doesNotMatch(router, /<Route path=\{ROUTE_PATH\.login\} element=\{<PagePullRefresh>/)
+    assert.doesNotMatch(router, /PagePullRefresh/)
+    assert.doesNotMatch(router, /RequireAuthentication/)
+    assert.match(router, /<Route element=\{<MainLayout \/>\}>/)
 })

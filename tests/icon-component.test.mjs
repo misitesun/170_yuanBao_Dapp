@@ -23,6 +23,9 @@ test('icon component provides a local inline svg icon contract', async () => {
     assert.match(component, /normalizeIconSize\(size\)/)
 
     assert.match(config, /ICON_DEFINITIONS/)
+    assert.match(config, /'home'/)
+    assert.match(config, /'menu'/)
+    assert.match(config, /'language'/)
     assert.match(config, /'arrow'/)
     assert.match(config, /'arrow-left'/)
     assert.match(config, /'arrow-up'/)

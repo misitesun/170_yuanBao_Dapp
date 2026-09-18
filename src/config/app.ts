@@ -43,7 +43,7 @@ export const APP_CONFIG = {
 
     // Project-level layout menu mode. `tabbar` and `sidebar` are mutually exclusive.
     // 项目级 layout 菜单模式，`tabbar` 和 `sidebar` 是互斥关系。
-    defaultLayoutMenuType: APP_LAYOUT_MENU_TYPE.tabbar,
+    defaultLayoutMenuType: APP_LAYOUT_MENU_TYPE.sidebar,
 
     // `dapp` only allows wallet login, `hybrid` allows wallet and account login, and `account` only allows account login.
     // `dapp` 仅支持钱包登录，`hybrid` 同时支持钱包和账号登录，`account` 仅支持账号登录。

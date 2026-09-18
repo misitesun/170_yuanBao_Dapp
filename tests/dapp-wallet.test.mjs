@@ -141,15 +141,15 @@ test('initialization stops early when there is no injected wallet environment', 
     assert.equal(useDappStore.getState().providerStatus, DAPP_PROVIDER_STATUS.unavailable)
 })
 
-test('signs a dapp message with the connected wallet address and timestamp', async () => {
+test('signs the exact project-supplied message with the connected wallet address', async () => {
     const provider = createProvider({ accounts: [TEST_ADDRESS], signature: '0xsigned' })
     setupWalletTest(provider)
 
-    const result = await signDappMessage('Login')
+    const result = await signDappMessage('server-issued challenge')
 
     assert.equal(result.signature, '0xsigned')
-    assert.match(result.message, /^Login-\d+$/)
-    assert.equal(typeof result.timestamp, 'number')
+    assert.equal(result.message, 'server-issued challenge')
+    assert.equal('timestamp' in result, false)
     assert.equal(provider.requests.at(-1).method, 'personal_sign')
 })
 

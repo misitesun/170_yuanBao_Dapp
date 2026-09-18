@@ -4,12 +4,12 @@ import {
     type ReactNode,
 } from 'react'
 
-import languageIconUrl from '@/assets/layout/headbar/lang.svg'
 import {
     Dropdown,
     type DropdownOption,
     type DropdownTriggerRenderProps,
 } from '@/components/Dropdown'
+import { Icon } from '@/components/Icon'
 import { APP_CONFIG } from '@/config/index.ts'
 import { changeAppLanguage } from '@/i18n/changeAppLanguage.ts'
 import { APP_LANGUAGES } from '@/i18n/config.ts'
@@ -49,7 +49,7 @@ function LanguageSwitchContent({
         .filter(Boolean)
         .join(' ')
     const triggerContent = children === undefined ? (
-        <img src={languageIconUrl} className="language-switch__default" alt="Language" />
+        <Icon name="language" className="language-switch__default" ariaLabel="Language" />
     ) : children
 
     function handleLanguageSwitchKeyDown(event: KeyboardEvent<HTMLDivElement>) {

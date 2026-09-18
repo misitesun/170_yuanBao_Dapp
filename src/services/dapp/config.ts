@@ -136,15 +136,3 @@ export const DAPP_ERROR_MESSAGE = {
     erc20BalanceInsufficient: '余额不足',
     invalidAmount: '金额格式错误',
 } as const
-
-export type DappSignMessage =
-    | 'Login'
-    | 'Transfer'
-    | 'Withdraw'
-    | 'Order'
-    | 'Node'
-    | 'Pledge'
-    | 'Claim'
-    | 'Saving'
-    | 'TokenOrder'
-    | 'ClaimQuota'

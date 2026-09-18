@@ -43,11 +43,10 @@ test('sidebar menu reuses the shared first-level layout menu items', () => {
     assert.match(sidebarSource, /handleMenuLinkClick[\s\S]*onClose\(\)/)
 })
 
-test('sidebar menu uses the shared icon pair and active theme color', () => {
+test('sidebar menu uses shared local icons and active theme color', () => {
     assert.match(sidebarSource, /app-menu__link--active app-color/)
     assert.match(sidebarSource, /\{\(\{ isActive \}\) =>/)
-    assert.match(sidebarSource, /src=\{isActive \? item\.activeIcon : item\.icon\}/)
-    assert.match(sidebarSource, /className="img-44"/)
+    assert.match(sidebarSource, /<Icon name=\{item\.icon\} className="size-44" \/>/)
     assert.match(sidebarSource, /<Icon\s+name="arrow"[\s\S]*className=\{isActive \? 'size-38' : 'size-38 opc-6'\}/)
     assert.doesNotMatch(sidebarSource, />title</)
 })

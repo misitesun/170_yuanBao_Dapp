@@ -25,7 +25,7 @@ const BASIC_OPTION_LIST: PickerOption[] = [
 ]
 
 const TOKEN_OPTION_LIST: PickerOption[] = [
-    { label: 'USDT', value: 'USDT', name: 'Tether USD', color: '#26A17B' },
+    { label: 'USDC', value: 'USDC', name: 'USD Coin', color: '#2775CA' },
     { label: 'BNB', value: 'BNB', name: 'BNB Smart Chain', color: '#F3BA2F' },
     { label: 'ETH', value: 'ETH', name: 'Ethereum', color: '#627EEA' },
 ]

@@ -50,11 +50,7 @@ export function SidebarMenu({
                             {({ isActive }) => (
                                 <div className="flex-between pt-30 pb-30">
                                     <div className="flex items-center">
-                                        <img
-                                            src={isActive ? item.activeIcon : item.icon}
-                                            className="img-44"
-                                            alt=""
-                                        />
+                                        <Icon name={item.icon} className="size-44" />
                                         <div className="ml-20 size-30">{item.title}</div>
                                     </div>
                                     <Icon

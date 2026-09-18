@@ -4,6 +4,7 @@ import {
     existsSync,
     mkdtempSync,
     readFileSync,
+    symlinkSync,
     statSync,
 } from 'node:fs'
 import { rm } from 'node:fs/promises'
@@ -46,9 +47,9 @@ test('create package exposes a pnpm dlx friendly CLI package', () => {
     assert.match(rootPackageJson.scripts['create:local'], /pnpm --dir packages\/create-template-react pack/)
     assert.equal(rootPackageJson.scripts['create:publish'], undefined)
     assert.match(readme, /pnpm create:local/)
-    assert.match(readme, /pnpm dlx \/Users\/jcy\/React\/template\/packages\/create-template-react\/jcy-create-template-react-0\.1\.0\.tgz/)
-    assert.match(workflow, /pnpm dlx \/Users\/jcy\/React\/template\/packages\/create-template-react\/jcy-create-template-react-0\.1\.0\.tgz/)
-    assert.match(workflow, /https:\/\/github\.com\/jcyhh\/template-react\.git/)
+    assert.match(readme, /pnpm dlx \.\/packages\/create-template-react\/jcy-create-template-react-0\.1\.0\.tgz \.\.\/my-dapp/)
+    assert.match(workflow, /pnpm dlx \.\/packages\/create-template-react\/jcy-create-template-react-0\.1\.0\.tgz/)
+    assert.match(workflow, /https:\/\/github\.com\/misitesun\/react_dapp_demo\.git/)
 })
 
 test('create package builds a template archive and creates a project from it', async () => {
@@ -83,6 +84,10 @@ test('create package builds a template archive and creates a project from it', a
         assert.equal(existsSync(join(target, 'node_modules')), false)
         assert.equal(existsSync(join(target, 'dist')), false)
         assert.equal(existsSync(join(target, 'packages/create-template-react')), false)
+        assert.equal(existsSync(join(target, 'src/pages/main/home/HomePage.tsx')), true)
+        assert.equal(existsSync(join(target, 'src/pages/main/stake')), false)
+        assert.equal(existsSync(join(target, 'src/features/auth')), false)
+        assert.equal(existsSync(join(target, 'src/services/dapp/uniswapV2Router.ts')), false)
 
         const createdPackageJson = JSON.parse(
             readFileSync(join(target, 'package.json'), 'utf8'),
@@ -97,6 +102,39 @@ test('create package builds a template archive and creates a project from it', a
 
         assert.doesNotMatch(createdProductionEnv, /^#/m)
         assert.match(createdProductionEnv, /VITE_BASE_URL\s*=/)
+
+        symlinkSync(
+            join(process.cwd(), 'node_modules'),
+            join(target, 'node_modules'),
+            process.platform === 'win32' ? 'junction' : 'dir',
+        )
+
+        const appTypecheck = run(process.execPath, [
+            join(process.cwd(), 'node_modules/typescript/bin/tsc'),
+            '-p',
+            'tsconfig.app.json',
+            '--noEmit',
+            '--incremental',
+            'false',
+        ], { cwd: target })
+        assert.equal(appTypecheck.status, 0, appTypecheck.stderr || appTypecheck.stdout)
+
+        const nodeTypecheck = run(process.execPath, [
+            join(process.cwd(), 'node_modules/typescript/bin/tsc'),
+            '-p',
+            'tsconfig.node.json',
+            '--noEmit',
+            '--incremental',
+            'false',
+        ], { cwd: target })
+        assert.equal(nodeTypecheck.status, 0, nodeTypecheck.stderr || nodeTypecheck.stdout)
+
+        const bundleResult = run(process.execPath, [
+            join(process.cwd(), 'node_modules/vite/bin/vite.js'),
+            'build',
+        ], { cwd: target })
+        assert.equal(bundleResult.status, 0, bundleResult.stderr || bundleResult.stdout)
+        assert.equal(existsSync(join(target, 'dist/index.html')), true)
     } finally {
         await rm(target, {
             recursive: true,

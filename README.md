@@ -1,14 +1,14 @@
 # React H5 DApp Template
 React 移动端 H5 DApp 模板。
 
-This project is a learning-friendly React template for mobile-only H5 and DApp projects.
-这是一个面向移动端 H5 和 DApp 项目的 React 学习模板。
+This repository is a business-neutral, ready-to-extend React template for mobile H5 DApp projects.
+这是一个不携带业务假设、可直接扩展的 React 移动端 H5 DApp 模板。
 
 The stack uses React, TypeScript, Vite, Oxlint, SCSS, PostCSS viewport conversion, React Router, Zustand, Axios and i18next.
 技术栈使用 React、TypeScript、Vite、Oxlint、SCSS、PostCSS 视口转换、React Router、Zustand、Axios 和 i18next。
 
-The template keeps most modules intentionally small so each module can be studied and replaced independently.
-模板会刻意让多数模块保持较小体积，方便逐个学习和独立替换。
+It ships an empty production home route, reusable application chrome, component showcases, wallet and contract primitives, request/storage/platform boundaries, project setup governance, and release checks. It intentionally ships no product pages, mock business data, backend endpoint contracts, deployed addresses, or product-specific ABI.
+模板提供空白生产首页、可复用应用外壳、组件演示、钱包与合约基础能力、请求/存储/平台边界、项目初始化治理和发布检查；不包含产品页面、业务 Mock、后端接口契约、已部署地址或产品专用 ABI。
 
 ## Agent rules
 ## AI 协作规则
@@ -22,8 +22,8 @@ Project conventions such as import paths, page modules, styles and asset naming 
 ## Governance assets
 ## 协作治理资产
 
-The project keeps implementation rules in `docs/ai-collaboration.md`, module boundaries in `docs/architecture.md`, normal-flow page layout rules in `docs/layout-standards.md`, PHP API boundary rules in `docs/php-api-contracts.md`, real-project DApp integration rules in `docs/dapp-project-integration.md`, and compatibility-sensitive behavior in `docs/compatibility.md`.
-项目把实现协作规则放在 `docs/ai-collaboration.md`，模块边界放在 `docs/architecture.md`，正常文档流页面布局规则放在 `docs/layout-standards.md`，PHP 接口边界规则放在 `docs/php-api-contracts.md`，真实项目 DApp 联调规则放在 `docs/dapp-project-integration.md`，兼容性敏感行为放在 `docs/compatibility.md`。
+The project keeps the reusable/non-reusable boundary in `docs/template-boundary.md`, implementation rules in `docs/ai-collaboration.md`, module boundaries in `docs/architecture.md`, normal-flow page layout rules in `docs/layout-standards.md`, PHP API boundary rules in `docs/php-api-contracts.md`, real-project DApp integration rules in `docs/dapp-project-integration.md`, and compatibility-sensitive behavior in `docs/compatibility.md`.
+项目把模板保留/排除边界放在 `docs/template-boundary.md`，实现协作规则放在 `docs/ai-collaboration.md`，模块边界放在 `docs/architecture.md`，正常文档流页面布局规则放在 `docs/layout-standards.md`，PHP 接口边界规则放在 `docs/php-api-contracts.md`，真实项目 DApp 联调规则放在 `docs/dapp-project-integration.md`，兼容性敏感行为放在 `docs/compatibility.md`。
 
 Reusable AI workflows live in `.agents/skills/`. They narrow work scope and routing, but never replace `AGENTS.md`, real API or contract Markdown documents, tests or lint checks.
 可复用的 AI 工作流位于 `.agents/skills/`。它们用于收窄工作范围和路由，但不能替代 `AGENTS.md`、真实接口或合约 Markdown、测试和 lint 检查。
@@ -35,7 +35,8 @@ Build the local create package first.
 先在本机模板目录生成本地创建包。
 
 ```bash
-cd /Users/jcy/React/template
+git clone https://github.com/misitesun/react_dapp_demo.git
+cd react_dapp_demo
 git pull
 pnpm create:local
 ```
@@ -44,11 +45,11 @@ Then create a project from the local package.
 然后在新项目空目录中使用本地包创建项目。
 
 ```bash
-pnpm dlx /Users/jcy/React/template/packages/create-template-react/jcy-create-template-react-0.1.0.tgz .
+pnpm dlx ./packages/create-template-react/jcy-create-template-react-0.1.0.tgz ../my-dapp
 ```
 
-If the local package is unavailable, clone the GitHub template from `https://github.com/jcyhh/template-react.git`.
-如果本地包暂不可用，则从 `https://github.com/jcyhh/template-react.git` 克隆模板。
+The source repository is `https://github.com/misitesun/react_dapp_demo.git`.
+源码仓库为 `https://github.com/misitesun/react_dapp_demo.git`。
 
 Before using this template for a real project, read `PROJECT_SETUP.md`.
 使用本模板创建真实项目前，先阅读 `PROJECT_SETUP.md`。
@@ -68,8 +69,8 @@ Authenticated business pages can use `PagePullRefresh` and `usePageRefresh()` fo
 Pages can use `useLatestRequest()` to prevent old API or contract reads from writing stale data back after a newer refresh starts.
 页面可使用 `useLatestRequest()`，避免旧接口或合约读取在新刷新后回写旧数据。
 
-DApp startup validates the current wallet account before authenticated APIs run, and splash animation is shared as the startup gate.
-DApp 启动会在鉴权接口执行前校验当前钱包账号，并统一把开屏动画作为启动门槛。
+Authentication is intentionally not prewired because endpoint fields, challenge format, signature message, session recovery and redirects are project contracts. Add that flow only after the current backend Markdown is confirmed.
+模板不会预置鉴权流程，因为接口字段、challenge 格式、签名原文、会话恢复与跳转都属于项目契约；只有当前后端 Markdown 确认后才实现。
 
 `AppBrowserRouter` accepts URLs with or without `/h5`, then adds `/h5` for app navigations.
 `AppBrowserRouter` 兼容带 `/h5` 与不带 `/h5` 的访问路径，并在应用内跳转时补回 `/h5`。
@@ -148,6 +149,17 @@ Run Oxlint.
 ```bash
 pnpm lint
 ```
+
+Run every quality gate together.
+一次运行全部质量门禁。
+
+```bash
+pnpm verify
+pnpm exec tsc -b
+```
+
+Production `pnpm build` additionally requires a confirmed project logo. The create-package test also extracts the generated archive and verifies that the created project type-checks and bundles independently.
+生产 `pnpm build` 还要求项目 Logo 已确认。创建包测试会额外解压模板归档，并验证新建项目能够独立通过类型检查和 Vite 打包。
 
 ## VS Code extensions
 ## VS Code 扩展

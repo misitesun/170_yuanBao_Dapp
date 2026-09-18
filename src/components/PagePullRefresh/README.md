@@ -1,8 +1,8 @@
 # PagePullRefresh
 # 页面级下拉刷新与上拉加载
 
-`PagePullRefresh` is a mobile page container for authenticated business routes that need pull-to-refresh.
-`PagePullRefresh` 是给已登录业务路由使用的移动端页面级下拉刷新容器。
+`PagePullRefresh` is a mobile page container for routes that need pull-to-refresh or incremental loading.
+`PagePullRefresh` 是给需要下拉刷新或增量加载的移动端页面使用的容器。
 
 Pages register their real refresh function through `usePageRefresh()`.
 页面通过 `usePageRefresh()` 注册真实刷新函数。
@@ -22,6 +22,9 @@ The registered function should return `Promise<void>` when it loads API data, co
 
 The refresh indicator settles only after the registered function finishes.
 刷新图标会等注册函数执行完成后再收起。
+
+Pass `onError` to observe rejected refresh or load-more work. The container catches event-driven promise rejections, reports them through this callback and always restores its idle state.
+通过 `onError` 接收刷新或加载更多的失败。容器会捕获事件触发的 Promise 拒绝、交给该回调处理，并始终恢复空闲状态。
 
 The pull-refresh indicator uses a 134px outer frame, a 102px circular surface
 and a 62px refresh icon. These visual dimensions do not change the 72px trigger

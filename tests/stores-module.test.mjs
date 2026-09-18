@@ -4,7 +4,6 @@ import assert from 'node:assert/strict'
 import {
     useAppStore,
     useDappStore,
-    useUserStore,
 } from '../src/stores/index.ts'
 import { DEFAULT_LANGUAGE_CODE } from '../src/i18n/config.ts'
 import { DAPP_PROVIDER_STATUS } from '../src/services/dapp/config.ts'
@@ -12,9 +11,6 @@ import { DAPP_PROVIDER_STATUS } from '../src/services/dapp/config.ts'
 test('store modules expose their starter states', () => {
     assert.equal(useAppStore.getState().languageCode, DEFAULT_LANGUAGE_CODE)
     assert.equal(typeof useAppStore.getState().setLanguageCode, 'function')
-    assert.equal(useUserStore.getState().isAuthenticated, false)
-    assert.equal(typeof useUserStore.getState().markSignedIn, 'function')
-    assert.equal(typeof useUserStore.getState().markSignedOut, 'function')
     assert.equal(useDappStore.getState().providerStatus, DAPP_PROVIDER_STATUS.checking)
     assert.equal(useDappStore.getState().walletAddress, '')
     assert.equal(useDappStore.getState().chainId, undefined)

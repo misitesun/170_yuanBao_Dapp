@@ -10,7 +10,7 @@
     background: $bg padding-box, $border border-box;
 }
 
-@mixin hu-popup-surface($radius) {
+@mixin app-popup-surface($radius) {
     @include gradient-card(
         $radius,
         linear-gradient(180deg, #2F1F53 0%, #1A1948 100%),

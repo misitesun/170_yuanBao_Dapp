@@ -40,8 +40,8 @@ Before a transaction-backed feature starts, collect the following project facts 
 | PHP API contract | Endpoint, auth/challenge protocol, DTO and envelope, lossless amount format, error and order-state semantics, retry/idempotency behavior, and signed transaction payload semantics. |
 | Feature flow matrix | User preconditions, API request, server-signed fields if any, wallet write, receipt/indexing wait, refresh targets, cancellation and failure UX. |
 
-The template may expose a timestamp-signing helper as a starter capability, but it does not establish any project's authentication protocol. If a legacy login or starter adapter signs a timestamp, or a legacy page sends backend parameters directly into a write, ask whether that behavior remains current. Do not promote it to a template default.
-模板可能提供时间戳签名辅助方法作为启动能力，但它不能确立任何项目的鉴权协议。若旧登录或启动适配器通过时间戳签名，或旧页面直接把后端参数传给写合约，必须确认该行为是否仍有效；不能把它提升为模板默认规则。
+The template signs only an exact message supplied by its caller; it does not establish any project's authentication protocol. If a legacy login signs a timestamp, or a legacy page sends backend parameters directly into a write, ask whether that behavior remains current. Do not promote it to a template default.
+模板只会原样签署调用方传入的消息，不能确立任何项目的鉴权协议。若旧登录通过时间戳签名，或旧页面直接把后端参数传给写合约，必须确认该行为是否仍有效；不能把它提升为模板默认规则。
 
 ## Code boundaries
 ## 代码边界

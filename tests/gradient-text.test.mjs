@@ -10,14 +10,14 @@ test('gradient text preserves content and span attributes, with an inaccessible 
         const { default: GradientText } = await import('../src/components/GradientText/GradientText.tsx')
         const html = renderToStaticMarkup(createElement(GradientText, {
             colors: ['red', 'blue'], animationSpeed: 3, showBorder: true,
-            className: 'custom-class', 'aria-label': 'HU Chain',
-        }, 'HU Chain'))
-        assert.match(html, /aria-label="HU Chain"/)
+            className: 'custom-class', 'aria-label': 'DApp Template',
+        }, 'DApp Template'))
+        assert.match(html, /aria-label="DApp Template"/)
         assert.match(html, /custom-class/)
         assert.match(html, /aria-hidden="true"/)
         assert.match(html, /linear-gradient\(to right, red, blue, red\)/)
         assert.match(html, /--gradient-text-duration:3s/)
-        assert.match(html, />HU Chain</)
+        assert.match(html, />DApp Template</)
         assert.doesNotMatch(html, /role="button"|tabindex=/)
     } finally { hooks.deregister() }
 })

@@ -55,12 +55,13 @@ function shouldInclude(file) {
 }
 
 function getTemplateFiles() {
-    const output = run('git', ['ls-files', '-z'])
+    const output = run('git', ['ls-files', '-co', '--exclude-standard', '-z'])
 
     return output
         .split('\0')
         .filter(Boolean)
         .filter(shouldInclude)
+        .filter((file) => existsSync(join(rootDir, file)))
 }
 
 function copyTemplateFiles(files) {

@@ -12,10 +12,11 @@ This template deliberately uses a small, readable module layout. It is not an FS
 | `src/app` / `src/main.tsx` | Application bootstrap and root composition | App initialization only |
 | `src/router` | Browser-base compatibility, route declarations, navigation helpers | Route and navigation APIs |
 | `src/pages` | Route-level page modules and page-local styles | Page components and local helpers |
-| `src/features` | Business-oriented API and session logic | Feature entry functions and feature types |
+| `src/features` | Confirmed project API and orchestration modules; empty in the base template | Feature entry functions and feature types |
 | `src/components` / `src/shared/components` | Reusable UI with stable layout and interaction contracts | Documented component props |
 | `src/hooks` | Reusable lifecycle, refresh, and request-control hooks | Hook APIs |
-| `src/services/http` | Axios client, request policy, headers, errors, uploads | `request` and documented HTTP services |
+| `src/services/http` | Axios client, generic request policy, headers and normalized errors | `request` and documented HTTP services |
+| `src/services/upload` | Browser file selection and explicit-endpoint upload primitives | Upload service functions and types |
 | `src/services/storage` | Browser storage access and typed storage helpers | Storage service functions |
 | `src/services/platform` | Host-runtime checks such as Flutter availability | Platform capability helpers |
 | `src/services/dapp` | Wallet detection, viem interaction, contract calls, units, 7702 helpers | DApp service functions and types |
@@ -27,7 +28,7 @@ This template deliberately uses a small, readable module layout. It is not an FS
 ## Boundary rules
 ## 边界规则
 
-- Axios may be imported only inside `src/services/http`; features use its public request helpers.
+- Axios may be imported only inside `src/services/http`; features and upload helpers use its public request boundary.
 - Browser storage may be accessed only through `src/services/storage`.
 - Direct injected-wallet access and viem imports belong to `src/services/dapp`; project-specific contracts build on its wrappers in `src/services/contracts`.
 - Native clipboard APIs belong to `src/shared/clipboard`.

@@ -3,7 +3,10 @@ import assert from 'node:assert/strict'
 import { AxiosError } from 'axios'
 
 import { APP_CONFIG } from '../src/config/app.ts'
-import { httpClient } from '../src/services/http/client.ts'
+import {
+    httpClient,
+    registerHttpUnauthorizedHandler,
+} from '../src/services/http/client.ts'
 import { HttpError } from '../src/services/http/error.ts'
 
 function createStorage(token = '') {
@@ -15,7 +18,7 @@ function createStorage(token = '') {
     }
 }
 
-test('only sends Address in a DApp wallet host', async () => {
+test('sends only generic configured headers', async () => {
     const storage = createStorage('token-value')
     storage.setItem('LANG', 'zh-Hant')
     storage.setItem('WALLET_ADDRESS', '0x0000000000000000000000000000000000000001')
@@ -41,7 +44,7 @@ test('only sends Address in a DApp wallet host', async () => {
     )
 })
 
-test('keeps the token header even when local token storage is empty', async () => {
+test('omits the authorization header when local token storage is empty', async () => {
     globalThis.window = { localStorage: createStorage() }
     let captured
 
@@ -53,8 +56,7 @@ test('keeps the token header even when local token storage is empty', async () =
         },
     })
 
-    assert.equal(captured.headers.has('Authorization'), true)
-    assert.match(captured.headers.get('Authorization') ?? '', /^Bearer/)
+    assert.equal(captured.headers.has('Authorization'), false)
 })
 
 test('does not send lang when i18n is disabled', async () => {
@@ -79,7 +81,7 @@ test('does not send lang when i18n is disabled', async () => {
     }
 })
 
-test('uses the cached wallet address in a DApp wallet host', async () => {
+test('does not invent a wallet-address header in a DApp wallet host', async () => {
     const storage = createStorage('token-value')
     storage.setItem('WALLET_ADDRESS', '0x0000000000000000000000000000000000000001')
     globalThis.window = {
@@ -96,10 +98,10 @@ test('uses the cached wallet address in a DApp wallet host', async () => {
         },
     })
 
-    assert.equal(captured.headers.get('Address'), '0x0000000000000000000000000000000000000001')
+    assert.equal(captured.headers.has('Address'), false)
 })
 
-test('uses the cached wallet address in a Flutter host with an injected wallet', async () => {
+test('does not invent a wallet-address header in a Flutter wallet host', async () => {
     const storage = createStorage('token-value')
     storage.setItem('WALLET_ADDRESS', '0x0000000000000000000000000000000000000001')
     globalThis.window = {
@@ -117,13 +119,17 @@ test('uses the cached wallet address in a Flutter host with an injected wallet',
         },
     })
 
-    assert.equal(captured.headers.get('Address'), '0x0000000000000000000000000000000000000001')
+    assert.equal(captured.headers.has('Address'), false)
 })
 
 test('normalizes 401 and removes the cached token', async () => {
     const storage = createStorage('expired')
     globalThis.window = { localStorage: storage }
 
+    let unauthorizedCalls = 0
+    const unregister = registerHttpUnauthorizedHandler(() => {
+        unauthorizedCalls += 1
+    })
     const request = httpClient.request({
         url: '/private',
         adapter: async (config) => {
@@ -150,4 +156,6 @@ test('normalizes 401 and removes the cached token', async () => {
         return true
     })
     assert.equal(storage.getItem('TOKEN'), null)
+    assert.equal(unauthorizedCalls, 1)
+    unregister()
 })

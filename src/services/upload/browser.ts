@@ -1,7 +1,5 @@
 import { request } from '../http/request.ts'
-import {
-    HTTP_UPLOAD_CONFIG,
-} from '../http/config.ts'
+import { HTTP_CONFIG } from '../http/config.ts'
 import type {
     SelectImageOptions,
     UploadFileOptions,
@@ -70,9 +68,10 @@ export function selectImageFile(
 
 export function uploadFile({
     file,
-    url = HTTP_UPLOAD_CONFIG.url,
-    fieldName = HTTP_UPLOAD_CONFIG.fieldName,
+    url,
+    fieldName = 'file',
     fields = {},
+    timeout = HTTP_CONFIG.timeout,
     onProgress,
 }: UploadFileOptions): Promise<UploadResult> {
     const data = new FormData()
@@ -86,7 +85,7 @@ export function uploadFile({
         method: 'POST',
         url,
         data,
-        timeout: HTTP_UPLOAD_CONFIG.timeout,
+        timeout,
         onUploadProgress: onProgress
             ? ({ loaded, total }) => {
                     if (!total) return
@@ -97,7 +96,7 @@ export function uploadFile({
 }
 
 export async function uploadImageWithBrowser(
-    options: Omit<UploadFileOptions, 'file'> = {},
+    options: Omit<UploadFileOptions, 'file'>,
 ): Promise<UploadResult> {
     const file = await selectImageFile()
     return uploadFile({ ...options, file })

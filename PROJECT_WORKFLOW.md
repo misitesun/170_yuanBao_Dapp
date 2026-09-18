@@ -49,14 +49,14 @@ Use this short prompt when only an empty project folder has been created.
 当你只创建了一个空项目文件夹时，复制下面这句即可。
 
 ```txt
-请使用 /Users/jcy/React/template/packages/create-template-react/jcy-create-template-react-0.1.0.tgz 这个本地包，在当前空项目目录创建 React H5 DApp 项目，并按模板文档开始初始化项目；如果本地包不存在或不是最新版，请先到 /Users/jcy/React/template 执行 git pull 和 pnpm create:local。
+请使用模板仓库中 `packages/create-template-react/jcy-create-template-react-0.1.0.tgz` 这个本地包，在目标空目录创建 React H5 DApp 项目，并按模板文档开始初始化；如果本地包不存在或不是最新版，请先在 `react_dapp_demo` 仓库执行 `git pull` 和 `pnpm create:local`。
 ```
 
-The local create command is `pnpm dlx /Users/jcy/React/template/packages/create-template-react/jcy-create-template-react-0.1.0.tgz .`.
-本地创建命令是 `pnpm dlx /Users/jcy/React/template/packages/create-template-react/jcy-create-template-react-0.1.0.tgz .`。
+The local create command from the template repository is `pnpm dlx ./packages/create-template-react/jcy-create-template-react-0.1.0.tgz ../my-dapp`.
+在模板仓库中运行的本地创建命令是 `pnpm dlx ./packages/create-template-react/jcy-create-template-react-0.1.0.tgz ../my-dapp`。
 
-If the local create package is unavailable, the fallback source is `https://github.com/jcyhh/template-react.git`.
-如果本地创建包暂不可用，备用来源是 `https://github.com/jcyhh/template-react.git`。
+If the local create package is unavailable, the source repository is `https://github.com/misitesun/react_dapp_demo.git`.
+如果本地创建包暂不可用，源码仓库是 `https://github.com/misitesun/react_dapp_demo.git`。
 
 After the template is copied, the AI should start the project before asking the first setup question.
 模板下载完毕后，AI 应先将项目运行起来，再询问第一个初始化问题。
