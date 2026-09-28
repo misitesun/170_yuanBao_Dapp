@@ -63,3 +63,68 @@
 .auto-btn{
     @include auto-button();
 }
+
+@property --orbit-border-progress {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+.orbit-border {
+    --orbit-border-start-angle: 0deg;
+    --orbit-border-direction: normal;
+    --orbit-border-speed: 5s;
+    --orbit-border-delay: 0s;
+    --orbit-border-width: 1px;
+    --orbit-border-color-start: var(--app-cyan);
+    --orbit-border-color-peak: var(--app-violet);
+    --orbit-border-glow: 6px;
+
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+.orbit-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    padding: var(--orbit-border-width);
+    background: conic-gradient(
+        from calc(var(--orbit-border-start-angle) + var(--orbit-border-progress) - 50deg),
+        transparent 0deg,
+        var(--orbit-border-color-start) 22deg,
+        var(--orbit-border-color-peak) 50deg,
+        var(--orbit-border-color-start) 78deg,
+        transparent 100deg,
+        transparent 360deg
+    );
+    filter: drop-shadow(0 0 var(--orbit-border-glow) var(--orbit-border-color-peak));
+    animation-name: orbit-border-spin;
+    animation-duration: var(--orbit-border-speed);
+    animation-delay: var(--orbit-border-delay);
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: var(--orbit-border-direction);
+    pointer-events: none;
+    -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .orbit-border::before {
+        animation: none;
+    }
+}
+
+@keyframes orbit-border-spin {
+    to { --orbit-border-progress: 360deg; }
+}

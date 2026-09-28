@@ -37,11 +37,17 @@ Before a transaction-backed feature starts, collect the following project facts 
 | Chain profile | Production and development chain IDs, native currency, wallet switch/add-chain data when needed, and RPC ownership. |
 | Asset registry | Each asset's env key or address source, decimals, display format, spender, approval policy, and any zero-reset requirement. |
 | ABI / contract definition | ABI version or hash, address env key, function signatures, argument units and order, payable value, events/errors, `msg.sender` use, and whether reads require the caller account. |
-| PHP API contract | Endpoint, auth/challenge protocol, DTO and envelope, lossless amount format, error and order-state semantics, retry/idempotency behavior, and signed transaction payload semantics. |
+| PHP API contract | Endpoint, auth/challenge protocol, DTO and envelope, whether each mutation success body is consumed, lossless amount format, error and order-state semantics, retry/idempotency behavior, and signed transaction payload semantics. |
 | Feature flow matrix | User preconditions, API request, server-signed fields if any, wallet write, receipt/indexing wait, refresh targets, cancellation and failure UX. |
 
 The template signs only an exact message supplied by its caller; it does not establish any project's authentication protocol. If a legacy login signs a timestamp, or a legacy page sends backend parameters directly into a write, ask whether that behavior remains current. Do not promote it to a template default.
 模板只会原样签署调用方传入的消息，不能确立任何项目的鉴权协议。若旧登录通过时间戳签名，或旧页面直接把后端参数传给写合约，必须确认该行为是否仍有效；不能把它提升为模板默认规则。
+
+Static UI development keeps `/h5` directed to the home page so page previews work without a wallet or backend. After a project's PHP authentication contract is confirmed, a real project may mount its startup/login gate at `/h5`. For a cached Token, restore the currently authorized wallet and match it to the saved account before contacting the backend. For a fresh login, sign only the documented message, then recheck the wallet before accepting the returned Token. When the PHP contract requires it, register the checked current address with the HTTP client so the session-validation request carries `Authorization: Bearer <token>` and `Address: <address>` together. Other protected business calls wait until session validation succeeds. Account changes, rejected sessions and 401 responses clear the Token and invalidate the registered address. Route destinations and referral handling remain project-specific.
+静态 UI 开发保持 `/h5` 直达首页，让页面不依赖钱包或后端即可预览。项目 PHP 鉴权契约确认后，真实项目可在 `/h5` 挂载启动或登录门槛。恢复缓存 Token 时，先恢复当前已授权钱包并与所存账号核对，再联系后端。新登录只签署文档规定的原文，并在接受返回的 Token 前再次检查钱包。若 PHP 契约要求，向 HTTP 客户端注册已核对的当前地址，让会话验证请求成对携带 `Authorization: Bearer <token>` 和 `Address: <address>`。其他受保护业务请求须等会话验证成功。账号切换、会话被拒绝及 401 都应清理 Token 并使注册地址失效。目标路由和邀请处理仍由具体项目决定。
+
+When a real project accepts a referral link and one wallet app may switch between addresses, keep the confirmed non-empty referral code in project-owned `localStorage` through the storage service. A code on the current link takes priority and replaces the saved code; without a link code, login reads the saved value. Account switching, Token invalidation and successful login must not erase that referral code, so another address can still log in. Pass the current link code through route state as well when storage may be unavailable. The key name, referral request field and any explicit removal policy belong in the real project's documented authentication contract; the blank template adds no referral route or business key.
+真实项目若接受邀请链接，且同一钱包 App 可能切换多个地址，应通过存储服务把已确认的非空邀请码保存在项目专属的 `localStorage` 键中。当前链接有邀请码时优先使用并覆盖保存值；链接没有邀请码时，登录读取本地保存值。账号切换、Token 失效和登录成功均不清理邀请码，以便其他地址继续登录。存储可能受限时，本次链接的邀请码还应通过路由状态传递。键名、登录请求字段及明确的删除策略由真实项目鉴权契约记录；空白模板不添加邀请路由或业务键。
 
 ## Code boundaries
 ## 代码边界
@@ -61,10 +67,13 @@ Keep the generic DApp layer reusable. A helper may move into it only after at le
 
 1. Read confirmed asset decimals and validation rules. Parse only user-entered display input with the confirmed unit helper; never use JavaScript floating-point math for contract-sensitive amounts.
 2. Verify wallet/provider state and the confirmed chain through existing DApp services.
-3. Call the feature API through its parser. If the documented response contains server-signed contract arguments, keep every raw value, deadline, signature, and argument order exactly as returned.
+3. Classify the feature API mutation response before parsing it. If the next step does not consume the success body, return `Promise<void>` and do not parse it. If the documented response contains required server-signed contract arguments, validate only those consumed fields and keep every raw value, deadline, signature, and argument order exactly as returned.
 4. Call the project contract wrapper. The wrapper maps named, documented inputs to the confirmed ABI; it does not reinterpret or silently alter a signed payload.
 5. Await the documented transaction outcome. If a backend indexer is involved, use the shared post-write synchronization delay only when the project flow documents that dependency.
 6. Reuse the page's real refresh function to reload the relevant API and contract data. Guard against stale async responses and avoid duplicate submissions while a write is active.
+
+Mutation success and post-success refresh have separate error boundaries. A failed refresh must not turn an already completed API or contract write into failure feedback that encourages the user to submit it again. Final display state comes from the documented authoritative read endpoint.
+提交成功与成功后的刷新必须使用不同的错误边界。刷新失败不能把已经完成的接口或合约写入改报成失败，并诱导用户再次提交。页面最终展示状态来自已文档化的权威读取接口。
 
 For a read whose result depends on `msg.sender`, pass the connected account through the project wrapper. Public configuration, market data, and metadata reads stay account-free.
 若读取结果依赖 `msg.sender`，应通过项目封装传入已连接账户。公共配置、行情和元数据读取保持不传账户。
@@ -77,6 +86,7 @@ For a read whose result depends on `msg.sender`, pass the connected account thro
 - Approval, gas, wallet-login, and retry behavior follow the documented project choice, not a legacy default.
 - Contract wrappers have tests for ABI argument mapping; user-context reads test account forwarding, while public reads test that no account is required.
 - PHP parsers test valid and malformed payloads separately from auth/header behavior.
+- Unused mutation bodies resolve successfully for empty or incompatible `2xx` payloads, while consumed contract or navigation values retain strict parser tests.
 - A wallet-capable manual pass covers connect, wrong-chain handling, user rejection, success, account change, and refresh when the required environment is available.
 
 ## Reusable project handoff

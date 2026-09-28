@@ -175,6 +175,21 @@ Keep `VITE_RPC_URL` empty in `.env.production` because production uses `DAPP_PRO
 These rules do not apply to `.env.development`, which may use a LAN API URL and local-chain RPC URL during integration.
 这些规则不适用于 `.env.development`，开发联调时可以填写局域网接口地址和本地测试链 RPC 地址。
 
+## API mutation response boundaries
+## API 提交响应边界
+
+Before implementing a button-triggered `POST`, `PUT`, `PATCH` or `DELETE`, decide whether the success response body is required by the next frontend step.
+实现按钮触发的 `POST`、`PUT`、`PATCH` 或 `DELETE` 前，必须先判断成功响应体是否是前端下一步操作的必需输入。
+
+If the page only needs to know that the HTTP request succeeded, the feature method must return `Promise<void>`, await `request<unknown>(...)`, and must not parse, destructure or validate the unused success body. Do not parse a mutation response merely because the API documentation lists its fields. Keep non-2xx handling in the shared HTTP error path, then refresh authoritative state through the documented read endpoint when needed.
+如果页面只需要知道 HTTP 请求成功，feature 方法必须返回 `Promise<void>`，只等待 `request<unknown>(...)`，不得解析、解构或校验未使用的成功响应体。不能仅因为接口文档列出了返回字段就解析提交响应。非 2xx 仍走公共 HTTP 错误链路；需要更新页面时，再通过已文档化的读取接口刷新权威数据。
+
+If the response is required for a contract call, navigation target, follow-up request key, download URL or other immediate behavior, validate and return only the documented fields actually consumed. Server-signed contract arguments remain strictly validated and passed through unchanged.
+如果响应是合约调用参数、跳转目标、后续请求标识、下载地址或其他即时行为的必需输入，则只校验并返回实际使用且已文档化的字段。服务端签名的合约参数仍必须严格校验并原样透传。
+
+Do not let a post-success refresh or display update turn a completed mutation into a failure Toast. Mutation failure and refresh failure need separate error boundaries unless the refresh helper catches and reports its own errors. Add a regression test in which a successful unused response body is empty or incompatible and the mutation still resolves, while HTTP failures still reject.
+提交成功后的刷新或展示更新，不能把已经完成的提交改报成失败 Toast。除非刷新函数内部已经自行捕获并提示错误，否则提交失败与刷新失败必须使用不同的错误边界。回归测试必须覆盖：HTTP 成功但未使用的响应体为空或类型不兼容时，提交仍成功完成；HTTP 失败仍正常抛错。
+
 ## DApp contract reads
 ## DApp 合约读取
 
@@ -319,6 +334,15 @@ Do not use a refresh handler that only increments a version value while the refr
 Disable `usePageRefresh()` while the page is submitting, writing a contract or otherwise unable to safely refresh.
 页面提交中、写合约中或其他不适合刷新时，应临时禁用 `usePageRefresh()`。
 
+Paged pages must keep `usePageLoadMore()` disabled and `hasMore=false` while page one is loading or a filter or Tab is replacing the current data set. Reset the rendered list, page cursor, `hasMore` and loading guards synchronously before starting the replacement page-one request, then derive `hasMore` only from that response.
+分页页面在第一页加载中，或筛选条件、Tab 正在替换当前数据集时，必须关闭 `usePageLoadMore()` 并保持 `hasMore=false`。发起替换型第一页请求前，应同步重置已渲染列表、页码游标、`hasMore` 和加载门控，再仅根据该第一页响应更新 `hasMore`。
+
+`PagePullRefresh` load-more observation must begin disarmed for every pagination registration and may arm only after a new scroll event. Never reuse historical `window.scrollY` from another Tab or run an immediate fallback proximity check on registration, because either behavior can race page two against the replacement page-one request.
+`PagePullRefresh` 的每次分页注册都必须从未启用状态开始，并且只能由之后的新滚动事件启用。不得复用其他 Tab 留下的历史 `window.scrollY`，也不得在注册时立即执行 fallback 距离检测；这两种行为都会让第二页与替换型第一页发生竞态。
+
+Use the shared `DropletLoading` through `loadingIndicator: 'droplet'` for inline paginated loading without visible loading copy. When an empty first page already has its own empty state, set `showNoMore` from the rendered item count so `没有更多了` appears only after a non-empty list has reached its end.
+分页的内联加载应通过 `loadingIndicator: 'droplet'` 复用公共 `DropletLoading`，不显示加载中文字。第一页为空且页面已有空状态时，应根据当前已渲染数据量设置 `showNoMore`，只在非空列表真正到达末尾后显示“没有更多了”。
+
 After API or contract integration, use `useLatestRequest()` or `AbortController` to prevent stale async requests from writing old data back into the page.
 接口或合约联调后，使用 `useLatestRequest()` 或 `AbortController` 防止旧异步请求把旧数据回写到页面。
 
@@ -331,6 +355,9 @@ When a page has timers, manual pull refresh and post-write refresh should reuse 
 The blank template does not implement splash, login, referral, backend session recovery or protected routes. Do not invent these flows from deleted demo code or template defaults.
 空白模板不实现开屏、登录、邀请、后端会话恢复或受保护路由。不要根据已删除演示代码或模板默认值猜测这些流程。
 
+During static UI development, opening `/h5` must go directly to the home page without wallet connection or API authentication. Replace that root redirect only during documented authentication integration in the real project.
+静态 UI 开发阶段，打开 `/h5` 必须直接进入首页，不依赖钱包连接或接口鉴权。只有真实项目进入有文档依据的鉴权联调阶段，才能替换根路由跳转。
+
 Implement authentication only after the current PHP Markdown confirms endpoints, request and response fields, challenge/message source, nonce or timestamp semantics, signature encoding, token storage, account-change behavior and redirect rules.
 只有当前 PHP Markdown 明确接口、请求与响应字段、challenge/message 来源、nonce 或时间戳语义、签名编码、Token 存储、账户切换行为和跳转规则后，才能实现鉴权。
 
@@ -339,6 +366,9 @@ Implement authentication only after the current PHP Markdown confirms endpoints,
 
 When DApp session recovery is implemented, validate and resume the current wallet account before authenticated APIs run. A cached token belonging to another wallet must be cleared before starting the documented login flow.
 实现 DApp 会话恢复后，必须先校验并恢复当前钱包账号，再请求鉴权接口。缓存 Token 属于其他钱包时，应先清理旧会话，再执行文档化的登录流程。
+
+For wallet-authenticated APIs whose confirmed PHP contract requires `Address`, register the currently connected address through the HTTP service only after checking it against the account associated with the Token. Send `Authorization: Bearer <token>` and `Address: <address>` together for session validation; wait for that validation before other protected business requests. Invalidate both on account change or 401. The cached wallet address alone must not be sent as proof; account-only authentication keeps its own Bearer-only behavior.
+若已确认的 PHP 契约要求钱包鉴权接口携带 `Address`，只有将当前连接地址与 Token 关联账号核对后，才能通过 HTTP 服务注册。会话验证请求成对发送 `Authorization: Bearer <token>` 和 `Address: <address>`；验证成功后才发起其他受保护业务请求。账号切换或 401 时令两者失效。缓存地址本身不能作为证明发送；纯账号鉴权保持独立的 Bearer 行为。
 
 ## History route fallback
 ## history 路由 fallback
@@ -450,8 +480,11 @@ Do not replace missing designed assets with CSS drawings, text, emoji or tempora
 If required assets are missing, pause page implementation and list the missing semantic asset names and suggested target paths.
 如果必需资源缺失，应暂停页面实现，并列出缺少的语义化资源名和建议放置路径。
 
-Place page-specific assets under `src/assets/<page-name>/`; keep initialization brand assets under `public/brand/`.
-页面专属资源放在 `src/assets/<page-name>/`；初始化品牌资源继续放在 `public/brand/`。
+Place private page images in a dedicated page directory under `src/assets/` (for example, `src/assets/<page-name>/`); keep initialization brand assets under `public/brand/`.
+页面私有图片必须放在 `src/assets/` 下为该页面创建的专属目录中（例如 `src/assets/<page-name>/`）；初始化品牌资源继续放在 `public/brand/`。
+
+Keep public, reusable images and icons as one semantic file under `src/assets/common/`; import that file instead of exporting or copying the same image into multiple page directories.
+公共类型、可跨页面复用的图片和图标统一以语义化文件名存放在 `src/assets/common/`，各页面引用同一份资源，不要在不同页面重复导出或复制同一图片。
 
 ## Verification
 ## 验证

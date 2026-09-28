@@ -48,3 +48,7 @@ For every `absolute`, `fixed`, or `sticky` declaration in a page stylesheet, add
 
 Before writing page SCSS, state the section order, the Flex/Grid relationship, shared utilities to reuse, and each positioned decorative exception. During review, ask whether removing every positioned decorative element would leave the primary content readable and correctly ordered; if not, the layout must return to normal flow.
 编写页面 SCSS 前，先说明 section 顺序、Flex/Grid 关系、要复用的通用样式，以及每个定位装饰例外。审查时问：移除所有定位装饰后，主要内容是否仍可读且顺序正确；若否，布局必须回到正常文档流。
+
+### Sidebar shell positioning exceptions
+
+The first-level sidebar is a viewport overlay below the fixed 100px design header. Its wallet badge may overlap the card edge; the header decorative divider is absolutely positioned inside the existing header bounds. These scoped layout exceptions preserve normal-flow page composition and do not apply to business pages or other Popup consumers.

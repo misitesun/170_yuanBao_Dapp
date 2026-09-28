@@ -24,8 +24,8 @@ test('sidebar menu is a right popup controlled by the main layout', () => {
 
     assert.match(layoutSource, /useState/)
     assert.match(layoutSource, /const \[showSidebarMenu, setShowSidebarMenu\] = useState\(false\)/)
-    assert.match(layoutSource, /function handleOpenSidebarMenu\(\)/)
-    assert.match(layoutSource, /setShowSidebarMenu\(true\)/)
+    assert.match(layoutSource, /function handleToggleSidebarMenu\(\)/)
+    assert.match(layoutSource, /setShowSidebarMenu\(\(isOpen\) => !isOpen\)/)
     assert.match(layoutSource, /function handleCloseSidebarMenu\(\)/)
     assert.match(layoutSource, /setShowSidebarMenu\(false\)/)
     assert.match(layoutSource, /<SidebarMenu/)
@@ -43,24 +43,18 @@ test('sidebar menu reuses the shared first-level layout menu items', () => {
     assert.match(sidebarSource, /handleMenuLinkClick[\s\S]*onClose\(\)/)
 })
 
-test('sidebar menu uses shared local icons and active theme color', () => {
-    assert.match(sidebarSource, /app-menu__link--active app-color/)
-    assert.match(sidebarSource, /\{\(\{ isActive \}\) =>/)
-    assert.match(sidebarSource, /<Icon name=\{item\.icon\} className="size-44" \/>/)
-    assert.match(sidebarSource, /<Icon\s+name="arrow"[\s\S]*className=\{isActive \? 'size-38' : 'size-38 opc-6'\}/)
-    assert.doesNotMatch(sidebarSource, />title</)
+test('sidebar retains template menu icons and isolates the copied visual theme', async () => {
+    const styles = await readFile('src/pages/main/layout/MainLayout.scss', 'utf8')
+    assert.match(sidebarSource, /name=\{item\.icon\}/)
+    assert.match(sidebarSource, /app-menu__link--active/)
+    assert.match(styles, /color: var\(--app-sidebar-accent\)/)
+    assert.doesNotMatch(sidebarSource, /referral_code|features\/ai-claw|ROUTE_PATH/)
+    assert.doesNotMatch(sidebarSource, /<AppBrand/)
 })
 
-test('sidebar menu renders the shared app brand in its header area', () => {
-    assert.match(sidebarSource, /import \{ AppBrand \} from '\.\/AppBrand\/AppBrand\.tsx'/)
-    assert.match(sidebarSource, /function handleCloseSidebarBrandClick\(\)/)
-    assert.match(sidebarSource, /handleCloseSidebarBrandClick[\s\S]*onClose\(\)/)
-    assert.match(sidebarSource, /<div className="flex-between">[\s\S]*<AppBrand onClick=\{handleCloseSidebarBrandClick\} \/>[\s\S]*<Icon/)
-})
-
-test('sidebar menu cross icon closes the popup', () => {
-    assert.match(
-        sidebarSource,
-        /<Icon\s+name="cross"(?:(?!\/>)[\s\S])*onClick=\{onClose\}(?:(?!\/>)[\s\S])*\/>/,
-    )
+test('sidebar copies the connected wallet address through the shared clipboard boundary', () => {
+    assert.match(sidebarSource, /copyTextToClipboard\(walletAddress\)/)
+    assert.match(sidebarSource, /!staticPreview && walletAddress/)
+    assert.match(sidebarSource, /WalletOrbitBorder/)
+    assert.doesNotMatch(sidebarSource, /navigator\.clipboard|localStorage|fetch\(/)
 })

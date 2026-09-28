@@ -9,6 +9,7 @@ import {
 } from 'react'
 
 import { Icon } from '@/components/Icon'
+import { DropletLoading } from '@/components/DropletLoading'
 
 import {
     PageRefreshContext,
@@ -178,7 +179,7 @@ export function PagePullRefresh(props: PagePullRefreshProps) {
 
     const registerPageLoadMore = useCallback((
         handler: PageLoadMoreRegistration['handler'],
-        options: Pick<PageLoadMoreRegistration, 'enabled' | 'hasMore'>,
+        options: Omit<PageLoadMoreRegistration, 'handler'>,
     ) => {
         const registration = { handler, ...options }
         setLoadMoreRegistration(registration)
@@ -318,9 +319,9 @@ export function PagePullRefresh(props: PagePullRefreshProps) {
 
         if (typeof IntersectionObserverConstructor === 'function') {
             let isSentinelNearViewport = false
-            let hasUserScrolled = window.scrollY > 0
+            let hasUserScrolled = false
             const handleObservedScroll = () => {
-                hasUserScrolled = hasUserScrolled || window.scrollY > 0
+                hasUserScrolled = true
 
                 if (hasUserScrolled && isSentinelNearViewport) {
                     void runPageLoadMore()
@@ -342,22 +343,35 @@ export function PagePullRefresh(props: PagePullRefreshProps) {
             }
         }
 
-        function handleScroll() {
+        let hasUserScrolled = false
+
+        function isSentinelNearViewport() {
             const documentHeight = document.documentElement.scrollHeight
             const viewportBottom = window.scrollY + window.innerHeight
 
-            if (window.scrollY > 0 && viewportBottom >= documentHeight - LOAD_MORE_SCROLL_OFFSET) {
+            return viewportBottom >= documentHeight - LOAD_MORE_SCROLL_OFFSET
+        }
+
+        function handleScroll() {
+            hasUserScrolled = true
+
+            if (isSentinelNearViewport()) {
+                void runPageLoadMore()
+            }
+        }
+
+        function handleResize() {
+            if (hasUserScrolled && isSentinelNearViewport()) {
                 void runPageLoadMore()
             }
         }
 
         window.addEventListener('scroll', handleScroll, { passive: true })
-        window.addEventListener('resize', handleScroll)
-        window.requestAnimationFrame(handleScroll)
+        window.addEventListener('resize', handleResize)
 
         return () => {
             window.removeEventListener('scroll', handleScroll)
-            window.removeEventListener('resize', handleScroll)
+            window.removeEventListener('resize', handleResize)
         }
     }, [loadMoreRegistration, runPageLoadMore])
 
@@ -367,6 +381,11 @@ export function PagePullRefresh(props: PagePullRefreshProps) {
         bottomInset === 'tabbar' ? 'page-pull-refresh--tabbar-inset' : null,
         className,
     ].filter(Boolean).join(' ')
+    const shouldRenderLoadMore = loadMoreRegistration !== null && (
+        isLoadingMore
+        || loadMoreRegistration.hasMore
+        || loadMoreRegistration.showNoMore
+    )
 
     return (
         <PageRefreshContext.Provider value={contextValue}>
@@ -389,15 +408,25 @@ export function PagePullRefresh(props: PagePullRefreshProps) {
 
                 {children}
 
-                {loadMoreRegistration ? (
+                {shouldRenderLoadMore && loadMoreRegistration ? (
                     <div
                         ref={loadMoreSentinelRef}
                         className="page-pull-refresh__load-more flex-center size-24"
                         role="status"
                         aria-live="polite"
                     >
-                        {isLoadingMore ? <><Icon name="refresh" className="page-pull-refresh__load-more-icon" />加载中...</>
-                            : loadMoreRegistration.hasMore ? <span aria-hidden="true" /> : '没有更多了'}
+                        {isLoadingMore ? (
+                            loadMoreRegistration.loadingIndicator === 'droplet' ? (
+                                <DropletLoading
+                                    size="small"
+                                    ariaLabel="正在加载更多"
+                                />
+                            ) : (
+                                <><Icon name="refresh" className="page-pull-refresh__load-more-icon" />加载中...</>
+                            )
+                        ) : loadMoreRegistration.hasMore ? (
+                            <span aria-hidden="true" />
+                        ) : '没有更多了'}
                     </div>
                 ) : null}
             </div>

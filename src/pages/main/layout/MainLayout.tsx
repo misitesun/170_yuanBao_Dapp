@@ -27,11 +27,11 @@ export function MainLayout({
     const isSidebarLayout = menuType === LAYOUT_MENU_TYPE.sidebar
     const isTabbarLayout = menuType === LAYOUT_MENU_TYPE.tabbar
     const appLayoutClassName = isTabbarLayout
-        ? 'app-layout app-layout--tabbar vw-100 min-vh-100'
-        : 'app-layout vw-100 min-vh-100'
+        ? 'app-layout app-layout--tabbar min-vh-100'
+        : 'app-layout min-vh-100'
 
-    function handleOpenSidebarMenu() {
-        setShowSidebarMenu(true)
+    function handleToggleSidebarMenu() {
+        setShowSidebarMenu((isOpen) => !isOpen)
     }
 
     function handleCloseSidebarMenu() {
@@ -44,7 +44,8 @@ export function MainLayout({
                 staticPreview={staticPreview}
                 showGap={!staticPreview}
                 showSidebarMenu={isSidebarLayout}
-                onSidebarMenuClick={handleOpenSidebarMenu}
+                sidebarOpen={showSidebarMenu}
+                onSidebarMenuClick={handleToggleSidebarMenu}
             />
 
             <div className="app-layout__body">
@@ -57,6 +58,7 @@ export function MainLayout({
                 <SidebarMenu
                     show={showSidebarMenu}
                     onClose={handleCloseSidebarMenu}
+                    staticPreview={staticPreview}
                 />
             ) : null}
             {isTabbarLayout ? <TabbarMenu /> : null}

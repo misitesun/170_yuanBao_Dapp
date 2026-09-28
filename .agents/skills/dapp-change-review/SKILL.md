@@ -17,9 +17,9 @@ Use this skill for a read-only review of a current diff, a proposed implementati
 
 1. Read `AGENTS.md`, `docs/ai-collaboration.md`, and the target module README.
 2. Inspect the change scope, affected tests, public consumers, and relevant compatibility entries.
-3. For PHP integrations, compare request and response handling with the supplied API Markdown contract and `docs/php-api-contracts.md`.
+3. For PHP integrations, compare request and response handling with the supplied API Markdown contract and `docs/php-api-contracts.md`. Trace each mutation result to its consumer: flag parsing of an unused success body, and flag any shared `try/catch` that can relabel post-success refresh failure as mutation failure. Do not weaken parsing when the response supplies required contract, navigation, follow-up or download data.
 4. For contract changes, inspect whether user-context reads correctly forward `account` and whether public reads remain account-free.
-5. Check for direct use of restricted boundaries, unchecked casts, non-null assertions, stale-request races, missing refresh behavior, and unrequested scope expansion.
+5. Check for direct use of restricted boundaries, unchecked casts, non-null assertions, stale-request races, missing refresh behavior, duplicate-write risk after misleading failure feedback, and unrequested scope expansion.
 6. Separate blocking correctness issues from optional follow-ups. If no issue is found, say so and list the checks performed.
 
 ## Finding format

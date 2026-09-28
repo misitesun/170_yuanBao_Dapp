@@ -47,3 +47,12 @@ This template deliberately uses a small, readable module layout. It is not an FS
 
 Use a feature-local file when one page owns the behavior. Promote code only after a second real consumer needs the same stable contract. A directory becomes a module boundary when it has a public entry, a configuration contract, or external runtime behavior; then it needs a README and focused tests.
 单页面拥有的行为保留在功能本地。只有第二个真实消费者需要同一稳定契约时才提升代码。目录拥有公开入口、配置契约或外部运行时行为时才成为模块边界；此时需要 README 和聚焦测试。
+
+## Shared motion boundaries / 公共动效边界
+
+`SegmentedTabs` owns controlled tab selection and the 500ms decorative transition; it never delays business callbacks. `CountUp` owns numeric presentation with a 500ms default, not data fetching or financial arithmetic. `orbit-border` belongs to `src/styles/common/common.scss` and decorates existing containers without adding React state or a new business module. Module READMEs define configuration and reduced-motion behavior.
+`SegmentedTabs` 管理受控 Tab 与500 毫秒装饰过渡，不延迟业务回调；`CountUp` 管理500 毫秒数字展示，不负责请求或金额计算；`orbit-border` 属于公共 SCSS，只装饰已有容器，不引入 React 状态或业务模块。配置与低动态行为以模块 README 为准。
+
+### Sidebar shell presentation
+
+MainLayout owns sidebar visibility and passes `sidebarOpen` to HeaderBar. MenuToggleIcon reverses from the current animation frame; SidebarMenu remains a consumer of MAIN_PAGE_ITEMS and the wallet store. WalletOrbitBorder is decorative only. Clipboard access continues through shared/clipboard; no authentication, referral API, route, storage or contract boundary is added.

@@ -57,8 +57,48 @@ For monetary values, do not use JavaScript floating-point arithmetic for contrac
 Do not introduce a schema-validation dependency preemptively. Use focused type guards or parsers first; introduce a shared runtime schema tool only after repeated real endpoints demonstrate the need and the developer approves the dependency.
 不要预先引入 schema 校验依赖。先使用聚焦的类型守卫或解析器；只有多个真实接口反复证明需要且开发者批准依赖后，才引入共享运行时 schema 工具。
 
+## Mutation success boundaries
+## 提交成功边界
+
+Classify every `POST`, `PUT`, `PATCH` and `DELETE` before writing its feature method:
+实现每个 `POST`、`PUT`、`PATCH` 和 `DELETE` 的 feature 方法前，先完成以下分类：
+
+| Success body usage | Feature boundary | Parsing rule | Post-success state |
+| --- | --- | --- | --- |
+| Not used by the next frontend step | `Promise<void>` | Await `request<unknown>(...)`; do not parse the body | Re-read the authoritative GET endpoint if the page needs new state |
+| Required for a contract call, navigation, follow-up request or download | Typed result | Validate only the documented fields that the next step consumes | Use the validated result, then refresh if the contract requires it |
+| Used only as an optional shortcut before an immediate authoritative refresh | Prefer `Promise<void>` | Do not add failure risk for a value that the refresh will replace | Let the read endpoint own final state |
+
+| 成功响应体用途 | Feature 边界 | 解析规则 | 成功后的状态来源 |
+| --- | --- | --- | --- |
+| 前端下一步不使用 | `Promise<void>` | 只等待 `request<unknown>(...)`，不解析响应体 | 页面需要新状态时重新请求权威 GET 接口 |
+| 合约调用、跳转、后续请求或下载必需 | 类型化结果 | 只校验下一步实际使用且文档化的字段 | 使用校验后的结果，并按契约决定是否刷新 |
+| 仅用于立即刷新前的临时状态合并 | 优先 `Promise<void>` | 不为即将被刷新替换的数据增加解析失败风险 | 最终状态以读取接口为准 |
+
+For an unused body, the safe pattern is:
+未使用响应体时，采用以下模式：
+
+```ts
+export async function submitAction(body: SubmitActionBody): Promise<void> {
+    await request<unknown, SubmitActionBody>({
+        url: '/api/actions',
+        method: 'POST',
+        data: body,
+    })
+}
+```
+
+Do not wrap the mutation and a throwing refresh in one `try/catch` that labels every error as submission failure. A refresh failure must not become a submission failure. Show mutation success after the mutation resolves, then run a self-reporting refresh or catch refresh errors separately. A user must not be encouraged to repeat a write that the backend already completed.
+不要把提交和可能抛错的刷新放在同一个 `try/catch` 中，并把所有错误都标成提交失败。提交完成后先确认提交成功，再执行内部自行提示错误的刷新，或单独捕获刷新错误。不能因为刷新失败而诱导用户重复执行后端已经完成的写操作。
+
+Server-signed transaction data is the exception, not a reason to parse every mutation. If the next step calls a contract with returned `id`, amount, recipient, deadline or signature, validate those required fields strictly and do not continue when they are missing or malformed.
+服务端签名交易数据属于例外，但不能据此解析所有提交响应。如果下一步合约调用依赖返回的 `id`、金额、收款地址、截止时间或签名，必须严格校验这些必需字段；字段缺失或格式错误时不得继续上链。
+
 ## Test matrix
 ## 测试矩阵
 
 For each integrated response parser, cover a valid payload and the meaningful failure modes: missing required field, wrong primitive type, null versus omitted, unsupported enum, malformed timestamp, and numeric string/number ambiguity when the backend contract permits both. Add endpoint and auth/header tests separately from parsing tests.
 每个已接入的响应解析器应覆盖有效 payload 与有意义的失败模式：必填字段缺失、原始类型错误、null 与省略的区别、不支持的枚举、错误时间戳，以及后端同时允许数字字符串/数字时的歧义。接口地址和鉴权/请求头测试应与解析测试分开。
+
+For a mutation whose success body is unused, test an HTTP `2xx` response containing an empty, primitive or deliberately incompatible body and assert that the feature method resolves to `undefined`. Separately preserve coverage that non-`2xx` responses reject through the shared HTTP error path. For a consumed mutation response, keep parser failure tests for every required downstream field.
+对于不使用成功响应体的提交接口，测试 HTTP `2xx` 返回空值、原始值或故意不兼容的响应体，并断言 feature 方法仍以 `undefined` 完成。另行保留非 `2xx` 通过公共 HTTP 错误链路抛出的覆盖。对于会消费提交响应的流程，继续为每个下游必需字段保留解析失败测试。

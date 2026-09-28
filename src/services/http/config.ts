@@ -4,6 +4,7 @@ export const HTTP_CONFIG = {
 
 export const HTTP_HEADER = {
     authorization: 'Authorization',
+    walletAddress: 'Address',
     contentType: 'Content-Type',
     language: 'lang',
 } as const

@@ -61,3 +61,20 @@ test('router uses AppBrowserRouter instead of strict BrowserRouter basename', as
     assert.match(routerReadme, /AppBrowserRouter/)
     assert.match(routerReadme, /with and without the configured `\/h5` prefix/)
 })
+
+test('route pathname changes reset the shared window scroll position before paint', async () => {
+    const [router, routerReadme, compatibility] = await Promise.all([
+        readFile('src/router/AppRouter.tsx', 'utf8'),
+        readFile('src/router/README.md', 'utf8'),
+        readFile('docs/compatibility.md', 'utf8'),
+    ])
+
+    assert.match(router, /function RouteScrollReset\(\)/)
+    assert.match(router, /const \{ pathname \} = useLocation\(\)/)
+    assert.match(router, /window\.history\.scrollRestoration = 'manual'/)
+    assert.match(router, /window\.history\.scrollRestoration = previousScrollRestoration/)
+    assert.match(router, /useLayoutEffect\(\(\) => \{[\s\S]*?window\.scrollTo\(0, 0\)[\s\S]*?\}, \[pathname\]\)/)
+    assert.match(router, /<RouteScrollReset \/>/)
+    assert.match(routerReadme, /pathname change resets the shared window scroll position/)
+    assert.match(compatibility, /### Route scroll reset/)
+})

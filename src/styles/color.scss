@@ -1,4 +1,10 @@
 :root {
+    // Sidebar visual tokens; global project theme stays independently configurable.
+    --app-sidebar-bg: #1F0006;
+    --app-sidebar-accent: #DC143C;
+    --app-sidebar-wallet-bg: #3A0C15;
+    --app-sidebar-connected: #00FF48;
+
     --app-color: #F934FF;
     --app-btn-color: #FFFFFF;
     --app-green: #34B926;
@@ -23,6 +29,8 @@
     --app-border-medium: rgb(255 255 255 / 20%);
     --app-focus-ring: rgb(65 222 255 / 12%);
     --app-toast-bg: rgb(14 13 40 / 94%);
+    --app-toast-success-bg: rgb(52 185 38 / 50%);
+    --app-toast-error-bg: rgb(241 70 61 / 50%);
     --app-toast-shadow: 0 12px 40px rgb(0 0 0 / 30%);
     --app-border: rgb(255 255 255 / 10%);
     --app-border-strong: rgb(255 255 255 / 40%);

@@ -12,6 +12,7 @@ import {
     HTTP_STATUS,
 } from './config.ts'
 import { toHttpError } from './error.ts'
+import { reportHttpError } from './feedback.ts'
 
 export const httpClient = axios.create({
     baseURL: import.meta.env?.VITE_BASE_URL,
@@ -19,8 +20,10 @@ export const httpClient = axios.create({
 })
 
 export type HttpUnauthorizedHandler = () => void
+export type HttpWalletAddressProvider = () => string | undefined
 
 let unauthorizedHandler: HttpUnauthorizedHandler | undefined
+let walletAddressProvider: HttpWalletAddressProvider | undefined
 
 /** Registers the project-owned reaction to a 401 response. */
 export function registerHttpUnauthorizedHandler(
@@ -33,16 +36,34 @@ export function registerHttpUnauthorizedHandler(
     }
 }
 
+/** Registers the current wallet address checked against the Token's owner. */
+export function registerHttpWalletAddressProvider(
+    provider: HttpWalletAddressProvider,
+): () => void {
+    walletAddressProvider = provider
+
+    return () => {
+        if (walletAddressProvider === provider) walletAddressProvider = undefined
+    }
+}
+
 httpClient.interceptors.request.use((config) => {
     const token = getToken()
+    const walletAddress = walletAddressProvider?.()?.trim()
 
-    if (token) {
+    if (token && (!walletAddressProvider || walletAddress)) {
         config.headers.set(
             HTTP_HEADER.authorization,
             `${HTTP_AUTH.scheme} ${token}`,
         )
     } else {
         config.headers.delete(HTTP_HEADER.authorization)
+    }
+
+    if (token && walletAddress) {
+        config.headers.set(HTTP_HEADER.walletAddress, walletAddress)
+    } else {
+        config.headers.delete(HTTP_HEADER.walletAddress)
     }
 
     if (APP_CONFIG.enableI18n) {
@@ -65,13 +86,13 @@ httpClient.interceptors.response.use(
     (error: unknown) => {
         const httpError = toHttpError(error)
 
+        reportHttpError(httpError)
+
         if (httpError.status === HTTP_STATUS.unauthorized) {
             removeToken()
             unauthorizedHandler?.()
         }
 
-        // TODO(http): Show request errors through the shared message module after it is ready.
-        // TODO(http): 全局消息系统完成后，在统一错误策略中展示请求错误。
         return Promise.reject(httpError)
     },
 )

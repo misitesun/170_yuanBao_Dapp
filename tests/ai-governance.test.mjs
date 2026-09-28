@@ -61,6 +61,29 @@ test('real-project DApp integration remains contract-first and legacy-safe', () 
     assert.match(decision, /Current project ABI Markdown and PHP API Markdown are the source of truth/)
 })
 
+test('mutation success is not coupled to parsing an unused response body', () => {
+    const agentRules = readRepositoryFile('AGENTS.md')
+    const collaboration = readRepositoryFile('docs/ai-collaboration.md')
+    const apiBoundary = readRepositoryFile('docs/php-api-contracts.md')
+    const integrationPlaybook = readRepositoryFile('docs/dapp-project-integration.md')
+    const compatibility = readRepositoryFile('docs/compatibility.md')
+    const decision = readRepositoryFile('docs/decisions/0006-api-mutation-success-boundary.md')
+    const featureSkill = readRepositoryFile('.agents/skills/dapp-feature-delivery/SKILL.md')
+    const integrationSkill = readRepositoryFile('.agents/skills/dapp-project-integration/SKILL.md')
+    const reviewSkill = readRepositoryFile('.agents/skills/dapp-change-review/SKILL.md')
+
+    for (const source of [agentRules, apiBoundary, integrationPlaybook, decision, featureSkill, integrationSkill]) {
+        assert.match(source, /Promise<void>/)
+        assert.match(source, /unused|未使用/i)
+    }
+
+    assert.match(collaboration, /success body/)
+    assert.match(compatibility, /duplicate write/)
+    assert.match(apiBoundary, /refresh failure.*submission failure/is)
+    assert.match(reviewSkill, /parsing of an unused success body/)
+    assert.match(reviewSkill, /duplicate-write risk/)
+})
+
 test('Figma implementation requires measured visual fidelity instead of screenshot guesses', () => {
     const agentRules = readRepositoryFile('AGENTS.md')
     const workflow = readRepositoryFile('PROJECT_WORKFLOW.md')

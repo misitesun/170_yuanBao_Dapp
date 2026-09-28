@@ -52,19 +52,21 @@ An estimate is acceptable only when the exact property cannot be retrieved. Iden
 - Do not treat a TypeScript assertion, a `request<T>()` generic, or a test fixture as proof of a remote contract.
 - Do not treat a legacy DApp, demo page, or old backend implementation as proof of a current API, ABI, authentication protocol, asset setting, or transaction rule.
 - If a required fact is missing, record the blocking question or TODO at the proper integration stage; do not fabricate a value to unblock coding.
+- For every mutation endpoint, record whether the next frontend step consumes its success body. An unused body is transport acknowledgement, not a domain object that must be parsed.
 
 - 不要从 UI 稿或 TypeScript 接口推断 PHP 字段、可空语义、错误码、枚举、时间、数字格式或分页。
 - 不要只从名称推断 ABI 方法、合约地址、精度、链 ID、写权限或 `msg.sender` 行为。
 - 不要把 TypeScript 断言、`request<T>()` 泛型或测试 fixture 当作远端契约的证据。
 - 不要把旧 DApp、演示页或旧后端实现当作当前接口、ABI、鉴权协议、资产配置或交易规则的证据。
 - 必要事实缺失时，在正确的联调阶段记录阻塞问题或 TODO；不要捏造值来继续编码。
+- 每个提交接口都必须记录前端下一步是否消费成功响应体。未使用的响应体只是传输成功确认，不是必须解析的领域对象。
 
 ## Documentation routing
 ## 文档路由
 
 | Change | Required documentation update or check |
 | --- | --- |
-| New or changed PHP endpoint | API Markdown, `docs/php-api-contracts.md`, feature/service README, response tests |
+| New or changed PHP endpoint | API Markdown, `docs/php-api-contracts.md`, mutation response-consumption classification, feature/service README, response tests |
 | Contract wrapper or account-context read | ABI Markdown, `src/services/dapp/README.md`, contract tests, `docs/compatibility.md` when behavior is runtime-sensitive |
 | First project PHP-and-contract transaction flow or legacy DApp migration | `docs/dapp-project-integration.md`, current PHP and ABI Markdown, project wrapper/parser tests, and `dapp-project-integration` |
 | Shared service, router, config, storage, i18n, or component contract | Affected README and `docs/architecture.md` if its public boundary changes |

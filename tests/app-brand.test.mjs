@@ -41,7 +41,7 @@ test('main layout brand extracts the shared logo and app name block', async () =
 
 test('app brand navigates back to home only when it is not already on home', async () => {
     const brand = await readSource('src/pages/main/layout/AppBrand/AppBrand.tsx')
-    const sidebar = await readSource('src/pages/main/layout/SidebarMenu.tsx')
+    const header = await readSource('src/pages/main/layout/HeaderBar/HeaderBar.tsx')
 
     assert.match(brand, /useLocation/)
     assert.match(brand, /useAppNavigate/)
@@ -53,5 +53,5 @@ test('app brand navigates back to home only when it is not already on home', asy
     assert.match(brand, /pushRoute\(ROUTE_PATH\.home\)/)
     assert.match(brand, /onClick\?\.\(\)/)
     assert.match(brand, /onClick=\{handleBrandClick\}/)
-    assert.match(sidebar, /<AppBrand onClick=\{handleCloseSidebarBrandClick\} \/>/)
+    assert.match(header, /onClick=\{sidebarOpen \? onSidebarMenuClick : undefined\}/)
 })

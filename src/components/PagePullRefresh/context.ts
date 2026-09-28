@@ -6,23 +6,28 @@ import {
 
 export type PageRefreshHandler = () => Promise<void> | void
 export type PageLoadMoreHandler = () => Promise<void> | void
+export type PageLoadMoreIndicator = 'default' | 'droplet'
 
 export interface PageLoadMoreOptions {
     enabled?: boolean
     hasMore?: boolean
+    loadingIndicator?: PageLoadMoreIndicator
+    showNoMore?: boolean
 }
 
 export interface PageLoadMoreRegistration {
     handler: PageLoadMoreHandler
     enabled: boolean
     hasMore: boolean
+    loadingIndicator: PageLoadMoreIndicator
+    showNoMore: boolean
 }
 
 export interface PageRefreshContextValue {
     registerPageRefresh: (handler: PageRefreshHandler) => () => void
     registerPageLoadMore: (
         handler: PageLoadMoreHandler,
-        options: Required<PageLoadMoreOptions>,
+        options: Omit<PageLoadMoreRegistration, 'handler'>,
     ) => () => void
 }
 
@@ -49,11 +54,18 @@ export function usePageLoadMore(
     const {
         enabled = true,
         hasMore = true,
+        loadingIndicator = 'default',
+        showNoMore = true,
     } = options
 
     useLayoutEffect(() => {
         if (!context) return undefined
 
-        return context.registerPageLoadMore(onLoadMore, { enabled, hasMore })
-    }, [context, enabled, hasMore, onLoadMore])
+        return context.registerPageLoadMore(onLoadMore, {
+            enabled,
+            hasMore,
+            loadingIndicator,
+            showNoMore,
+        })
+    }, [context, enabled, hasMore, loadingIndicator, onLoadMore, showNoMore])
 }

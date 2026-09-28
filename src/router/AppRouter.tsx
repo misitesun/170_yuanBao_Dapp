@@ -1,8 +1,12 @@
-import { useEffect } from 'react'
+import {
+    useEffect,
+    useLayoutEffect,
+} from 'react'
 import {
     Navigate,
     Route,
     Routes,
+    useLocation,
     useNavigate,
 } from 'react-router'
 
@@ -23,10 +27,33 @@ function RouterNavigationBridge() {
     return null
 }
 
+function RouteScrollReset() {
+    const { pathname } = useLocation()
+
+    useEffect(() => {
+        if (!('scrollRestoration' in window.history)) return
+
+        const previousScrollRestoration = window.history.scrollRestoration
+
+        window.history.scrollRestoration = 'manual'
+
+        return () => {
+            window.history.scrollRestoration = previousScrollRestoration
+        }
+    }, [])
+
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0)
+    }, [pathname])
+
+    return null
+}
+
 export function AppRouter() {
     return (
         <AppBrowserRouter>
             <RouterNavigationBridge />
+            <RouteScrollReset />
             <Routes>
                 <Route path={ROUTE_PATH.root} element={<Navigate to={ROUTE_PATH.home} replace />} />
                 <Route element={<MainLayout />}>

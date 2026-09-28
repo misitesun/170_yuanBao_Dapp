@@ -1,7 +1,9 @@
 export {
     httpClient,
     registerHttpUnauthorizedHandler,
+    registerHttpWalletAddressProvider,
     type HttpUnauthorizedHandler,
+    type HttpWalletAddressProvider,
 } from './client.ts'
 export {
     HTTP_AUTH,
@@ -12,4 +14,12 @@ export {
     HTTP_STATUS,
 } from './config.ts'
 export { HttpError, toHttpError } from './error.ts'
+export {
+    clearHttpErrorNotification,
+    getHttpErrorNotification,
+    reportHttpError,
+    subscribeHttpErrorNotifications,
+    wasHttpErrorReported,
+    type HttpErrorNotification,
+} from './feedback.ts'
 export { request, type RequestConfig } from './request.ts'

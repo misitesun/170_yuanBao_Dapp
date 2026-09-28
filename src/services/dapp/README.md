@@ -14,6 +14,9 @@ The generic signing helper is only a wallet capability. Its message shape, times
 通用签名辅助方法只是钱包能力。它的消息结构、时间戳/nonce 语义、接口和服务端校验仍属于项目事实，必须遵循当前 PHP 契约。
 
 The normal initialization flow is wallet environment check, chain check, then feature calls.
+
+`getDappUserRejectionMessage()` follows viem `cause` wrappers and recognizes only provider code `4001`. It returns the provider message, an empty string when that message is absent, or `undefined` for other failures. A page can use neutral cancellation feedback while retaining its normal error path.
+钱包拒签识别沿 viem 的 `cause` 链查找 `4001`，返回钱包原始消息；消息缺失时返回空字符串，其他错误返回 `undefined`。页面据此显示普通取消提示，并保留其他错误的原有处理。
 正常初始化流程是先检查钱包环境，再检查网络，最后再执行具体功能调用。
 
 `initializeDappWallet()` does not bind account or chain listeners by default. Authentication flows should bind them only after an authenticated DApp session exists.

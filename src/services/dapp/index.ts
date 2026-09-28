@@ -57,6 +57,7 @@ export {
 export {
     waitForDappContractDataSync,
 } from './contractRefresh.ts'
+export { getDappUserRejectionMessage } from './error.ts'
 export {
     formatDappAmountUnits,
     parseDappAmountUnits,

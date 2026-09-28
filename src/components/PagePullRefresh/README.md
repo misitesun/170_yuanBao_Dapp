@@ -14,8 +14,11 @@ original behavior.
 分页页面通过 `usePageLoadMore()` 注册下一页加载函数。容器观察底部哨兵，同一时间只执行一次加载；未注册此 Hook 的已有页面不会渲染上拉区域，行为保持不变。
 
 The initial page does not auto-load while the document remains at scroll position
-zero. Loading is armed after the user scrolls, matching mobile pull-up behavior.
-页面停留在顶部时不会自动请求下一页；用户发生滚动后才启用加载，符合移动端上拉交互。
+zero. Loading is armed only by a scroll event after the current pagination
+registration becomes active. A previous tab or data set's historical scroll
+position never starts the new data set's next-page request.
+页面停留在顶部时不会自动请求下一页；只有当前分页注册生效后发生的新滚动事件才会启用加载。
+上一个 Tab 或上一份数据的历史滚动位置不会触发新数据集的下一页请求。
 
 The registered function should return `Promise<void>` when it loads API data, contract data or timers.
 如果刷新函数会加载接口、合约或定时器数据，应返回 `Promise<void>`。
@@ -64,8 +67,28 @@ only after the next page has been applied to the screen.
 
 ```tsx
 usePageLoadMore(loadNextPage, {
-    enabled: !submitting,
+    enabled: !isInitialLoading && !submitting,
     hasMore,
+})
+```
+
+Keep incremental loading disabled while page one is loading or a filter/tab is
+resetting. Reset `hasMore` to `false` before starting the replacement page-one
+request, then derive its next value from that response. This prevents page two
+from racing and invalidating the replacement request.
+
+第一页加载中或筛选/Tab 正在重置时，应关闭增量加载。发起替换型第一页请求前先把
+`hasMore` 重置为 `false`，再根据第一页响应更新它，避免第二页并发并淘汰第一页请求。
+
+Use `loadingIndicator: 'droplet'` for the shared 40px water-droplet spinner without visible loading copy. Set `showNoMore` from the current rendered item count when an empty first page should show only its empty state; later empty pages can still show the finished message because the list is non-empty.
+
+使用 `loadingIndicator: 'droplet'` 可显示不带可见文字的通用 40px 水滴加载动画。当接口第一页为空时只应显示空状态，可根据当前已渲染数据量设置 `showNoMore`；已有列表数据后遇到空的后续页，仍可显示结束提示。
+
+```tsx
+usePageLoadMore(loadNextPage, {
+    hasMore,
+    loadingIndicator: 'droplet',
+    showNoMore: items.length > 0,
 })
 ```
 

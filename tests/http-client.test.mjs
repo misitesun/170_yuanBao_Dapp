@@ -6,8 +6,13 @@ import { APP_CONFIG } from '../src/config/app.ts'
 import {
     httpClient,
     registerHttpUnauthorizedHandler,
+    registerHttpWalletAddressProvider,
 } from '../src/services/http/client.ts'
 import { HttpError } from '../src/services/http/error.ts'
+import {
+    clearHttpErrorNotification,
+    getHttpErrorNotification,
+} from '../src/services/http/feedback.ts'
 
 function createStorage(token = '') {
     const cache = new Map(token ? [['TOKEN', token]] : [])
@@ -57,6 +62,49 @@ test('omits the authorization header when local token storage is empty', async (
     })
 
     assert.equal(captured.headers.has('Authorization'), false)
+})
+
+test('wallet authentication sends Address and Bearer only for a verified current wallet', async () => {
+    const storage = createStorage('token-value')
+    storage.setItem('WALLET_ADDRESS', '0x0000000000000000000000000000000000000001')
+    globalThis.window = { localStorage: storage }
+    let verifiedAddress
+    const unregister = registerHttpWalletAddressProvider(() => verifiedAddress)
+    const requestHeaders = async () => {
+        let headers
+        await httpClient.request({
+            url: '/private',
+            adapter: async (config) => {
+                headers = config.headers
+                return { data: {}, status: 200, statusText: 'OK', headers: {}, config }
+            },
+        })
+        return headers
+    }
+
+    try {
+        let headers = await requestHeaders()
+        assert.equal(headers.has('Authorization'), false)
+        assert.equal(headers.has('Address'), false)
+
+        verifiedAddress = '0x0000000000000000000000000000000000000002'
+        headers = await requestHeaders()
+        assert.equal(headers.get('Authorization'), 'Bearer token-value')
+        assert.equal(headers.get('Address'), verifiedAddress)
+
+        verifiedAddress = undefined
+        headers = await requestHeaders()
+        assert.equal(headers.has('Authorization'), false)
+        assert.equal(headers.has('Address'), false)
+
+        storage.removeItem('TOKEN')
+        verifiedAddress = '0x0000000000000000000000000000000000000003'
+        headers = await requestHeaders()
+        assert.equal(headers.has('Authorization'), false)
+        assert.equal(headers.has('Address'), false)
+    } finally {
+        unregister()
+    }
 })
 
 test('does not send lang when i18n is disabled', async () => {
@@ -123,8 +171,12 @@ test('does not invent a wallet-address header in a Flutter wallet host', async (
 })
 
 test('normalizes 401 and removes the cached token', async () => {
+    clearHttpErrorNotification()
     const storage = createStorage('expired')
     globalThis.window = { localStorage: storage }
+    const unregisterAddress = registerHttpWalletAddressProvider(
+        () => '0x0000000000000000000000000000000000000001',
+    )
 
     let unauthorizedCalls = 0
     const unregister = registerHttpUnauthorizedHandler(() => {
@@ -157,5 +209,18 @@ test('normalizes 401 and removes the cached token', async () => {
     })
     assert.equal(storage.getItem('TOKEN'), null)
     assert.equal(unauthorizedCalls, 1)
+    assert.equal(getHttpErrorNotification()?.message, '登录已失效')
+    let headersAfter401
+    await httpClient.request({
+        url: '/private',
+        adapter: async (config) => {
+            headersAfter401 = config.headers
+            return { data: {}, status: 200, statusText: 'OK', headers: {}, config }
+        },
+    })
+    assert.equal(headersAfter401.has('Authorization'), false)
+    assert.equal(headersAfter401.has('Address'), false)
     unregister()
+    unregisterAddress()
+    clearHttpErrorNotification()
 })
