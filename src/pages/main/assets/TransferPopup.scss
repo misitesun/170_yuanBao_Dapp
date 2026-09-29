@@ -1,0 +1,63 @@
+.transfer-popup.popup-content--center {
+    width: 670px;
+    padding: 26px 28px 38px;
+    border: 2px solid var(--app-border-medium);
+    border-radius: 40px;
+    background: var(--app-box-bg);
+    color: var(--app-text);
+    font-family: 'Microsoft YaHei', '微软雅黑', sans-serif;
+    overflow-y: auto;
+
+    .popup-content__header { min-height: 56px; }
+    .popup-content__title { font-size: 32px; line-height: 45px; font-weight: 400; }
+    .popup-content__header .app-icon--cross {
+        width: 56px;
+        height: 56px;
+        padding: 11px;
+        border: 1px solid var(--app-border-medium);
+        border-radius: 50%;
+        opacity: 1;
+        color: var(--app-text-secondary);
+        cursor: pointer;
+    }
+
+    .app-input {
+        --app-input-background: var(--app-surface-subtle);
+        --app-input-border-color: var(--app-border-medium);
+        min-height: 0;
+        height: 88px;
+        padding: 0 29px;
+        input { height: 39px; padding: 0; line-height: 39px; }
+        input::placeholder { color: var(--app-text-muted); }
+    }
+    .transfer-popup__field--amount .app-input { padding-right: 19px; }
+}
+
+.transfer-popup {
+    &__form { margin-top: 34px; }
+    &__label { display: block; font-size: 28px; line-height: 39px; font-weight: 400; }
+    &__field {
+        .app-input { margin-top: 20px; }
+        &:not(&--amount) .app-input { --app-input-border-color: var(--app-color); }
+    }
+    &__field--amount {
+        margin-top: 30px;
+    }
+    &__all { font-size: 24px; line-height: 34px; color: var(--app-cyan); cursor: pointer; }
+    &__balance {
+        margin-top: 30px;
+        font-size: 24px;
+        line-height: 34px;
+        color: var(--app-text-muted);
+    }
+    &__balance-value { color: var(--app-color); }
+    &__confirm.action-button {
+        margin-top: 40px;
+        min-height: 80px;
+        padding: 10px;
+        font-size: 28px;
+        line-height: 39px;
+        font-weight: 600;
+    }
+    button:focus-visible { outline: 2px solid var(--app-color); outline-offset: 4px; }
+}

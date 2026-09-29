@@ -7,6 +7,7 @@ import { SHOWCASE_ROUTE_PATH } from '../router'
 type ShowcaseRoutePath = (typeof SHOWCASE_ROUTE_PATH)[keyof typeof SHOWCASE_ROUTE_PATH]
 
 const COMPONENT_SHOWCASE_LIST = [
+    { title: '侧边栏', path: SHOWCASE_ROUTE_PATH.sidebar },
     { title: '渐变文案', path: SHOWCASE_ROUTE_PATH.gradientText },
     {
         title: '弹窗',

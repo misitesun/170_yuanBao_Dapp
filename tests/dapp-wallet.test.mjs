@@ -9,6 +9,7 @@ import {
 import { resetDappProviderCache } from '../src/services/dapp/provider.ts'
 import {
     connectDappWallet,
+    getAuthorizedDappAddress,
     disconnectDappWallet,
     initializeDappWallet,
     signDappMessage,
@@ -163,4 +164,16 @@ test('disconnect only clears local wallet state', () => {
     assert.equal(useDappStore.getState().walletAddress, '')
     assert.equal(window.localStorage.getItem('WALLET_ADDRESS'), null)
     assert.equal(provider.requests.length, 0)
+})
+
+
+test('passive session lookup forwards eth_accounts without requesting permission or modifying wallet state', async () => {
+    for (const accounts of [[], [TEST_ADDRESS]]) {
+        const provider = createProvider({ accounts })
+        setupWalletTest(provider)
+        assert.equal(await getAuthorizedDappAddress(), accounts[0])
+        assert.deepEqual(provider.requests.map((request) => request.method), ['eth_accounts'])
+        assert.equal(useDappStore.getState().walletAddress, '')
+        assert.equal(window.localStorage.getItem('WALLET_ADDRESS'), null)
+    }
 })

@@ -3,6 +3,7 @@ import {
     type KeyboardEvent,
     type ReactNode,
 } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
     Dropdown,
@@ -43,6 +44,7 @@ function LanguageSwitchContent({
     className = '',
     onOpen,
 }: LanguageSwitchProps) {
+    const { t } = useTranslation()
     const languageCode = useAppStore((state) => state.languageCode)
     const [isChangingLanguage, setIsChangingLanguage] = useState(false)
     const classes = ['language-switch', className]
@@ -95,6 +97,7 @@ function LanguageSwitchContent({
                 ref={setTriggerElement}
                 className={classes}
                 role="button"
+                aria-label={t('切换语言')}
                 tabIndex={isDisabled ? -1 : 0}
                 aria-haspopup="listbox"
                 aria-controls={isOpen ? panelId : undefined}

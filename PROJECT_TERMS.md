@@ -10,9 +10,10 @@ Before copying visible text from Figma or legacy code, record every confirmed wo
 ## Confirmed terms
 ## 已确认术语
 
-None yet. Add project-specific rows only after the developer confirms them.
-暂无。只有开发者确认后，才添加项目专属规则。
+以下名称由开发者第二张截图明确提供，仅适用于首页卡牌标题。
 
 | Source term | Approved term | Scope | Reason |
 | --- | --- | --- | --- |
-| — | — | — | — |
+| 蓝色卡牌标题 | Yuanbao Premium Card | 首页蓝卡 | 开发者提供卡牌名称截图 |
+| 红色卡牌标题 | Yuanbao Collection Card | 首页红卡 | 开发者提供卡牌名称截图 |
+| 绿色卡牌标题 | Yuanbao Supreme Card | 首页绿卡 | 开发者提供卡牌名称截图 |

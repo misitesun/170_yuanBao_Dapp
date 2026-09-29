@@ -1,5 +1,23 @@
-# Home page placeholder
+# 元宝首页
 
-`HomePage` is intentionally empty so the template starts without carrying demo-product content. Replace its markup and SCSS during the static-page phase, while keeping the shared `MainLayout` shell unless the project explicitly requires a different structure.
+开发者最新要求（2026-09-29）：立即购买、进入抢拍、查看我的卡包三个入口统一用共享Toast提示“暂未开放”，不导航、不模拟交易；后面的历史入口描述由本条覆盖。三张卡按蓝/红/绿顺序分别显示Yuanbao Premium Card、Yuanbao Collection Card、Yuanbao Supreme Card，已记录PROJECT_TERMS.md；保留图片的颜色alt、原价格及轮播行为，不将截图装饰下划线作为标题样式。
 
-`HomePage` 是有意保留的空白首页占位，不携带演示项目业务内容。静态页面阶段替换其结构和 SCSS；除非项目明确要求不同结构，否则继续复用 `MainLayout` 公共外壳。
+`HomePage` 复用 `MainLayout`。主卡使用既有Swiper依赖做500ms横向轮播，支持左右按钮、缩略图、鼠标/触摸拖动及左右方向键；当前卡牌由Swiper的realIndex同步，避免切图与缩略图状态脱节。系统减少动态效果时使用0ms切换。轮播视窗与每张slide扩展至整屏宽度，卡图保留320px源宽及原稿中心向右8px偏置，切换时从屏幕边缘外进入并滑出，不在中央卡牌框内裁切。左右箭头与轮播共用Grid行，箭头保持原落点并位于滑动层上方，按钮仍可点击。首页局部隐藏桌面滚动条，保留window滚动，防止滚动条占宽造成轮播与vw设计宽度不一致。
+
+“我的卡包”按开发者最新要求复用公共 Empty（showGap=false）显示暂无数据，移除示例卡牌、卡包专属Swiper及拖动/键盘浏览。标题、说明、卡包入口及其暂未开放提示保留，上方主卡轮播不变。卡包容器使用min-height容纳共享空状态，不裁切图标与文字；当前不增加库存接口或伪造已购数据。
+
+卡牌图片沿用 Figma 静态展示，名称遵循开发者确认的三个卡牌名称。按开发者最新要求，三张卡价格均默认显示 `--`，保留元气图标和单位，不继续显示设计示例价格300；真实商品接口确认后再接入价格。卡包暂无已接入的真实库存，当前展示公共暂无数据组件。
+
+开发者手动导出的资源位于 `src/assets/home/`。卡牌平台仍采用此前授权的CSS背景；后续开发者要求补回抢拍房间插画，因此从Figma节点30091:4663下载该节点的图片填充为 `auction-room-background.png`，使用cover居中裁切并叠加原稿90°紫色渐变。源图片1840×854、展示690×292，背景属于非交互装饰；不导出按钮或文字。其余源尺寸与样式见 `docs/yuanbao-home-checklist.md`。未实现设备状态栏，公共Header仍高100px。
+
+公共项目颜色集中到 `src/styles/color.scss`，侧栏变量保留兼容别名。按开发者要求，艺术渐变也集中为变量，首页SCSS不含裸色值。卡图、选择面板、正文与按钮使用正常流和 Grid/Flex；仅星空背景与平台为带 `layout-exception` 的绝对定位装饰。
+
+当前没有真实数据加载，不启用下拉刷新。进入抢拍通过 `useAppNavigate` 到 `/auction`，卡包箭头进入 `/card-pack`。接口、商品参数、通知、真实卡包与交易均待后续契约接入，不在本次静态页范围内。
+
+抢拍页接入后，共用的三张卡牌、时钟与抢拍按钮迁至 `src/assets/common/`，两个页面引用同一份资源；首页的轮播与视觉参数保持原有实现。
+
+卡包页开发后，元气图和标题分隔图统一移至 `src/assets/common/`，两页引用同一资源；首页只调整对应import与卡包入口点击处理，原有轮播及视觉参数保持不变。
+
+## 多语言
+
+固定文案和卡牌颜色 alt 已接入五种语言；三个英文卡牌名称保持 PROJECT_TERMS.md 原值，价格继续 --。说明与卡包标题区允许换行。

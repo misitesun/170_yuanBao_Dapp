@@ -4,6 +4,7 @@ export const SHOWCASE_ROUTE_PATH = {
     styles: '/showcase/styles',
     gradientText: '/showcase/components/gradient-text',
     popup: '/showcase/components/popup',
+    sidebar: '/showcase/components/sidebar',
     picker: '/showcase/components/picker',
     dropdown: '/showcase/components/dropdown',
     icon: '/showcase/components/icon',

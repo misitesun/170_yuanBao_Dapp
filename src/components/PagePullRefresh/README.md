@@ -104,3 +104,7 @@ finished messages remain visible above the navigation.
 
 Do not wrap splash, login or other flow pages with this component.
 不要把开屏页、登录页或其他流程页包进这个组件。
+
+## 多语言
+
+加载中、没有更多与内联加载无障碍标签使用当前语言，分页和刷新门控不变。

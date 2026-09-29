@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import {
     useEffect,
     useMemo,
@@ -80,8 +81,8 @@ function getOptionLabel(option: PickerOption): ReactNode {
 export function Picker({
     show,
     options,
-    title = '请选择',
-    confirmText = '确定',
+    title,
+    confirmText,
     emptyText,
     value,
     defaultIndex = 0,
@@ -94,6 +95,7 @@ export function Picker({
     onConfirm,
     renderOption,
 }: PickerProps) {
+    const { t } = useTranslation()
     const swiperRef = useRef<SwiperInstance | null>(null)
     const isControlled = value !== undefined
     const [innerIndex, setInnerIndex] = useState(() => clampIndex(defaultIndex, options.length, allowEmpty))
@@ -183,7 +185,7 @@ export function Picker({
         >
             <div className={pickerClassName}>
                 <div className="picker__header">
-                    <div className="picker__title size-32 bold-6">{title}</div>
+                    <div className="picker__title size-32 bold-6">{title ?? t('请选择')}</div>
                     <button
                         type="button"
                         className="picker__close"
@@ -227,7 +229,7 @@ export function Picker({
                         onClick={handleConfirm}
                         disabled={options.length <= 0}
                     >
-                        {confirmText}
+                        {confirmText ?? t('确定')}
                     </button>
                 </div>
             </div>

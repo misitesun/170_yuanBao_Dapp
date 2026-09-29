@@ -1,0 +1,7 @@
+# 元宝钱包鉴权
+
+对外邀请链接统一通过 `buildInvitationLink` 生成：当前站点origin + `/ref/` + 编码后的真实邀请码，示例 `http://192.168.110.83:5175/ref/Oa0y507g`。链接不包含应用部署前缀 `/h5`；根路径邀请入口由服务器转发至H5。邀请码为空或非浏览器环境返回空串，侧栏和团队页共用此函数，展示与复制值一致。应用内部导航仍使用既有 `/h5/` 部署规则。
+
+开屏参考 HU 的延迟自动授权流程，当前签名协议保持 Login-{timestamp}，POST /api/auth/login。session.ts 管理真实连接地址与已验证会话两种状态；HTTP 全局 address 来自 provider 查询、连接或事件，不依赖 Token，缓存地址不能作为依据。钱包切换/断开立即更新地址并清理旧会话；Token 过期保留真实连接地址。
+
+恢复被动读取 eth_accounts，携带 Bearer 与当前地址读取 /users/my，核对成功后进入业务页面，不重复签名。公开登录只移除 Bearer。等待步骤使用 generation 淘汰旧结果；POST 成功但 GET 失败保留 Token，重试读取。邀请码只读取链接/本地存储，没有输入框或临时 Token。金额和等级在 user/api.ts 解析；详见 docs/yuanbao-api-integration.md。

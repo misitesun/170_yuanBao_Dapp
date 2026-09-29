@@ -87,6 +87,12 @@ export async function initializeDappWallet(
     return true
 }
 
+/** Passive account lookup for session recovery; never opens a wallet permission prompt. */
+export async function getAuthorizedDappAddress(): Promise<Address | undefined> {
+    const [address] = await getDappWalletClient().getAddresses()
+    return address
+}
+
 export async function getConnectedDappAddress(): Promise<Address> {
     const walletClient = getDappWalletClient()
     const [address] = await walletClient.getAddresses()

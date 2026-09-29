@@ -34,27 +34,38 @@ test('sidebar menu is a right popup controlled by the main layout', () => {
 })
 
 test('sidebar menu reuses the shared first-level layout menu items', () => {
-    assert.match(sidebarSource, /MAIN_PAGE_ITEMS\.map/)
-    assert.match(sidebarSource, /key=\{item\.path\}/)
+    assert.match(sidebarSource, /SIDEBAR_ITEMS\.map/)
+    assert.match(sidebarSource, /key=\{item\.id\}/)
     assert.match(sidebarSource, /to=\{item\.path\}/)
-    assert.match(sidebarSource, /\{item\.title\}/)
-    assert.match(sidebarSource, /onClick=\{handleMenuLinkClick\}/)
-    assert.match(sidebarSource, /function handleMenuLinkClick\(\)/)
+    assert.match(sidebarSource, /\{t\(item\.title\)\}/)
+    assert.match(sidebarSource, /handleMenuLinkClick\(event, item\)/)
+    assert.match(sidebarSource, /function handleMenuLinkClick\(/)
     assert.match(sidebarSource, /handleMenuLinkClick[\s\S]*onClose\(\)/)
 })
 
-test('sidebar retains template menu icons and isolates the copied visual theme', async () => {
+test('sidebar uses confirmed design artwork and isolates its visual theme', async () => {
     const styles = await readFile('src/pages/main/layout/MainLayout.scss', 'utf8')
-    assert.match(sidebarSource, /name=\{item\.icon\}/)
+    assert.match(sidebarSource, /src=\{active \? item\.activeImage : item\.image\}/)
     assert.match(sidebarSource, /app-menu__link--active/)
     assert.match(styles, /color: var\(--app-sidebar-accent\)/)
     assert.doesNotMatch(sidebarSource, /referral_code|features\/ai-claw|ROUTE_PATH/)
     assert.doesNotMatch(sidebarSource, /<AppBrand/)
 })
 
-test('sidebar copies the connected wallet address through the shared clipboard boundary', () => {
-    assert.match(sidebarSource, /copyTextToClipboard\(walletAddress\)/)
-    assert.match(sidebarSource, /!staticPreview && walletAddress/)
+test('sidebar leaves invitation link empty and uses the shared clipboard boundary only for available links', () => {
+    assert.match(sidebarSource, /invitationLink = ''/)
+    assert.match(sidebarSource, /if \(!invitationLink\) return/)
+    assert.match(sidebarSource, /disabled=\{!invitationLink\}/)
+    assert.match(sidebarSource, /copyTextToClipboard\(invitationLink\)/)
+    assert.match(sidebarSource, /staticPreview \? previewWalletAddress : connectedWalletAddress/)
     assert.match(sidebarSource, /WalletOrbitBorder/)
     assert.doesNotMatch(sidebarSource, /navigator\.clipboard|localStorage|fetch\(/)
+})
+
+
+test('unfinished entries select locally instead of navigating to nonexistent pages', () => {
+    assert.match(sidebarSource, /if \(item\.path && !staticPreview\)/)
+    assert.match(sidebarSource, /aria-pressed=\{active\}/)
+    assert.match(sidebarSource, /setSelectedItem\(item\.id\)/)
+    assert.doesNotMatch(sidebarSource, /disconnect\(|退出/)
 })

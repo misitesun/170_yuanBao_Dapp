@@ -15,6 +15,8 @@ const HIGHLIGHT_LENGTH = 335
 const SEGMENTS_PER_HIGHLIGHT = 32
 const SEGMENT_STEP = HIGHLIGHT_LENGTH / SEGMENTS_PER_HIGHLIGHT
 const SEGMENT_OVERLAP = 1
+// Start the paired peaks near the upper-right and lower-left corners.
+const INITIAL_HIGHLIGHT_OFFSET = PATH_WIDTH - 2 * CENTERLINE_RADIUS - HIGHLIGHT_LENGTH * 0.28
 
 type OrbitColor = {
     red: number
@@ -37,10 +39,10 @@ type OrbitGroupStyle = CSSProperties & {
 }
 
 const COLOR_STOPS: OrbitColorStop[] = [
-    { position: 0, color: { red: 220, green: 20, blue: 60, alpha: 0.1 } },
-    { position: 0.28, color: { red: 220, green: 20, blue: 60, alpha: 1 } },
-    { position: 0.6, color: { red: 255, green: 208, blue: 0, alpha: 0.4 } },
-    { position: 1, color: { red: 220, green: 20, blue: 60, alpha: 0.1 } },
+    { position: 0, color: { red: 171, green: 68, blue: 255, alpha: 0.1 } },
+    { position: 0.28, color: { red: 171, green: 68, blue: 255, alpha: 1 } },
+    { position: 0.6, color: { red: 251, green: 0, blue: 255, alpha: 0.4 } },
+    { position: 1, color: { red: 171, green: 68, blue: 255, alpha: 0.1 } },
 ]
 
 function interpolate(from: number, to: number, progress: number): number {
@@ -63,7 +65,7 @@ function getSegmentColor(position: number): string {
 const ORBIT_SEGMENTS = [0, PATH_PERIMETER / 2].flatMap((highlightOffset, highlightIndex) => (
     Array.from({ length: SEGMENTS_PER_HIGHLIGHT }, (_, segmentIndex) => {
         const position = (segmentIndex + 0.5) / SEGMENTS_PER_HIGHLIGHT
-        const startOffset = -(highlightOffset + segmentIndex * SEGMENT_STEP)
+        const startOffset = -(INITIAL_HIGHLIGHT_OFFSET + highlightOffset + segmentIndex * SEGMENT_STEP)
 
         return {
             key: `${highlightIndex}-${segmentIndex}`,

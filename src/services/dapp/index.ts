@@ -40,6 +40,7 @@ export {
     connectDappWallet,
     detectDappWallet,
     disconnectDappWallet,
+    getAuthorizedDappAddress,
     getConnectedDappAddress,
     initializeDappWallet,
     signDappMessage,

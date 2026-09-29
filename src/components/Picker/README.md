@@ -200,3 +200,7 @@ The component showcase lives in `src/showcase/components/picker/PickerShowcasePa
 
 Use the showcase as the source of truth for common usage patterns before adding new usage.
 新增使用方式前，优先参考该演示页中的常见写法。
+
+## 多语言
+
+默认标题请选择、确认文案确定使用当前语言；显式传入的 title/confirmText 保持调用方内容，选择与提交契约保持。

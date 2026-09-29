@@ -22,5 +22,15 @@
     "点击重试": "Tap to retry",
     "重新加载": "Reload",
     "上传中...": "Uploading...",
-    "提交中...": "Submitting..."
+    "提交中...": "Submitting...",
+    "请求失败": "Request failed",
+    "未知请求错误": "Unknown request error",
+    "没有钱包环境": "No wallet available",
+    "未获取到钱包地址": "Wallet address unavailable",
+    "Gas费用不足": "Insufficient gas balance",
+    "交易执行失败": "Transaction failed",
+    "未配置 Token 合约地址": "Token contract address not configured",
+    "当前钱包暂不支持7702批量调用": "Wallet does not support 7702 batch calls",
+    "余额不足": "Insufficient balance",
+    "金额格式错误": "Invalid amount"
 }

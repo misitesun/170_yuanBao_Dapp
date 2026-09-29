@@ -23,3 +23,7 @@ Call `showToast(message, 'success')` after a successful action and `showToast(me
 `HttpErrorToast` is mounted once by `App`. It subscribes to normalized HTTP error notifications and always renders them with the `error` variant for 2.5 seconds. Business pages must not mount another global instance. Callers that also own local feedback can use `wasHttpErrorReported()` to avoid showing the same normalized error twice.
 
 `HttpErrorToast` 由 `App` 唯一挂载，订阅统一 HTTP 错误通知，并始终使用 `error` 状态展示 2.5 秒。业务页面不要重复挂载全局实例；同时拥有局部提示的调用方可通过 `wasHttpErrorReported()` 避免重复展示同一个规范化错误。
+
+## 多语言
+
+HttpErrorToast 仅翻译 HTTP_ERROR_MESSAGE 的前端默认错误文案，后端返回的错误消息原样展示；去重、展示时长与状态保持。

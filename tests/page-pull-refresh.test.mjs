@@ -76,10 +76,10 @@ test('page pull refresh exposes a page-level refresh registration contract', asy
     assert.match(readme, /enabled: !isInitialLoading/)
 })
 
-test('blank route table does not simulate data refresh before pages exist', async () => {
+test('router keeps refresh inside business pages and authorization outside refresh', async () => {
     const router = await readFile('src/router/AppRouter.tsx', 'utf8')
 
     assert.doesNotMatch(router, /PagePullRefresh/)
-    assert.doesNotMatch(router, /RequireAuthentication/)
+    assert.match(router, /RequireAuthentication/)
     assert.match(router, /<Route element=\{<MainLayout \/>\}>/)
 })

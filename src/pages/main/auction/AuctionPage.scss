@@ -1,0 +1,145 @@
+.auction-page {
+    position: relative;
+    isolation: isolate;
+    padding-bottom: 40px;
+    font-family: 'Microsoft YaHei', '微软雅黑', sans-serif;
+    letter-spacing: 0;
+
+    &::before {
+        content: '';
+        /* layout-exception: background-art the complete Figma star field extends behind the shared header */
+        position: absolute;
+        z-index: -1;
+        top: -128px;
+        left: 0;
+        width: 100%;
+        height: 801px;
+        background: url('@/assets/auction/hero-background.png') center top / 100% 100% no-repeat;
+        pointer-events: none;
+    }
+
+    &__hero { height: 546px; padding-top: 40px; }
+    &__time {
+        flex: none;
+        width: 361px;
+        height: 58px;
+        margin-left: 195px;
+        padding: 10px 30px;
+        gap: 10px;
+        border: 1px solid var(--app-color);
+        border-radius: 999px;
+        background: var(--app-accent-soft);
+        backdrop-filter: blur(10px);
+        color: var(--app-text-secondary);
+        font-size: 26px;
+        font-weight: 400;
+        line-height: 36.39999771118164px;
+        white-space: nowrap;
+
+        img { flex: none; width: 32px; height: 32px; }
+    }
+    &__title {
+        width: 552px;
+        height: 110px;
+        margin: 10px auto 0;
+        font-size: 80px;
+        font-weight: 700;
+        line-height: 109.75999450683594px;
+        text-shadow: 0 4px 10px var(--app-text-shadow-color);
+        white-space: nowrap;
+
+        span { color: var(--app-auction-title-accent); }
+    }
+    &__list { padding: 0 30px; gap: 20px; }
+    &__card {
+        display: grid;
+        grid-template-columns: 182px 307px;
+        column-gap: 81px;
+        height: 290px;
+        padding: 25px 80px 25px 40px;
+        border-radius: 30px;
+        background: var(--auction-card-background) center / 100% 100% no-repeat;
+
+        &--red {
+            --auction-card-background: url('@/assets/auction/card-red-background.png');
+            --auction-name-gradient: var(--app-auction-red-title-gradient);
+            padding-top: 24px;
+            padding-bottom: 26px;
+
+            .auction-page__details { padding-top: 16px; }
+            .auction-page__price { width: 261px; }
+        }
+        &--blue {
+            --auction-card-background: url('@/assets/auction/card-blue-background.png');
+            --auction-name-gradient: var(--app-auction-blue-title-gradient);
+
+            .auction-page__price { width: 271px; }
+        }
+        &--green {
+            --auction-card-background: url('@/assets/auction/card-green-background.png');
+            --auction-name-gradient: var(--app-auction-green-title-gradient);
+
+            .auction-page__price { width: 293px; }
+        }
+    }
+    &__card-image { width: 182px; height: 240px; object-fit: fill; }
+    &__details { padding-top: 15px; }
+    &__name {
+        @include gradient-word(var(--auction-name-gradient));
+        width: 307px;
+        height: 55px;
+        font-size: 40px;
+        font-weight: 500;
+        line-height: 54.87999725341797px;
+        filter: drop-shadow(0 4px 4px var(--app-shadow));
+    }
+    &__price {
+        flex: none;
+        height: 58px;
+        margin-top: 17px;
+        padding: 10px 12px;
+        gap: 4px;
+        border: 1px solid var(--app-color);
+        border-radius: 999px;
+        background: var(--app-auction-price-bg);
+        backdrop-filter: blur(10px);
+        font-size: 26px;
+        font-weight: 600;
+        line-height: 36.39999771118164px;
+        text-shadow: 0 4px 4px var(--app-shadow);
+        white-space: nowrap;
+
+        img { flex: none; width: 40px; height: 30px; }
+    }
+    &__bid {
+        align-self: flex-start;
+        flex: none;
+        width: 272px;
+        height: 72px;
+        margin-top: 18px;
+        margin-left: 18px;
+        padding: 0 80px 0 81px;
+        background: url('@/assets/common/auction-button.png') center / 100% 100% no-repeat;
+        cursor: pointer;
+
+        span {
+            @include gradient-word(var(--app-auction-bid-gradient));
+            flex: none;
+            width: 111px;
+            height: 38px;
+            white-space: nowrap;
+            font-size: 28px;
+            font-weight: 500;
+            line-height: 38.41600036621094px;
+            filter: drop-shadow(0 4px 4px var(--app-shadow));
+        }
+        &:focus-visible { outline: 2px solid var(--app-color); outline-offset: 4px; }
+    }
+}
+
+.auction-page:where(:lang(en), :lang(ja), :lang(ko)) {
+    .auction-page__time { width: fit-content; max-width: calc(100% - 60px); height: auto; min-height: 58px; margin-inline: auto; }
+    .auction-page__title { width: calc(100% - 60px); height: auto; min-height: 110px; font-size: 52px; line-height: 1.4; white-space: normal; }
+    .auction-page__name { width: 100%; height: auto; min-height: 55px; font-size: 28px; line-height: 1.4; }
+    .auction-page__price { font-size: 30px; }
+}

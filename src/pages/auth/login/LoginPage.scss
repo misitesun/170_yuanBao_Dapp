@@ -1,0 +1,47 @@
+.splash-page {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    background: #040404;
+
+    &__galaxy {
+        /* layout-exception: background-art HU galaxy decorates the opening viewport */
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        canvas { display: block; width: 100%; height: 100%; }
+    }
+    &__brand {
+        /* layout-exception: viewport-overlay HU opening brand fills the viewport */
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+        animation-delay: .3s;
+        h1 { font-size: 36px; font-weight: 600; color: var(--app-text-primary); }
+    }
+    &__logo { width: 160px; height: 160px; object-fit: contain; }
+    &__tips {
+        /* layout-exception: viewport-overlay HU welcome and authorization status anchor to the viewport foot */
+        position: fixed;
+        bottom: 30px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        padding: 0 24px;
+        color: #8d9094;
+        font-size: 20px;
+        text-align: center;
+        overflow-wrap: anywhere;
+        animation-delay: .3s;
+        button { padding: 10px 24px; color: var(--app-text-primary); border: 1px solid var(--app-border-medium); border-radius: 12px; background: transparent; }
+    }
+    &__status { display: flex; align-items: center; justify-content: center; gap: 10px; }
+}

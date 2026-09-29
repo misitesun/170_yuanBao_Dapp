@@ -46,10 +46,19 @@ test('layout exposes the supported menu modes for templates', () => {
     assert.equal(DEFAULT_LAYOUT_MENU_TYPE, 'sidebar')
 })
 
-test('route records keep only the blank starter route', () => {
+test('route records include the project auction destination without deployment prefixes', () => {
     assert.equal(ROUTE_PATH.root, '/')
     assert.equal(ROUTE_PATH.home, '/home')
-    assert.deepEqual(Object.keys(ROUTE_PATH), ['root', 'home'])
+    assert.equal(ROUTE_PATH.auction, '/auction')
+    assert.equal(ROUTE_PATH.cardPack, '/card-pack')
+    assert.equal(ROUTE_PATH.assets, '/assets')
+    assert.equal(ROUTE_PATH.team, '/team')
+    assert.equal(ROUTE_PATH.ranking, '/ranking')
+    assert.equal(ROUTE_PATH.depositRecords, '/deposit/records')
+    assert.equal(ROUTE_PATH.withdrawRecords, '/withdraw/records')
+    assert.equal(ROUTE_PATH.announcements, '/announcements')
+    assert.equal(ROUTE_PATH.announcementDetail, '/announcements/:id')
+    assert.ok(Object.values(ROUTE_PATH).every((path) => !path.startsWith('/h5')))
 })
 
 test('main page config owns the first-level page records', async () => {
@@ -65,15 +74,15 @@ test('main page config owns the first-level page records', async () => {
     assert.doesNotMatch(routerRoutesSource, /appRouteItems/)
 })
 
-test('app redirects root to the blank home route and preserves the layout shell', async () => {
+test('project routes expose standalone wallet authorization and protect business pages', async () => {
     const source = await readFile(
         new URL('../src/router/AppRouter.tsx', import.meta.url),
         'utf8',
     )
 
-    assert.doesNotMatch(source, /SplashPage|LoginPage|RequireAuthentication/)
+    assert.match(source, /LoginPage|RequireAuthentication/)
     assert.match(source, /import \{ HomePage, MainLayout \} from '@\/pages\/main'/)
-    assert.match(source, /<Route path=\{ROUTE_PATH\.root\} element=\{<Navigate to=\{ROUTE_PATH\.home\} replace \/>\} \/>/)
+    assert.match(source, /<Route path=\{ROUTE_PATH\.root\} element=\{<LoginPage \/>\} \/>/)
     assert.match(source, /<Route element=\{<MainLayout \/>\}>/)
-    assert.match(source, /<Route path="\*" element=\{<Navigate to=\{ROUTE_PATH\.home\} replace \/>\} \/>/)
+    assert.match(source, /<Route path="\*" element=\{<Navigate to=\{ROUTE_PATH\.root\} replace \/>\} \/>/)
 })

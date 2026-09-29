@@ -1,0 +1,26 @@
+@use '@/styles/mixins' as *;
+
+html:has(.announcement-detail-page) { @include hide-scrollbar; }
+
+.announcement-detail-page {
+    background: var(--app-bg);
+
+    &__main { padding: 30px 30px 64px; }
+    &__demo { font-size: 20px; color: var(--app-text-muted); white-space: nowrap; }
+
+    &__article {
+        padding: 30px;
+        border: 1px solid var(--app-border-medium);
+        border-radius: 20px;
+        background: var(--app-surface-subtle);
+        overflow-wrap: anywhere;
+    }
+
+    &__heading { padding-bottom: 28px; border-bottom: 1px solid var(--app-border-medium); }
+    &__title { line-height: 54px; }
+    &__time { display: block; margin-top: 16px; color: var(--app-text-muted); line-height: 36px; }
+    &__body { gap: 28px; padding-top: 28px; }
+    &__body h2 { line-height: 42px; }
+    &__body p { margin-top: 16px; color: var(--app-text-secondary); line-height: 44px; white-space: pre-wrap; }
+    &__back { min-height: 72px; }
+}

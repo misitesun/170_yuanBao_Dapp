@@ -8,6 +8,18 @@ test('main first-level pages keep matching page directories and files', () => {
             dir: 'src/pages/main/home',
             component: 'HomePage',
         },
+        {
+            dir: 'src/pages/main/auction',
+            component: 'AuctionPage',
+        },
+        {
+            dir: 'src/pages/main/card-pack',
+            component: 'CardPackPage',
+        },
+        {
+            dir: 'src/pages/main/assets',
+            component: 'AssetsPage',
+        },
     ]
 
     for (const page of firstLevelPages) {

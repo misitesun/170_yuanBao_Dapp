@@ -1,31 +1,34 @@
-import { useEffect } from 'react'
+import { useEffect, useState, type MouseEvent } from 'react'
 import { NavLink } from 'react-router'
 import { useTranslation } from 'react-i18next'
 
 import walletLinkIcon from '@/assets/common/wallet-link.png'
-import { Icon } from '@/components/Icon'
+import walletCopyIcon from '@/assets/common/wallet-copy.png'
+import yuanbaoLogo from '@/assets/common/yuanbao-logo.png'
+import chevron from '@/assets/common/menu-chevron.svg'
+import activeChevron from '@/assets/common/menu-chevron-active.svg'
 import { Popup } from '@/components/Popup'
 import { Toast, useToast } from '@/components/Toast'
-import { APP_CONFIG } from '@/config'
 import { copyTextToClipboard } from '@/shared/clipboard/copyTextToClipboard.ts'
 import { maskWalletAddress } from '@/shared/formatters/maskWalletAddress.ts'
 import { useDappStore } from '@/stores/dapp/index.ts'
 
-import { MAIN_PAGE_ITEMS } from '../config.ts'
+import { SIDEBAR_ITEMS, type SidebarItem } from '../sidebar-config'
 import { WalletOrbitBorder } from './WalletOrbitBorder.tsx'
-
-const getMenuLinkClassName = ({ isActive }: { isActive: boolean }): string =>
-    isActive ? 'app-menu__link app-menu__link--active' : 'app-menu__link'
 
 type SidebarMenuProps = {
     show: boolean
     onClose: () => void
     staticPreview?: boolean
+    previewWalletAddress?: string
+    invitationLink?: string
 }
 
-export function SidebarMenu({ show, onClose, staticPreview = false }: SidebarMenuProps) {
+export function SidebarMenu({ show, onClose, staticPreview = false, previewWalletAddress, invitationLink = '' }: SidebarMenuProps) {
     const { t } = useTranslation()
-    const walletAddress = useDappStore((state) => state.walletAddress)
+    const connectedWalletAddress = useDappStore((state) => state.walletAddress)
+    const walletAddress = staticPreview ? previewWalletAddress : connectedWalletAddress
+    const [selectedItem, setSelectedItem] = useState<string | null>(null)
     const { message, variant, showToast } = useToast()
 
     useEffect(() => {
@@ -37,14 +40,19 @@ export function SidebarMenu({ show, onClose, staticPreview = false }: SidebarMen
         return () => window.removeEventListener('keydown', handleKeyDown)
     }, [show, onClose])
 
-    function handleMenuLinkClick() {
+    function handleMenuLinkClick(event: MouseEvent<HTMLAnchorElement>, item: SidebarItem) {
+        if (item.unavailable) {
+            event.preventDefault()
+            showToast(t('暂未开放'))
+            return
+        }
+        setSelectedItem(null)
         onClose()
     }
 
-    async function handleCopyWalletAddress() {
-        if (!walletAddress) return
-        const copied = await copyTextToClipboard(walletAddress)
-        if (useDappStore.getState().walletAddress !== walletAddress) return
+    async function handleCopyInvitationLink() {
+        if (!invitationLink) return
+        const copied = await copyTextToClipboard(invitationLink)
         showToast(copied ? t('复制成功') : t('复制失败'), copied ? 'success' : 'error')
     }
 
@@ -58,47 +66,60 @@ export function SidebarMenu({ show, onClose, staticPreview = false }: SidebarMen
         >
             <aside id="app-sidebar-menu" className="app-sidebar-menu" aria-label={t('导航菜单')}>
                 <nav className="app-menu">
-                    {MAIN_PAGE_ITEMS.map((item) => (
-                        <NavLink
-                            key={item.path}
-                            to={item.path}
-                            className={getMenuLinkClassName}
-                            onClick={handleMenuLinkClick}
-                        >
-                            <span className="app-menu__icon-box"><Icon name={item.icon} className="app-menu__icon" /></span>
-                            <span className="app-menu__label">{item.title}</span>
-                            <Icon name="arrow" className="app-menu__chevron" />
-                        </NavLink>
-                    ))}
+                    {SIDEBAR_ITEMS.map((item) => {
+                        const content = (active: boolean) => <>
+                            <img className="app-menu__icon-box" src={active ? item.activeImage : item.image} alt="" />
+                            <span className="app-menu__label">{t(item.title)}</span>
+                            <img src={active ? activeChevron : chevron} className="app-menu__chevron" alt="" />
+                        </>
+                        if (item.path && !staticPreview) return (
+                            <NavLink key={item.id} to={item.path}
+                                className={({ isActive }) => `app-menu__link${isActive && !selectedItem ? ' app-menu__link--active' : ''}`}
+                                onClick={(event) => handleMenuLinkClick(event, item)}>
+                                {({ isActive }) => content(isActive && !selectedItem)}
+                            </NavLink>
+                        )
+                        const active = selectedItem ? selectedItem === item.id : item.id === SIDEBAR_ITEMS[0]?.id
+                        return <button key={item.id} type="button" aria-pressed={active}
+                            className={`app-menu__link${active ? ' app-menu__link--active' : ''}`}
+                            onClick={() => {
+                                if (item.unavailable) {
+                                    showToast(t('暂未开放'))
+                                    return
+                                }
+                                setSelectedItem(item.id)
+                            }}>{content(active)}</button>
+                    })}
                 </nav>
-                {!staticPreview && walletAddress ? (
                     <section className="app-sidebar-wallet" aria-label={t('钱包信息')}>
-                        <img className="app-sidebar-wallet__badge" src={`${APP_CONFIG.routeBase}brand/app-logo.png`} alt="" />
+                        <div className="app-sidebar-wallet__badge flex-center">
+                            <img src={yuanbaoLogo} alt="" />
+                        </div>
                         <div className="app-sidebar-wallet__card">
                             <WalletOrbitBorder />
                             <div className="app-sidebar-wallet__identity">
                                 <span className="app-sidebar-wallet__name">{maskWalletAddress(walletAddress)}</span>
-                                <span className="app-sidebar-wallet__status">
+                                <span className={`app-sidebar-wallet__status${walletAddress ? '' : ' app-sidebar-wallet__status--disconnected'}`}>
                                     <span className="app-sidebar-wallet__status-dot" aria-hidden="true" />
-                                    {t('已连接钱包')}
+                                    {t(walletAddress ? '已连接钱包' : '未连接钱包')}
                                 </span>
                             </div>
                             <div className="app-sidebar-wallet__address">
                                 <img className="app-sidebar-wallet__link-icon" src={walletLinkIcon} alt="" />
-                                <span className="app-sidebar-wallet__address-text" title={walletAddress}>{walletAddress}</span>
+                                <span className="app-sidebar-wallet__address-text" title={invitationLink}>{invitationLink}</span>
                                 <span className="app-sidebar-wallet__address-divider" aria-hidden="true" />
                                 <button
                                     type="button"
                                     className="app-sidebar-wallet__copy"
-                                    aria-label={t('复制钱包地址')}
-                                    onClick={() => void handleCopyWalletAddress()}
+                                    aria-label={t('复制邀请链接')}
+                                    disabled={!invitationLink}
+                                    onClick={() => void handleCopyInvitationLink()}
                                 >
-                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h12v12H8zM4 16V4h12" fill="none" stroke="currentColor" strokeWidth="1.5" /></svg>
+                                    <img src={walletCopyIcon} alt="" />
                                 </button>
                             </div>
                         </div>
                     </section>
-                ) : null}
             </aside>
             <Toast message={message} variant={variant} />
         </Popup>

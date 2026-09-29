@@ -1,0 +1,231 @@
+html:has(.assets-page) {
+    @include hide-scrollbar;
+}
+
+.assets-page {
+    position: relative;
+    isolation: isolate;
+    padding-bottom: 30px;
+    font-family: 'Microsoft YaHei', '微软雅黑', sans-serif;
+    letter-spacing: 0;
+
+    &::before {
+        content: '';
+        /* layout-exception: background-art reuse the card-pack star field behind the existing shared header */
+        position: absolute;
+        z-index: -1;
+        top: -128px;
+        left: calc(100% / 750);
+        width: 749px;
+        height: 888px;
+        background: url('@/assets/common/account-background.png') center top / 100% 100% no-repeat;
+        pointer-events: none;
+    }
+
+    &__hero { padding-top: 47px; }
+    &__title {
+        width: 237px;
+        height: 82px;
+        margin-left: 256px;
+        font-size: 60px;
+        font-weight: 700;
+        line-height: 82.31999969482422px;
+        text-shadow: var(--app-text-shadow);
+        white-space: nowrap;
+
+        span { color: var(--app-card-pack-title-accent); }
+    }
+    &__subtitle {
+        width: 408px;
+        height: 34px;
+        margin-top: 6px;
+        margin-left: 170px;
+        color: var(--app-text-secondary);
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 33.599998474121094px;
+        text-shadow: var(--app-text-shadow);
+        white-space: nowrap;
+    }
+    &__divider { width: 338px; height: 24px; margin-top: 16px; margin-left: 205px; }
+    &__overview { padding: 0 30px; margin-top: 30px; }
+    &__balances,
+    &__actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
+
+    &__balance {
+        --assets-outline-width: 1px;
+        --assets-outline-gradient: var(--app-assets-balance-border);
+
+        position: relative;
+        isolation: isolate;
+        height: 284px;
+        padding: 30px 20px;
+        overflow: hidden;
+        border-radius: 24px;
+        background: var(--assets-balance-background);
+
+        &--usdt {
+            --assets-balance-background: var(--app-assets-usdt-background);
+            --assets-balance-chart: url('@/assets/assets/balance-usdt-chart.png');
+            --assets-fraction-color: var(--app-card-pack-green);
+        }
+        &--yuanqi {
+            --assets-balance-background: var(--app-assets-yuanqi-background);
+            --assets-balance-chart: url('@/assets/assets/balance-yuanqi-chart.png');
+            --assets-fraction-color: var(--app-assets-yuanqi);
+        }
+        &--baoqi {
+            --assets-balance-background: var(--app-assets-baoqi-background);
+            --assets-balance-chart: url('@/assets/assets/balance-baoqi-chart.png');
+            --assets-fraction-color: var(--app-assets-baoqi);
+        }
+        &::before {
+            content: '';
+            /* layout-exception: background-art the exported curve decorates the card independently of its balance text */
+            position: absolute;
+            z-index: -1;
+            top: 90px;
+            left: 0;
+            width: 220px;
+            height: 194px;
+            background: var(--assets-balance-chart) center / 100% 100% no-repeat;
+            pointer-events: none;
+        }
+    }
+    &__balance::after,
+    &__action::after {
+        content: '';
+        /* layout-exception: background-art the masked inside outline must not brighten the transparent card or button fill */
+        position: absolute;
+        inset: 0;
+        padding: var(--assets-outline-width);
+        border-radius: inherit;
+        background: var(--assets-outline-gradient);
+        -webkit-mask: linear-gradient(var(--app-mask-opaque) 0 0) content-box, linear-gradient(var(--app-mask-opaque) 0 0);
+        mask: linear-gradient(var(--app-mask-opaque) 0 0) content-box, linear-gradient(var(--app-mask-opaque) 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+
+    &__asset-name {
+        height: 40px;
+        gap: 10px;
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 33.599998474121094px;
+
+        img { flex: none; width: 40px; height: 40px; }
+    }
+    &__balance--usdt &__asset-name { font-weight: 400; }
+    &__amount { height: 77px; margin-top: 107px; white-space: nowrap; }
+    &__integer { font-size: 32px; font-weight: 400; line-height: 44.8px; }
+    &__fraction { color: var(--assets-fraction-color); font-size: 24px; font-weight: 400; line-height: 33.6px; }
+
+    &__actions { margin-top: 30px; }
+    &__action {
+        --assets-outline-width: 2px;
+        --assets-outline-gradient: var(--app-assets-action-border);
+
+        position: relative;
+        height: 80px;
+        gap: 12px;
+        border-radius: 40px;
+        background: var(--app-assets-action-background);
+        font-size: 26px;
+        font-weight: 400;
+        line-height: 36.39999771118164px;
+        cursor: pointer;
+
+        img { flex: none; width: 40px; height: 40px; }
+        span { -webkit-text-stroke: 1px var(--app-text); }
+        &--transfer { background: var(--app-assets-transfer-gradient); }
+        &--transfer::after { display: none; }
+    }
+
+    &__details { margin: 40px 30px 0; }
+    &__tabs.segmented-tabs { width: auto; height: 50px; gap: 30px; align-items: center; }
+    &__tabs .segmented-tabs__item {
+        flex: none;
+        min-width: 0;
+        min-height: 0;
+        height: 39px;
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+        color: var(--app-text-secondary);
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 39.20000076293945px;
+        text-shadow: var(--app-text-shadow);
+        white-space: nowrap;
+
+        &::before { display: none; }
+        &--active {
+            height: 50px;
+            color: var(--app-text);
+            font-size: 36px;
+            font-weight: 600;
+            line-height: 50.39999771118164px;
+        }
+    }
+    &__panel { margin-top: 30px; }
+    &__records { gap: 20px; }
+    &__record {
+        height: 148px;
+        padding: 30px;
+        border-radius: 20px;
+        background: var(--app-team-surface);
+
+        &--highlighted { background: var(--app-assets-record-highlight); }
+    }
+    &__record-heading { height: 42px; align-items: flex-start; gap: 20px; }
+    &__remark { font-size: 28px; font-weight: 600; line-height: 39.20000076293945px; }
+    &__change {
+        flex: none;
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 42px;
+        text-align: right;
+        white-space: nowrap;
+
+        &--expense { color: var(--app-card-pack-red); }
+        &--income { color: var(--app-card-pack-green); }
+        &--credit { color: var(--app-assets-credit); }
+        &--debit { color: var(--app-assets-debit); }
+    }
+    &__record--highlighted &__change { font-weight: 600; }
+    &__date {
+        display: block;
+        height: 36px;
+        margin-top: 10px;
+        margin-left: -2px;
+        color: var(--app-text-muted);
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 36px;
+        white-space: nowrap;
+    }
+
+    &__action:focus-visible,
+    &__panel:focus-visible { outline: 2px solid var(--app-text); outline-offset: 4px; }
+}
+
+.assets-page__loading {
+    min-height: 148px;
+}
+
+.assets-page__empty {
+    padding: 100px 0;
+}
+
+.assets-page:where(:lang(en), :lang(ja), :lang(ko)) {
+    .assets-page__title { width: auto; height: auto; min-height: 82px; margin: 0 30px; white-space: normal; }
+    .assets-page__subtitle { height: auto; min-height: 34px; white-space: normal; }
+    .assets-page__asset-name { gap: 8px; font-size: 24px; }
+    .assets-page__action { gap: 8px; font-size: 24px; }
+    .assets-page__action img { flex: none; }
+    .assets-page__tabs.segmented-tabs { height: auto; min-height: 50px; gap: 16px; align-items: stretch; }
+    .assets-page__tabs .segmented-tabs__item { flex: 1; height: auto; white-space: normal; font-size: 26px; line-height: 1.4; }
+    .assets-page__tabs .segmented-tabs__item--active { font-size: 30px; }
+}

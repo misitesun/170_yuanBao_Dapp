@@ -1,0 +1,78 @@
+@use '@/styles/mixins' as *;
+
+html:has(.withdraw-records-page) { @include hide-scrollbar; }
+
+.withdraw-records-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--app-bg);
+
+    &__demo { font-size: 20px; color: var(--app-text-muted); white-space: nowrap; }
+
+    &__main {
+        padding: 28px 30px 64px;
+    }
+
+    &__tabs.segmented-tabs {
+        gap: 15px;
+    }
+
+    &__tabs .segmented-tabs__item {
+        border: 1px solid var(--app-border);
+        background: var(--app-card-bg);
+    }
+
+    &__list {
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    &__card {
+        min-height: 146px;
+        padding: 30px;
+        border: 1px solid var(--app-border-medium);
+        border-radius: 20px;
+        background: var(--app-surface-subtle);
+    }
+
+    &__card--rejected {
+        min-height: 202px;
+    }
+
+    &__card-heading {
+        gap: 20px;
+        min-height: 42px;
+        line-height: 42px;
+    }
+
+    &__note {
+        min-width: 0;
+        line-height: 42px;
+    }
+
+    &__amount {
+        flex: none;
+        line-height: 42px;
+        white-space: nowrap;
+    }
+
+    &__meta {
+        min-height: 36px;
+        margin-top: 6px;
+        color: var(--app-text-muted);
+        line-height: 36px;
+    }
+
+    &__reason {
+        min-height: 36px;
+        margin-top: 20px;
+        color: var(--app-pink);
+        line-height: 36px;
+    }
+
+    &__cancel.action-button {
+        min-height: 60px;
+        margin-top: 20px;
+        font-size: 22px;
+    }
+}

@@ -1,0 +1,167 @@
+html:has(.ranking-page) {
+    @include hide-scrollbar;
+}
+
+.ranking-page {
+    position: relative;
+    isolation: isolate;
+    padding-bottom: calc(179px + env(safe-area-inset-bottom));
+    font-family: 'Microsoft YaHei', '微软雅黑', sans-serif;
+    letter-spacing: 0;
+
+    &::before {
+        content: '';
+        /* layout-exception: background-art reuse the star field behind the flowing page and shared header */
+        position: absolute;
+        z-index: -1;
+        top: -128px;
+        left: 0;
+        width: 750px;
+        height: 888px;
+        background: url('@/assets/common/account-background.png') center top / 100% 100% no-repeat;
+        pointer-events: none;
+    }
+
+    &__hero { padding-top: 47px; padding-right: 2px; }
+    &__title {
+        width: 296px;
+        height: 82px;
+        font-size: 60px;
+        font-weight: 700;
+        line-height: 82.31999969482422px;
+        text-shadow: var(--app-text-shadow);
+        white-space: nowrap;
+
+        span { color: var(--app-card-pack-title-accent); }
+    }
+    &__subtitle {
+        width: 528px;
+        height: 34px;
+        margin-top: 6px;
+        color: var(--app-text-secondary);
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 33.599998474121094px;
+        text-shadow: var(--app-text-shadow);
+        white-space: nowrap;
+    }
+    &__divider { width: 338px; height: 24px; margin-top: 16px; }
+    &__results { margin: 30px 30px 0; }
+    &__list { gap: 20px; }
+    &__row {
+        display: grid;
+        grid-template-columns: 78px 20px 180px 1fr 145px;
+        align-items: center;
+        height: 102px;
+        padding: 0 30px 0 20px;
+        border-radius: 20px;
+        background: var(--ranking-row-bg);
+        box-shadow: inset 0 0 0 2px var(--ranking-row-border);
+        color: var(--ranking-row-color);
+        font-size: 28px;
+        font-weight: 600;
+        line-height: 42px;
+
+        &--1 {
+            --ranking-row-bg: var(--app-ranking-first-bg);
+            --ranking-row-border: var(--app-ranking-first);
+            --ranking-row-color: var(--app-ranking-first);
+        }
+        &--2 {
+            --ranking-row-bg: var(--app-ranking-second-bg);
+            --ranking-row-border: var(--app-ranking-second-border);
+            --ranking-row-color: var(--app-ranking-second);
+        }
+        &--3 {
+            --ranking-row-bg: var(--app-ranking-third-bg);
+            --ranking-row-border: var(--app-ranking-third);
+            --ranking-row-color: var(--app-ranking-third);
+        }
+        &--regular {
+            --ranking-row-bg: var(--app-ranking-row-bg);
+            --ranking-row-border: var(--app-ranking-row-border);
+            --ranking-row-color: var(--app-text);
+        }
+    }
+    &__medal { grid-column: 1; width: 78px; height: 78px; }
+    &__number {
+        grid-column: 1;
+        height: 36px;
+        margin-top: 4px;
+        color: var(--app-text-secondary);
+        font-size: 24px;
+        line-height: 36px;
+    }
+    &__address { grid-column: 3; height: 42px; white-space: nowrap; }
+    &__amount { grid-column: 5; height: 42px; white-space: nowrap; }
+
+    &__mine {
+        /* layout-exception: viewport-overlay the developer explicitly requires my ranking to remain at the viewport bottom */
+        position: fixed;
+        z-index: 1;
+        right: 30px;
+        bottom: calc(29px + env(safe-area-inset-bottom));
+        left: 30px;
+        display: grid;
+        grid-template-columns: 30px 81px 30px 173px 1fr 173px 30px;
+        grid-template-rows: 144px;
+        height: 144px;
+        background: url('@/assets/ranking/my-rank-background.png') center / 100% 100% no-repeat;
+    }
+    &__glow {
+        /* layout-exception: background-art clip the measured blurred circle to the 200px decorative frame */
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200px;
+        height: 144px;
+        overflow: hidden;
+        border-radius: 20px 0 0 20px;
+        pointer-events: none;
+
+        &::before {
+            content: '';
+            /* layout-exception: background-art the measured 96px circle provides only the my-ranking glow */
+            position: absolute;
+            top: 24px;
+            left: 22px;
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: rgb(73.33333492279053% 0% 100%);
+            // Figma's 100px layer-blur radius maps to a 50px CSS Gaussian standard deviation.
+            filter: blur(50px);
+        }
+    }
+    &__my-icon { z-index: 1; grid-column: 2; grid-row: 1; width: 81px; height: 80px; margin-top: 32px; }
+    &__my-identity { z-index: 1; grid-column: 4; grid-row: 1; gap: 10px; padding-top: 30px; }
+    &__my-total { z-index: 1; grid-column: 6; grid-row: 1; gap: 10px; padding-top: 29px; }
+    &__my-title {
+        width: 174px;
+        height: 39px;
+        color: var(--app-card-pack-title-accent);
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 39.20000076293945px;
+        white-space: nowrap;
+    }
+    &__my-address { height: 36px; font-size: 24px; font-weight: 600; line-height: 36px; }
+    &__my-amount {
+        height: 42px;
+        color: var(--app-card-pack-title-accent);
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 42px;
+        white-space: nowrap;
+    }
+    &__my-label { width: 177px; height: 34px; font-size: 24px; font-weight: 400; line-height: 33.599998474121094px; white-space: nowrap; }
+}
+
+.ranking-page:where(:lang(en), :lang(ja), :lang(ko)) {
+    .ranking-page__title { width: auto; max-width: 100%; height: auto; min-height: 82px; font-size: 48px; white-space: normal; }
+    .ranking-page__subtitle { height: auto; min-height: 34px; white-space: normal; }
+    .ranking-page__mine { grid-template-columns: 30px 81px 20px 200px 1fr 220px 30px; grid-template-rows: minmax(144px, auto); height: auto; min-height: 144px; }
+    .ranking-page__my-title { width: auto; font-size: 24px; }
+    .ranking-page__my-amount { font-size: 26px; }
+    .ranking-page__my-label { width: auto; height: auto; white-space: normal; font-size: 22px; }
+}

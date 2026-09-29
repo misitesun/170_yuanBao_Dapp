@@ -20,7 +20,7 @@ test('language switch keeps its reusable children wrapper while using Dropdown',
     assert.match(component, /useState\(false\)/)
     assert.match(component, /import \{[\s\S]*Dropdown/)
     assert.doesNotMatch(component, /import \{ Picker/)
-    assert.doesNotMatch(component, /useTranslation/)
+    assert.match(component, /aria-label=\{t\('切换语言'\)\}/)
     assert.doesNotMatch(component, /useRef/)
     assert.match(component, /APP_LANGUAGES/)
     assert.match(component, /LANGUAGE_DROPDOWN_OPTIONS/)

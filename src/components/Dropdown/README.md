@@ -63,3 +63,7 @@ const options: readonly DropdownOption[] = [
 ```
 
 将业务动作保留在 `onChange` 中；组件不会自行调用接口、钱包、路由或 Toast。
+
+## 多语言
+
+默认请选择与菜单无障碍标签使用当前语言；调用方传入的 ReactNode 文案不自动翻译，选项与关闭契约保持。

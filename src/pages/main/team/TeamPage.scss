@@ -1,0 +1,234 @@
+html:has(.team-page) {
+    @include hide-scrollbar;
+}
+
+.team-page {
+    position: relative;
+    isolation: isolate;
+    padding: 0 30px;
+    font-family: 'Microsoft YaHei', '微软雅黑', sans-serif;
+    letter-spacing: 0;
+
+    &::before {
+        content: '';
+        /* layout-exception: background-art the two exported star fields extend behind the existing shared header */
+        position: absolute;
+        z-index: -1;
+        top: -128px;
+        left: 0;
+        width: 750px;
+        height: 888px;
+        background:
+            url('@/assets/team/hero-background-front.png') left top / 750px 888px no-repeat,
+            url('@/assets/team/hero-background-back.png') left top / 749px 888px no-repeat;
+        pointer-events: none;
+    }
+
+    &__identity {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 236px;
+        height: 274px;
+        padding-top: 30px;
+    }
+    &__wallet { min-width: 0; padding-top: 30px; }
+    &__wallet-heading {
+        height: 36px;
+        gap: 12px;
+        font-size: 26px;
+        font-weight: 400;
+        line-height: 36.39999771118164px;
+    }
+    &__wallet-copy {
+        flex: none;
+        width: 30px;
+        height: 30px;
+        img { width: 30px; height: 30px; }
+    }
+    &__wallet-address {
+        width: 287px;
+        max-width: 100%;
+        margin-top: 10px;
+        height: 60px;
+        overflow: hidden;
+        font-size: 40px;
+        font-weight: 600;
+        line-height: 60px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    &__level {
+        width: 173px;
+        height: 56px;
+        margin-top: 12px;
+        padding: 8px 20px;
+        border: 1px solid var(--app-team-level-color);
+        border-radius: 999px;
+        background: var(--app-team-level-background);
+        color: var(--app-team-level-color);
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 36px;
+        white-space: nowrap;
+    }
+    &__level-emblem { width: 236px; height: 236px; object-fit: contain; }
+
+    &__invitation {
+        @include gradient-card(30px, linear-gradient(var(--app-box-bg), var(--app-box-bg)), var(--app-card-pack-border-gradient), 2px);
+        height: 287px;
+        padding: 38px 28px 28px;
+    }
+    &__invitation-title {
+        height: 28px;
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 28.125px;
+    }
+    &__code-row {
+        display: grid;
+        grid-template-columns: 29px 244px 29px;
+        align-items: center;
+        gap: 8px;
+        height: 69px;
+        margin-top: 10px;
+    }
+    &__code {
+        grid-column: 2;
+        font-size: 46px;
+        font-weight: 700;
+        line-height: 69px;
+        white-space: nowrap;
+    }
+    &__code-copy {
+        grid-column: 3;
+        align-self: start;
+        margin-top: 21px;
+        width: 29px;
+        height: 28px;
+        img { width: 29px; height: 28px; }
+    }
+    &__invitation-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 80px;
+        gap: 12px;
+        width: 100%;
+        height: 80px;
+        margin-top: 30px;
+    }
+    &__invitation-row .app-input {
+        --app-input-border-color: var(--app-team-input-border);
+        --app-input-background: var(--app-team-input-background);
+        min-width: 0;
+        min-height: 0;
+        width: 100%;
+        height: 80px;
+        padding: 0 18px;
+        border: 2px solid var(--app-team-input-border);
+        border-radius: 20px;
+        input {
+            height: 36px;
+            padding: 0;
+            font-size: 24px;
+            font-weight: 400;
+            line-height: 36px;
+        }
+    }
+    &__invitation-copy {
+        width: 80px;
+        height: 80px;
+        img { width: 80px; height: 80px; }
+    }
+
+    &__statistics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 30px;
+    }
+    &__statistic {
+        min-width: 0;
+        height: 136px;
+        padding: 23px 23px 19px;
+        gap: 10px;
+        border: 1px solid var(--app-accent-border);
+        border-radius: 24px;
+        background: var(--app-team-surface);
+        &:nth-child(even) { padding-left: 29px; }
+        dt {
+            height: 34px;
+            color: var(--app-text-muted);
+            font-size: 24px;
+            font-weight: 400;
+            line-height: 33.599998474121094px;
+        }
+        dd {
+            height: 48px;
+            font-size: 32px;
+            font-weight: 600;
+            line-height: 48px;
+            white-space: nowrap;
+        }
+    }
+    &__statistic-value--accent { color: var(--app-card-pack-title-accent); }
+
+    &__members { margin-top: 40px; }
+    &__members-title {
+        height: 50px;
+        font-size: 36px;
+        font-weight: 600;
+        line-height: 50.39999771118164px;
+    }
+    &__member-list { margin-top: 30px; gap: 20px; }
+    &__member {
+        height: 291px;
+        padding: 30px;
+        border-radius: 20px;
+        background: var(--app-team-surface);
+    }
+    &__member-heading { height: 84px; }
+    &__member-name {
+        height: 42px;
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 42px;
+    }
+    &__member-time {
+        display: block;
+        height: 36px;
+        margin-top: 6px;
+        color: var(--app-text-muted);
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 36px;
+    }
+    &__member-level { flex: none; width: 90px; height: 48px; object-fit: contain; }
+    &__member-divider { height: 1px; margin-top: 20px; background: var(--app-border-medium); }
+    &__member-performance {
+        margin-top: 30px;
+        gap: 24px;
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 36px;
+        > div { height: 36px; }
+        dt { color: var(--app-text-muted); }
+    }
+
+    button {
+        cursor: pointer;
+        &:disabled { cursor: default; opacity: 0.5; }
+        &:focus-visible { outline: 2px solid var(--app-color); outline-offset: 4px; }
+    }
+}
+
+.team-page__loading {
+    min-height: 291px;
+}
+
+.team-page__empty {
+    padding: 100px 0;
+}
+
+.team-page:where(:lang(en), :lang(ja), :lang(ko)) {
+    .team-page__level { width: fit-content; max-width: 100%; height: auto; min-height: 56px; white-space: normal; }
+    .team-page__statistic { height: auto; min-height: 137px; }
+    .team-page__statistic dt { height: auto; min-height: 36px; white-space: normal; }
+}

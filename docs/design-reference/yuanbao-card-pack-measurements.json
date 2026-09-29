@@ -1,0 +1,3585 @@
+{
+  "fileKey": "NVwAAv12WZx1LiCTqPMNWD",
+  "nodeId": "30183:311",
+  "source": "Figma REST nodes read on 2026-09-28",
+  "frame": {
+    "width": 750,
+    "height": 1624
+  },
+  "nodes": [
+    {
+      "id": "30183:311",
+      "name": "01-首页",
+      "type": "FRAME",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.08235294371843338,
+            "g": 0.0117647061124444,
+            "b": 0.21176470816135406,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 750.0,
+        "height": 1624.0
+      }
+    },
+    {
+      "id": "30192:463",
+      "name": "image 4906",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "STRETCH",
+          "imageRef": "461a0a4a62e81c49a30424de16ac13d2192a1665",
+          "imageTransform": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.538032054901123,
+              0.22116726636886597
+            ]
+          ],
+          "filters": {
+            "exposure": -0.07999999821186066
+          }
+        },
+        {
+          "blendMode": "NORMAL",
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.5,
+              "y": -3.0616171314629196e-17
+            },
+            {
+              "x": 0.5,
+              "y": 0.9999999999999999
+            },
+            {
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.08235294371843338,
+                "g": 0.0117647061124444,
+                "b": 0.21176470816135406,
+                "a": 0.20000000298023224
+              },
+              "position": 0.20000000298023224
+            },
+            {
+              "color": {
+                "r": 0.08235294371843338,
+                "g": 0.0117647061124444,
+                "b": 0.21176470816135406,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 1.0,
+        "y": 0.0,
+        "width": 749.0,
+        "height": 888.0
+      }
+    },
+    {
+      "id": "30183:314",
+      "name": "Rectangle 105",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "opacity": 0.20000000298023224,
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [
+        {
+          "type": "BACKGROUND_BLUR",
+          "visible": true,
+          "radius": 20.0
+        }
+      ],
+      "frameRelativeBoundingBox": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 750.0,
+        "height": 128.0
+      }
+    },
+    {
+      "id": "30183:315",
+      "name": "Rectangle 1167",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 1.0,
+              "y": 0.5000000000000002
+            },
+            {
+              "x": 0.0,
+              "y": 0.5000000000000001
+            },
+            {
+              "x": 1.0,
+              "y": 2.220446049250313e-16
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 1.0,
+                "g": 0.364705890417099,
+                "b": 1.0,
+                "a": 0.20000000298023224
+              },
+              "position": 0.4000000059604645
+            },
+            {
+              "color": {
+                "r": 1.0,
+                "g": 0.364705890417099,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 1.0,
+                "g": 0.364705890417099,
+                "b": 1.0,
+                "a": 0.20000000298023224
+              },
+              "position": 0.6000000238418579
+            }
+          ]
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 0.0,
+        "y": 128.0,
+        "width": 750.0,
+        "height": 2.0
+      }
+    },
+    {
+      "id": "30183:316",
+      "name": "Component 3",
+      "type": "INSTANCE",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "itemSpacing": 10.0,
+      "frameRelativeBoundingBox": {
+        "x": 10.0,
+        "y": 9.0,
+        "width": 730.0,
+        "height": 19.0
+      }
+    },
+    {
+      "id": "I30183:316;2144:3",
+      "name": "1 拷贝 13-2",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "FILL",
+          "imageRef": "c12197eafa125dabadb2629a9c26407310d1a197"
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 10.0,
+        "y": 9.0,
+        "width": 730.0,
+        "height": 19.53521156311035
+      }
+    },
+    {
+      "id": "30183:317",
+      "name": "Frame 1312317318",
+      "type": "FRAME",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "itemSpacing": 20.0,
+      "frameRelativeBoundingBox": {
+        "x": 340.0,
+        "y": 60.0,
+        "width": 380.0,
+        "height": 52.0
+      }
+    },
+    {
+      "id": "30183:318",
+      "name": "Frame 584",
+      "type": "FRAME",
+      "fills": [
+        {
+          "opacity": 0.10000000149011612,
+          "blendMode": "NORMAL",
+          "visible": false,
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.5,
+              "y": -3.0616171314629196e-17
+            },
+            {
+              "x": 0.5,
+              "y": 0.9999999999999999
+            },
+            {
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.5574284195899963,
+                "g": 0.01650766283273697,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.08325383067131042,
+                "g": 0.8777672052383423,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.0,
+                "g": 0.38333332538604736,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        },
+        {
+          "opacity": 0.20000000298023224,
+          "blendMode": "NORMAL",
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.5,
+              "y": -3.0616171314629196e-17
+            },
+            {
+              "x": 0.5,
+              "y": 0.9999999999999999
+            },
+            {
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.7960784435272217,
+                "g": 0.47058823704719543,
+                "b": 0.9921568632125854,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.6941176652908325,
+                "g": 0.7960784435272217,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.18431372940540314,
+                "g": 0.42352941632270813,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        }
+      ],
+      "strokes": [
+        {
+          "blendMode": "NORMAL",
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.5,
+              "y": -3.0616171314629196e-17
+            },
+            {
+              "x": 0.5,
+              "y": 0.9999999999999999
+            },
+            {
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.7960784435272217,
+                "g": 0.47058823704719543,
+                "b": 0.9921568632125854,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.6941176652908325,
+                "g": 0.9058823585510254,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.18431372940540314,
+                "g": 0.42352941632270813,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        }
+      ],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "cornerRadius": 999.0,
+      "effects": [
+        {
+          "type": "INNER_SHADOW",
+          "visible": false,
+          "color": {
+            "r": 0.0784313753247261,
+            "g": 0.3843137323856354,
+            "b": 1.0,
+            "a": 1.0
+          },
+          "blendMode": "NORMAL",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "radius": 30.0
+        }
+      ],
+      "itemSpacing": 10.0,
+      "paddingLeft": 20.0,
+      "paddingRight": 20.0,
+      "paddingTop": 10.0,
+      "paddingBottom": 10.0,
+      "frameRelativeBoundingBox": {
+        "x": 340.0,
+        "y": 60.0,
+        "width": 164.0,
+        "height": 52.0
+      }
+    },
+    {
+      "id": "30183:319",
+      "name": "0xC1..839d",
+      "type": "TEXT",
+      "characters": "0xC1..839d",
+      "style": {
+        "fontFamily": "Poppins",
+        "fontPostScriptName": "Poppins-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 24.0,
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 36.0,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 360.0,
+        "y": 68.0,
+        "width": 124.0,
+        "height": 36.0
+      }
+    },
+    {
+      "id": "30183:320",
+      "name": "Group 2085666468",
+      "type": "GROUP",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 524.0,
+        "y": 60.0,
+        "width": 52.0,
+        "height": 52.0
+      }
+    },
+    {
+      "id": "30183:321",
+      "name": "Ellipse 8874",
+      "type": "ELLIPSE",
+      "fills": [
+        {
+          "opacity": 0.20000000298023224,
+          "blendMode": "NORMAL",
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.5,
+              "y": -3.0616171314629196e-17
+            },
+            {
+              "x": 0.5,
+              "y": 0.9999999999999999
+            },
+            {
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.7960784435272217,
+                "g": 0.47058823704719543,
+                "b": 0.9921568632125854,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.6941176652908325,
+                "g": 0.9058823585510254,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.18431372940540314,
+                "g": 0.42352941632270813,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        }
+      ],
+      "strokes": [
+        {
+          "blendMode": "NORMAL",
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.5,
+              "y": -3.0616171314629196e-17
+            },
+            {
+              "x": 0.5,
+              "y": 0.9999999999999999
+            },
+            {
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.7960784435272217,
+                "g": 0.47058823704719543,
+                "b": 0.9921568632125854,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.6941176652908325,
+                "g": 0.9058823585510254,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.18431372940540314,
+                "g": 0.42352941632270813,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        }
+      ],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [
+        {
+          "type": "BACKGROUND_BLUR",
+          "visible": true,
+          "radius": 20.0
+        }
+      ],
+      "frameRelativeBoundingBox": {
+        "x": 524.0,
+        "y": 60.0,
+        "width": 52.0,
+        "height": 52.0
+      }
+    },
+    {
+      "id": "30183:322",
+      "name": "Frame 2147227276",
+      "type": "FRAME",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "itemSpacing": 10.0,
+      "paddingLeft": 10.0,
+      "paddingRight": 10.0,
+      "paddingTop": 10.0,
+      "paddingBottom": 10.0,
+      "frameRelativeBoundingBox": {
+        "x": 532.125,
+        "y": 68.125,
+        "width": 35.75,
+        "height": 35.75
+      }
+    },
+    {
+      "id": "30183:323",
+      "name": "Vector",
+      "type": "VECTOR",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 0.1953125,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 532.0,
+        "y": 69.0,
+        "width": 36.0,
+        "height": 34.0
+      }
+    },
+    {
+      "id": "30183:324",
+      "name": "Ellipse 8873",
+      "type": "ELLIPSE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 2.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 556.5,
+        "y": 72.1875,
+        "width": 8.125,
+        "height": 8.125
+      }
+    },
+    {
+      "id": "30183:325",
+      "name": "Group 181",
+      "type": "GROUP",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 596.0,
+        "y": 60.0,
+        "width": 52.0,
+        "height": 52.0
+      }
+    },
+    {
+      "id": "30183:326",
+      "name": "Ellipse 21",
+      "type": "ELLIPSE",
+      "fills": [
+        {
+          "opacity": 0.10000000149011612,
+          "blendMode": "NORMAL",
+          "visible": false,
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.5,
+              "y": -3.0616171314629196e-17
+            },
+            {
+              "x": 0.5,
+              "y": 0.9999999999999999
+            },
+            {
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.5574284195899963,
+                "g": 0.01650766283273697,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.08325383067131042,
+                "g": 0.8777672052383423,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.0,
+                "g": 0.38333332538604736,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        },
+        {
+          "opacity": 0.20000000298023224,
+          "blendMode": "NORMAL",
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.5,
+              "y": -3.0616171314629196e-17
+            },
+            {
+              "x": 0.5,
+              "y": 0.9999999999999999
+            },
+            {
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.7960784435272217,
+                "g": 0.47058823704719543,
+                "b": 0.9921568632125854,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.6941176652908325,
+                "g": 0.9058823585510254,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.18431372940540314,
+                "g": 0.42352941632270813,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        }
+      ],
+      "strokes": [
+        {
+          "blendMode": "NORMAL",
+          "visible": false,
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.5,
+              "y": -3.0616171314629196e-17
+            },
+            {
+              "x": 0.5,
+              "y": 0.9999999999999999
+            },
+            {
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.5574284195899963,
+                "g": 0.01650766283273697,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.08325383067131042,
+                "g": 0.8777672052383423,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.0,
+                "g": 0.38333332538604736,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        },
+        {
+          "blendMode": "NORMAL",
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.5,
+              "y": -3.0616171314629196e-17
+            },
+            {
+              "x": 0.5,
+              "y": 0.9999999999999999
+            },
+            {
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.7960784435272217,
+                "g": 0.47058823704719543,
+                "b": 0.9921568632125854,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.6941176652908325,
+                "g": 0.9058823585510254,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.18431372940540314,
+                "g": 0.42352941632270813,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        }
+      ],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 596.0,
+        "y": 60.0,
+        "width": 52.0,
+        "height": 52.0
+      }
+    },
+    {
+      "id": "30183:327",
+      "name": "2 825628258",
+      "type": "FRAME",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "visible": false,
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 606.0,
+        "y": 70.0,
+        "width": 32.0,
+        "height": 32.0
+      }
+    },
+    {
+      "id": "30183:328",
+      "name": "Clip path group",
+      "type": "GROUP",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 606.0,
+        "y": 70.0,
+        "width": 32.0,
+        "height": 32.0
+      }
+    },
+    {
+      "id": "30183:329",
+      "name": "clip0_683_3391",
+      "type": "GROUP",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 606.0,
+        "y": 70.0,
+        "width": 32.0,
+        "height": 32.0
+      }
+    },
+    {
+      "id": "30183:330",
+      "name": "Vector",
+      "type": "VECTOR",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 606.0,
+        "y": 70.0,
+        "width": 32.0,
+        "height": 32.0
+      }
+    },
+    {
+      "id": "30183:331",
+      "name": "Group",
+      "type": "GROUP",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 606.0,
+        "y": 70.0,
+        "width": 32.0,
+        "height": 32.0
+      }
+    },
+    {
+      "id": "30183:332",
+      "name": "Vector",
+      "type": "VECTOR",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 606.0,
+        "y": 70.0,
+        "width": 32.0,
+        "height": 32.0
+      }
+    },
+    {
+      "id": "30183:333",
+      "name": "Group 286",
+      "type": "GROUP",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 668.0,
+        "y": 60.0,
+        "width": 52.0,
+        "height": 52.0
+      }
+    },
+    {
+      "id": "30183:334",
+      "name": "Ellipse 21",
+      "type": "ELLIPSE",
+      "fills": [
+        {
+          "opacity": 0.10000000149011612,
+          "blendMode": "NORMAL",
+          "visible": false,
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.5,
+              "y": -3.0616171314629196e-17
+            },
+            {
+              "x": 0.5,
+              "y": 0.9999999999999999
+            },
+            {
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.5574284195899963,
+                "g": 0.01650766283273697,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.08325383067131042,
+                "g": 0.8777672052383423,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.0,
+                "g": 0.38333332538604736,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        },
+        {
+          "opacity": 0.20000000298023224,
+          "blendMode": "NORMAL",
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.5,
+              "y": -3.0616171314629196e-17
+            },
+            {
+              "x": 0.5,
+              "y": 0.9999999999999999
+            },
+            {
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.7960784435272217,
+                "g": 0.47058823704719543,
+                "b": 0.9921568632125854,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.6941176652908325,
+                "g": 0.9058823585510254,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.18431372940540314,
+                "g": 0.42352941632270813,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        }
+      ],
+      "strokes": [
+        {
+          "blendMode": "NORMAL",
+          "visible": false,
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.5,
+              "y": -3.0616171314629196e-17
+            },
+            {
+              "x": 0.5,
+              "y": 0.9999999999999999
+            },
+            {
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.5574284195899963,
+                "g": 0.01650766283273697,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.08325383067131042,
+                "g": 0.8777672052383423,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.0,
+                "g": 0.38333332538604736,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        },
+        {
+          "blendMode": "NORMAL",
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.5,
+              "y": -3.0616171314629196e-17
+            },
+            {
+              "x": 0.5,
+              "y": 0.9999999999999999
+            },
+            {
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.7960784435272217,
+                "g": 0.47058823704719543,
+                "b": 0.9921568632125854,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.6941176652908325,
+                "g": 0.9058823585510254,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.18431372940540314,
+                "g": 0.42352941632270813,
+                "b": 0.9960784316062927,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        }
+      ],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 668.0,
+        "y": 60.0,
+        "width": 52.0,
+        "height": 52.0
+      }
+    },
+    {
+      "id": "30183:335",
+      "name": "Icon",
+      "type": "VECTOR",
+      "fills": [],
+      "strokes": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokeWeight": 4.0,
+      "strokeAlign": "CENTER",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 681.0,
+        "y": 77.0,
+        "width": 27.0,
+        "height": 18.0
+      }
+    },
+    {
+      "id": "30183:341",
+      "name": "image 4898",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "STRETCH",
+          "imageRef": "10340c5b42784f57651dfa8344736f50aacd0110",
+          "imageTransform": [
+            [
+              0.8500000238418579,
+              0.0,
+              0.07500000298023224
+            ],
+            [
+              0.0,
+              0.8500000238418579,
+              0.05000000074505806
+            ]
+          ]
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 27.0,
+        "y": 57.0,
+        "width": 58.0,
+        "height": 58.0
+      }
+    },
+    {
+      "id": "30192:500",
+      "name": "Frame 2147236718",
+      "type": "FRAME",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "itemSpacing": 14.0,
+      "frameRelativeBoundingBox": {
+        "x": 31.0,
+        "y": 453.0,
+        "width": 688.0,
+        "height": 76.0
+      }
+    },
+    {
+      "id": "30183:443",
+      "name": "Frame 2147236716",
+      "type": "FRAME",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.13333334028720856,
+            "g": 0.0235294122248888,
+            "b": 0.3529411852359772,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokeWeight": 2.0,
+      "strokeAlign": "INSIDE",
+      "cornerRadius": 20.0,
+      "effects": [
+        {
+          "type": "INNER_SHADOW",
+          "visible": true,
+          "color": {
+            "r": 0.9843137264251709,
+            "g": 0.0,
+            "b": 1.0,
+            "a": 0.6000000238418579
+          },
+          "blendMode": "NORMAL",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "radius": 20.0
+        },
+        {
+          "type": "DROP_SHADOW",
+          "visible": false,
+          "color": {
+            "r": 0.6705882549285889,
+            "g": 0.2666666805744171,
+            "b": 1.0,
+            "a": 1.0
+          },
+          "blendMode": "NORMAL",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "radius": 10.0,
+          "showShadowBehindNode": false
+        }
+      ],
+      "itemSpacing": 4.0,
+      "paddingLeft": 20.0,
+      "paddingRight": 20.0,
+      "paddingTop": 16.0,
+      "paddingBottom": 16.0,
+      "frameRelativeBoundingBox": {
+        "x": 31.0,
+        "y": 453.0,
+        "width": 220.0,
+        "height": 76.0
+      }
+    },
+    {
+      "id": "30183:451",
+      "name": "image 4904",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "STRETCH",
+          "imageRef": "1856ca8c4af731b324ffe6a3a0f8a996154ba468",
+          "imageTransform": [
+            [
+              0.18895162642002106,
+              0.0,
+              -0.00014802119403611869
+            ],
+            [
+              0.0,
+              0.5668548941612244,
+              0.2205745130777359
+            ]
+          ]
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 77.0,
+        "y": 471.0,
+        "width": 40.0,
+        "height": 40.0
+      }
+    },
+    {
+      "id": "30183:442",
+      "name": "待开奖",
+      "type": "TEXT",
+      "characters": "待开奖",
+      "style": {
+        "fontFamily": "PingFang SC",
+        "fontPostScriptName": "PingFangSC-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textCase": "UPPER",
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 28.0,
+        "textAlignHorizontal": "CENTER",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 39.20000076293945,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 121.0,
+        "y": 471.5,
+        "width": 84.0,
+        "height": 39.0
+      }
+    },
+    {
+      "id": "30192:501",
+      "name": "Frame 2147236718",
+      "type": "FRAME",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.13333334028720856,
+            "g": 0.0235294122248888,
+            "b": 0.3529411852359772,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.5254902243614197,
+            "g": 0.2666666805744171,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokeWeight": 2.0,
+      "strokeAlign": "INSIDE",
+      "cornerRadius": 20.0,
+      "effects": [
+        {
+          "type": "INNER_SHADOW",
+          "visible": false,
+          "color": {
+            "r": 0.6703425645828247,
+            "g": 0.26742789149284363,
+            "b": 1.0,
+            "a": 1.0
+          },
+          "blendMode": "NORMAL",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "radius": 10.0
+        }
+      ],
+      "itemSpacing": 4.0,
+      "paddingLeft": 20.0,
+      "paddingRight": 20.0,
+      "paddingTop": 16.0,
+      "paddingBottom": 16.0,
+      "frameRelativeBoundingBox": {
+        "x": 265.0,
+        "y": 453.0,
+        "width": 220.0,
+        "height": 76.0
+      }
+    },
+    {
+      "id": "30192:502",
+      "name": "image 4904",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "STRETCH",
+          "imageRef": "63a8fc3dd3a18c9d4de9d2035eb143839e320545",
+          "imageTransform": [
+            [
+              0.8392009139060974,
+              0.0,
+              0.0803995355963707
+            ],
+            [
+              0.0,
+              0.8392009139060974,
+              0.055898960679769516
+            ]
+          ]
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 311.0,
+        "y": 471.0,
+        "width": 40.0,
+        "height": 40.0
+      }
+    },
+    {
+      "id": "30192:503",
+      "name": "已中奖",
+      "type": "TEXT",
+      "characters": "已中奖",
+      "style": {
+        "fontFamily": "PingFang SC",
+        "fontPostScriptName": "PingFangSC-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textCase": "UPPER",
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 28.0,
+        "textAlignHorizontal": "CENTER",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 39.20000076293945,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.5254902243614197,
+            "g": 0.2666666805744171,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 355.0,
+        "y": 471.5,
+        "width": 84.0,
+        "height": 39.0
+      }
+    },
+    {
+      "id": "30192:453",
+      "name": "Frame 2147236717",
+      "type": "FRAME",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.13333334028720856,
+            "g": 0.0235294122248888,
+            "b": 0.3529411852359772,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.5254902243614197,
+            "g": 0.2666666805744171,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokeWeight": 2.0,
+      "strokeAlign": "INSIDE",
+      "cornerRadius": 20.0,
+      "effects": [
+        {
+          "type": "INNER_SHADOW",
+          "visible": false,
+          "color": {
+            "r": 0.6703425645828247,
+            "g": 0.26742789149284363,
+            "b": 1.0,
+            "a": 1.0
+          },
+          "blendMode": "NORMAL",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "radius": 10.0
+        }
+      ],
+      "itemSpacing": 4.0,
+      "paddingLeft": 20.0,
+      "paddingRight": 20.0,
+      "paddingTop": 16.0,
+      "paddingBottom": 16.0,
+      "frameRelativeBoundingBox": {
+        "x": 499.0,
+        "y": 453.0,
+        "width": 220.0,
+        "height": 76.0
+      }
+    },
+    {
+      "id": "30192:454",
+      "name": "image 4904",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "STRETCH",
+          "imageRef": "9cb5d95ab993805d61bf0b37de742101b7dbbdb0",
+          "imageTransform": [
+            [
+              0.7649681568145752,
+              0.0,
+              0.14238017797470093
+            ],
+            [
+              0.0,
+              0.7649681568145752,
+              0.12872885167598724
+            ]
+          ]
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 545.0,
+        "y": 471.0,
+        "width": 40.0,
+        "height": 40.0
+      }
+    },
+    {
+      "id": "30192:455",
+      "name": "未中奖",
+      "type": "TEXT",
+      "characters": "未中奖",
+      "style": {
+        "fontFamily": "PingFang SC",
+        "fontPostScriptName": "PingFangSC-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textCase": "UPPER",
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 28.0,
+        "textAlignHorizontal": "CENTER",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 39.20000076293945,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.5254902243614197,
+            "g": 0.2666666805744171,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 589.0,
+        "y": 471.5,
+        "width": 84.0,
+        "height": 39.0
+      }
+    },
+    {
+      "id": "30192:509",
+      "name": "我的卡包",
+      "type": "TEXT",
+      "characters": "我的卡包",
+      "style": {
+        "fontFamily": "Alibaba PuHuiTi",
+        "fontPostScriptName": "AlibabaPuHuiTi-Bold",
+        "fontStyle": "Bold",
+        "fontWeight": 700,
+        "textCase": "UPPER",
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 60.0,
+        "textAlignHorizontal": "CENTER",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 82.31999969482422,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "color": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 0.30000001192092896
+          },
+          "blendMode": "NORMAL",
+          "offset": {
+            "x": 0.0,
+            "y": 4.0
+          },
+          "radius": 10.0,
+          "showShadowBehindNode": false
+        }
+      ],
+      "characterStyleOverrides": [
+        0,
+        0,
+        315,
+        315
+      ],
+      "styleOverrideTable": {
+        "315": {
+          "fills": [
+            {
+              "blendMode": "NORMAL",
+              "type": "SOLID",
+              "color": {
+                "r": 0.98333340883255,
+                "g": 0.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            }
+          ]
+        }
+      },
+      "frameRelativeBoundingBox": {
+        "x": 257.0,
+        "y": 175.0,
+        "width": 237.0,
+        "height": 82.0
+      }
+    },
+    {
+      "id": "30192:510",
+      "name": "珍藏每一次收获，查看你拥有的元宝卡",
+      "type": "TEXT",
+      "characters": "珍藏每一次收获，查看你拥有的元宝卡",
+      "style": {
+        "fontFamily": "PingFang SC",
+        "fontPostScriptName": "PingFangSC-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textCase": "UPPER",
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 24.0,
+        "textAlignHorizontal": "CENTER",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 33.599998474121094,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.8196078538894653,
+            "g": 0.7176470756530762,
+            "b": 0.9843137264251709,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "color": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 0.30000001192092896
+          },
+          "blendMode": "NORMAL",
+          "offset": {
+            "x": 0.0,
+            "y": 4.0
+          },
+          "radius": 10.0,
+          "showShadowBehindNode": false
+        }
+      ],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 171.0,
+        "y": 263.0,
+        "width": 408.0,
+        "height": 34.0
+      }
+    },
+    {
+      "id": "30192:512",
+      "name": "拍出订单",
+      "type": "TEXT",
+      "characters": "拍出订单",
+      "style": {
+        "fontFamily": "PingFang SC",
+        "fontPostScriptName": "PingFangSC-Semibold",
+        "fontStyle": "Semibold",
+        "fontWeight": 600,
+        "textCase": "UPPER",
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 40.0,
+        "textAlignHorizontal": "CENTER",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 56.0,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "color": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 0.30000001192092896
+          },
+          "blendMode": "NORMAL",
+          "offset": {
+            "x": 0.0,
+            "y": 4.0
+          },
+          "radius": 10.0,
+          "showShadowBehindNode": false
+        }
+      ],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 31.0,
+        "y": 367.0,
+        "width": 160.0,
+        "height": 56.0
+      }
+    },
+    {
+      "id": "30192:513",
+      "name": "拍入订单",
+      "type": "TEXT",
+      "characters": "拍入订单",
+      "style": {
+        "fontFamily": "PingFang SC",
+        "fontPostScriptName": "PingFangSC-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textCase": "UPPER",
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 32.0,
+        "textAlignHorizontal": "CENTER",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 44.79999923706055,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.8196078538894653,
+            "g": 0.7176470756530762,
+            "b": 0.9843137264251709,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "color": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 0.30000001192092896
+          },
+          "blendMode": "NORMAL",
+          "offset": {
+            "x": 0.0,
+            "y": 4.0
+          },
+          "radius": 10.0,
+          "showShadowBehindNode": false
+        }
+      ],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 221.0,
+        "y": 375.0,
+        "width": 128.0,
+        "height": 45.0
+      }
+    },
+    {
+      "id": "30192:511",
+      "name": "image 4890",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "STRETCH",
+          "imageRef": "668c0735d2bbb8e0130788d95c52f34a43debea1",
+          "imageTransform": [
+            [
+              0.9999999403953552,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.21276594698429108,
+              0.39361700415611267
+            ]
+          ]
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 206.0,
+        "y": 313.0,
+        "width": 338.0,
+        "height": 24.0
+      }
+    },
+    {
+      "id": "30204:1324",
+      "name": "Frame 2147236739",
+      "type": "FRAME",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "itemSpacing": 10.0,
+      "frameRelativeBoundingBox": {
+        "x": 30.0,
+        "y": 559.0,
+        "width": 693.0,
+        "height": 1064.0
+      }
+    },
+    {
+      "id": "30204:1311",
+      "name": "Group 2085666806",
+      "type": "GROUP",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 30.0,
+        "y": 559.0,
+        "width": 693.0,
+        "height": 348.0
+      }
+    },
+    {
+      "id": "30204:1312",
+      "name": "Group 2085665710",
+      "type": "GROUP",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 30.0,
+        "y": 559.0,
+        "width": 693.0,
+        "height": 348.0
+      }
+    },
+    {
+      "id": "30204:1313",
+      "name": "Rectangle 1122",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "opacity": 0.5,
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.13333334028720856,
+            "g": 0.0235294122248888,
+            "b": 0.3529411852359772,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "opacity": 0.5,
+          "blendMode": "NORMAL",
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.4999999999999999,
+              "y": 0.0
+            },
+            {
+              "x": 0.4999999847960356,
+              "y": 0.999999999999998
+            },
+            {
+              "x": 8.881784197001252e-16,
+              "y": -6.283514153437852e-08
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.6705882549285889,
+                "g": 0.2666666805744171,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.9843137264251709,
+                "g": 0.0,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.6705882549285889,
+                "g": 0.2666666805744171,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        }
+      ],
+      "strokeWeight": 2.0,
+      "strokeAlign": "INSIDE",
+      "cornerRadius": 32.0,
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 30.0,
+        "y": 579.0,
+        "width": 690.0,
+        "height": 328.0
+      }
+    },
+    {
+      "id": "30204:1325",
+      "name": "image 4878",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "STRETCH",
+          "imageRef": "e075a999cd36e77756d5bc8111c45efa6ddf68be",
+          "imageTransform": [
+            [
+              1.0,
+              0.0,
+              1.4210854715202004e-14
+            ],
+            [
+              0.0,
+              0.9891218543052673,
+              0.007662021555006504
+            ]
+          ]
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 60.0,
+        "y": 559.0,
+        "width": 240.0,
+        "height": 316.0
+      }
+    },
+    {
+      "id": "30204:1315",
+      "name": "Frame 2147227273",
+      "type": "FRAME",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "itemSpacing": 10.0,
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 698.0,
+        "width": 403.0,
+        "height": 164.0
+      }
+    },
+    {
+      "id": "30204:1316",
+      "name": "本金(元气）",
+      "type": "TEXT",
+      "characters": "本金(元气）",
+      "style": {
+        "fontFamily": "Poppins",
+        "fontPostScriptName": "Poppins-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textAutoResize": "HEIGHT",
+        "fontSize": 24.0,
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 36.0,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "opacity": 0.5,
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 698.0,
+        "width": 403.0,
+        "height": 36.0
+      }
+    },
+    {
+      "id": "30204:1317",
+      "name": "Frame 2147236738",
+      "type": "FRAME",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "itemSpacing": 10.0,
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 744.0,
+        "width": 141.0,
+        "height": 72.0
+      }
+    },
+    {
+      "id": "30204:4276",
+      "name": "Frame",
+      "type": "FRAME",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "visible": false,
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 754.0,
+        "width": 52.0,
+        "height": 52.0
+      }
+    },
+    {
+      "id": "30204:4277",
+      "name": "Vector",
+      "type": "VECTOR",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.0,
+            "g": 0.1761527806520462,
+            "b": 0.45952898263931274,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 0.1953125,
+      "strokeAlign": "INSIDE",
+      "effects": [
+        {
+          "type": "INNER_SHADOW",
+          "visible": true,
+          "color": {
+            "r": 0.0,
+            "g": 0.7166666388511658,
+            "b": 1.0,
+            "a": 1.0
+          },
+          "blendMode": "NORMAL",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "radius": 6.0
+        }
+      ],
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 754.0,
+        "width": 52.0,
+        "height": 52.0
+      }
+    },
+    {
+      "id": "30204:4279",
+      "name": "image 4904",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "FILL",
+          "imageRef": "6aec5078ea5b8e7ef1f3526894a70e0469bd2cbc"
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 322.0,
+        "y": 756.0,
+        "width": 48.0,
+        "height": 48.0
+      }
+    },
+    {
+      "id": "30204:1319",
+      "name": "100",
+      "type": "TEXT",
+      "characters": "100",
+      "style": {
+        "fontFamily": "Poppins",
+        "fontPostScriptName": "Poppins-Medium",
+        "fontStyle": "Medium",
+        "fontWeight": 500,
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 48.0,
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 72.0,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 382.0,
+        "y": 744.0,
+        "width": 79.0,
+        "height": 72.0
+      }
+    },
+    {
+      "id": "30204:1320",
+      "name": "购买时间：2026.02.24 12:28",
+      "type": "TEXT",
+      "characters": "购买时间：2026.02.24 12:28",
+      "style": {
+        "fontFamily": "Poppins",
+        "fontPostScriptName": "Poppins-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 24.0,
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 36.0,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "opacity": 0.5,
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 826.0,
+        "width": 308.0,
+        "height": 36.0
+      }
+    },
+    {
+      "id": "30204:1321",
+      "name": "Frame 2147227268",
+      "type": "FRAME",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.13333334028720856,
+            "g": 0.0235294122248888,
+            "b": 0.3529411852359772,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 0.27199143171310425,
+            "b": 0.27199143171310425,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "cornerRadius": 999.0,
+      "effects": [],
+      "itemSpacing": 10.0,
+      "paddingLeft": 12.0,
+      "paddingRight": 12.0,
+      "paddingTop": 10.0,
+      "paddingBottom": 10.0,
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 609.0,
+        "width": 202.0,
+        "height": 58.0
+      }
+    },
+    {
+      "id": "30204:1327",
+      "name": "image 4920",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "STRETCH",
+          "imageRef": "05d40f8c2ef26dce305cddcf7cc6f0a03b4a3a7b",
+          "imageTransform": [
+            [
+              0.9140521883964539,
+              0.0,
+              0.04936216399073601
+            ],
+            [
+              0.0,
+              0.9140521883964539,
+              0.041883498430252075
+            ]
+          ]
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 333.0,
+        "y": 620.0,
+        "width": 36.0,
+        "height": 36.0
+      }
+    },
+    {
+      "id": "30204:1323",
+      "name": "元宝典藏卡",
+      "type": "TEXT",
+      "characters": "元宝典藏卡",
+      "style": {
+        "fontFamily": "PingFang SC",
+        "fontPostScriptName": "PingFangSC-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 26.0,
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 36.39999771118164,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 0.27199143171310425,
+            "b": 0.27199143171310425,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 379.0,
+        "y": 620.0,
+        "width": 130.0,
+        "height": 36.0
+      }
+    },
+    {
+      "id": "30204:1310",
+      "name": "Group 2085666805",
+      "type": "GROUP",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 30.0,
+        "y": 917.0,
+        "width": 693.0,
+        "height": 348.0
+      }
+    },
+    {
+      "id": "30204:1276",
+      "name": "Group 2085665710",
+      "type": "GROUP",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 30.0,
+        "y": 917.0,
+        "width": 693.0,
+        "height": 348.0
+      }
+    },
+    {
+      "id": "30204:1277",
+      "name": "Rectangle 1122",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "opacity": 0.5,
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.13333334028720856,
+            "g": 0.0235294122248888,
+            "b": 0.3529411852359772,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "opacity": 0.5,
+          "blendMode": "NORMAL",
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.4999999999999999,
+              "y": 0.0
+            },
+            {
+              "x": 0.4999999847960356,
+              "y": 0.999999999999998
+            },
+            {
+              "x": 8.881784197001252e-16,
+              "y": -6.283514153437852e-08
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.6705882549285889,
+                "g": 0.2666666805744171,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.9843137264251709,
+                "g": 0.0,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.6705882549285889,
+                "g": 0.2666666805744171,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        }
+      ],
+      "strokeWeight": 2.0,
+      "strokeAlign": "INSIDE",
+      "cornerRadius": 32.0,
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 30.0,
+        "y": 937.0,
+        "width": 690.0,
+        "height": 328.0
+      }
+    },
+    {
+      "id": "30204:1306",
+      "name": "image 4907",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "STRETCH",
+          "imageRef": "b8c6ed87b320fdd84562b1a4f60f17b7bee34ac9",
+          "imageTransform": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.9932431578636169,
+              7.209157047327608e-05
+            ]
+          ],
+          "filters": {
+            "saturation": 0.4699999988079071
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 60.0,
+        "y": 917.0,
+        "width": 240.0,
+        "height": 318.0
+      }
+    },
+    {
+      "id": "30204:1292",
+      "name": "Frame 2147227273",
+      "type": "FRAME",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "itemSpacing": 10.0,
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 1056.0,
+        "width": 403.0,
+        "height": 164.0
+      }
+    },
+    {
+      "id": "30204:1293",
+      "name": "本金(元气）",
+      "type": "TEXT",
+      "characters": "本金(元气）",
+      "style": {
+        "fontFamily": "Poppins",
+        "fontPostScriptName": "Poppins-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textAutoResize": "HEIGHT",
+        "fontSize": 24.0,
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 36.0,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "opacity": 0.5,
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 1056.0,
+        "width": 403.0,
+        "height": 36.0
+      }
+    },
+    {
+      "id": "30204:1304",
+      "name": "Frame 2147236738",
+      "type": "FRAME",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "itemSpacing": 10.0,
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 1102.0,
+        "width": 152.0,
+        "height": 72.0
+      }
+    },
+    {
+      "id": "30204:1302",
+      "name": "image 4891",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "FILL",
+          "imageRef": "6aec5078ea5b8e7ef1f3526894a70e0469bd2cbc"
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 1112.0,
+        "width": 52.0,
+        "height": 52.0
+      }
+    },
+    {
+      "id": "30204:1294",
+      "name": "300",
+      "type": "TEXT",
+      "characters": "300",
+      "style": {
+        "fontFamily": "Poppins",
+        "fontPostScriptName": "Poppins-Medium",
+        "fontStyle": "Medium",
+        "fontWeight": 500,
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 48.0,
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 72.0,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 382.0,
+        "y": 1102.0,
+        "width": 90.0,
+        "height": 72.0
+      }
+    },
+    {
+      "id": "30204:1291",
+      "name": "购买时间：2026.02.24 12:28",
+      "type": "TEXT",
+      "characters": "购买时间：2026.02.24 12:28",
+      "style": {
+        "fontFamily": "Poppins",
+        "fontPostScriptName": "Poppins-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 24.0,
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 36.0,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "opacity": 0.5,
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 1184.0,
+        "width": 308.0,
+        "height": 36.0
+      }
+    },
+    {
+      "id": "30204:1278",
+      "name": "Frame 2147227268",
+      "type": "FRAME",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.13333334028720856,
+            "g": 0.0235294122248888,
+            "b": 0.3529411852359772,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.4108135402202606,
+            "g": 0.617683470249176,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "cornerRadius": 999.0,
+      "effects": [],
+      "itemSpacing": 10.0,
+      "paddingLeft": 12.0,
+      "paddingRight": 12.0,
+      "paddingTop": 10.0,
+      "paddingBottom": 10.0,
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 967.0,
+        "width": 202.0,
+        "height": 58.0
+      }
+    },
+    {
+      "id": "30204:1308",
+      "name": "image 4919",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "STRETCH",
+          "imageRef": "4b9f4d6a9c3bbc360dd853c4f782bf8bd153eb5a",
+          "imageTransform": [
+            [
+              0.852415144443512,
+              0.0,
+              0.07039017975330353
+            ],
+            [
+              0.0,
+              0.852415144443512,
+              0.07655023783445358
+            ]
+          ]
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 333.0,
+        "y": 978.0,
+        "width": 36.0,
+        "height": 36.0
+      }
+    },
+    {
+      "id": "30204:1280",
+      "name": "元宝尊享卡",
+      "type": "TEXT",
+      "characters": "元宝尊享卡",
+      "style": {
+        "fontFamily": "PingFang SC",
+        "fontPostScriptName": "PingFangSC-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 26.0,
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 36.39999771118164,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.4108135402202606,
+            "g": 0.617683470249176,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 379.0,
+        "y": 978.0,
+        "width": 130.0,
+        "height": 36.0
+      }
+    },
+    {
+      "id": "30204:1329",
+      "name": "Group 2085666807",
+      "type": "GROUP",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 30.0,
+        "y": 1275.0,
+        "width": 693.0,
+        "height": 348.0
+      }
+    },
+    {
+      "id": "30204:1330",
+      "name": "Group 2085665710",
+      "type": "GROUP",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 30.0,
+        "y": 1275.0,
+        "width": 693.0,
+        "height": 348.0
+      }
+    },
+    {
+      "id": "30204:1331",
+      "name": "Rectangle 1122",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "opacity": 0.5,
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.13333334028720856,
+            "g": 0.0235294122248888,
+            "b": 0.3529411852359772,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "opacity": 0.5,
+          "blendMode": "NORMAL",
+          "type": "GRADIENT_LINEAR",
+          "gradientHandlePositions": [
+            {
+              "x": 0.4999999999999999,
+              "y": 0.0
+            },
+            {
+              "x": 0.4999999847960356,
+              "y": 0.999999999999998
+            },
+            {
+              "x": 8.881784197001252e-16,
+              "y": -6.283514153437852e-08
+            }
+          ],
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.6705882549285889,
+                "g": 0.2666666805744171,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.0
+            },
+            {
+              "color": {
+                "r": 0.9843137264251709,
+                "g": 0.0,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 0.5
+            },
+            {
+              "color": {
+                "r": 0.6705882549285889,
+                "g": 0.2666666805744171,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "position": 1.0
+            }
+          ]
+        }
+      ],
+      "strokeWeight": 2.0,
+      "strokeAlign": "INSIDE",
+      "cornerRadius": 32.0,
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 30.0,
+        "y": 1295.0,
+        "width": 690.0,
+        "height": 328.0
+      }
+    },
+    {
+      "id": "30204:1343",
+      "name": "image 4879",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "STRETCH",
+          "imageRef": "d629d606aec8992362954dbb6d2ec0a67550fb6c",
+          "imageTransform": [
+            [
+              1.0,
+              0.0,
+              2.842170943040401e-14
+            ],
+            [
+              0.0,
+              0.9891219735145569,
+              0.00384717364795506
+            ]
+          ]
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 60.0,
+        "y": 1275.0,
+        "width": 240.0,
+        "height": 316.0
+      }
+    },
+    {
+      "id": "30204:1333",
+      "name": "Frame 2147227273",
+      "type": "FRAME",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "itemSpacing": 10.0,
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 1414.0,
+        "width": 403.0,
+        "height": 164.0
+      }
+    },
+    {
+      "id": "30204:1334",
+      "name": "本金(元气）",
+      "type": "TEXT",
+      "characters": "本金(元气）",
+      "style": {
+        "fontFamily": "Poppins",
+        "fontPostScriptName": "Poppins-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textAutoResize": "HEIGHT",
+        "fontSize": 24.0,
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 36.0,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "opacity": 0.5,
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 1414.0,
+        "width": 403.0,
+        "height": 36.0
+      }
+    },
+    {
+      "id": "30204:1335",
+      "name": "Frame 2147236738",
+      "type": "FRAME",
+      "fills": [],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "itemSpacing": 10.0,
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 1460.0,
+        "width": 182.0,
+        "height": 72.0
+      }
+    },
+    {
+      "id": "30204:1336",
+      "name": "image 4891",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "FILL",
+          "imageRef": "6aec5078ea5b8e7ef1f3526894a70e0469bd2cbc"
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 1470.0,
+        "width": 52.0,
+        "height": 52.0
+      }
+    },
+    {
+      "id": "30204:1337",
+      "name": "1,000",
+      "type": "TEXT",
+      "characters": "1,000",
+      "style": {
+        "fontFamily": "Poppins",
+        "fontPostScriptName": "Poppins-Medium",
+        "fontStyle": "Medium",
+        "fontWeight": 500,
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 48.0,
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 72.0,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 382.0,
+        "y": 1460.0,
+        "width": 120.0,
+        "height": 72.0
+      }
+    },
+    {
+      "id": "30204:1338",
+      "name": "购买时间：2026.02.24 12:28",
+      "type": "TEXT",
+      "characters": "购买时间：2026.02.24 12:28",
+      "style": {
+        "fontFamily": "Poppins",
+        "fontPostScriptName": "Poppins-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 24.0,
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 36.0,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "opacity": 0.5,
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 1542.0,
+        "width": 308.0,
+        "height": 36.0
+      }
+    },
+    {
+      "id": "30204:1339",
+      "name": "Frame 2147227268",
+      "type": "FRAME",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.13333334028720856,
+            "g": 0.0235294122248888,
+            "b": 0.3529411852359772,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.27199143171310425,
+            "g": 1.0,
+            "b": 0.4054596722126007,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "cornerRadius": 999.0,
+      "effects": [],
+      "itemSpacing": 10.0,
+      "paddingLeft": 12.0,
+      "paddingRight": 12.0,
+      "paddingTop": 10.0,
+      "paddingBottom": 10.0,
+      "frameRelativeBoundingBox": {
+        "x": 320.0,
+        "y": 1325.0,
+        "width": 202.0,
+        "height": 58.0
+      }
+    },
+    {
+      "id": "30204:1345",
+      "name": "image 4918",
+      "type": "RECTANGLE",
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "IMAGE",
+          "scaleMode": "STRETCH",
+          "imageRef": "ace7ad420969cd5296f71de06bbe55ad67b5a3af",
+          "imageTransform": [
+            [
+              0.8691166639328003,
+              0.0,
+              0.07320467382669449
+            ],
+            [
+              0.0,
+              0.8691166639328003,
+              0.06516452133655548
+            ]
+          ]
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "INSIDE",
+      "effects": [],
+      "frameRelativeBoundingBox": {
+        "x": 333.0,
+        "y": 1336.0,
+        "width": 36.0,
+        "height": 36.0
+      }
+    },
+    {
+      "id": "30204:1341",
+      "name": "元宝至尊卡",
+      "type": "TEXT",
+      "characters": "元宝至尊卡",
+      "style": {
+        "fontFamily": "PingFang SC",
+        "fontPostScriptName": "PingFangSC-Regular",
+        "fontStyle": "Regular",
+        "fontWeight": 400,
+        "textAutoResize": "WIDTH_AND_HEIGHT",
+        "fontSize": 26.0,
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP",
+        "letterSpacing": 0.0,
+        "lineHeightPx": 36.39999771118164,
+        "lineHeightPercent": 100.0,
+        "lineHeightUnit": "INTRINSIC_%"
+      },
+      "fills": [
+        {
+          "blendMode": "NORMAL",
+          "type": "SOLID",
+          "color": {
+            "r": 0.27199143171310425,
+            "g": 1.0,
+            "b": 0.4054596722126007,
+            "a": 1.0
+          }
+        }
+      ],
+      "strokes": [],
+      "strokeWeight": 1.0,
+      "strokeAlign": "OUTSIDE",
+      "effects": [],
+      "characterStyleOverrides": [],
+      "styleOverrideTable": {},
+      "frameRelativeBoundingBox": {
+        "x": 379.0,
+        "y": 1336.0,
+        "width": 130.0,
+        "height": 36.0
+      }
+    }
+  ]
+}

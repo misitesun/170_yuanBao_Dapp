@@ -1,0 +1,107 @@
+@use '@/styles/mixins' as *;
+
+.withdraw-page {
+    color: var(--app-text);
+    background: var(--app-bg);
+    font-family: 'Microsoft YaHei', '微软雅黑', sans-serif;
+
+    &__record {
+        width: 66px;
+        height: 66px;
+        cursor: pointer;
+        img { width: 100%; height: auto; }
+    }
+
+    &__content { padding: 30px 30px 60px; }
+
+    &__information {
+        min-height: 188px;
+        padding: 39px 29px;
+        border: 1px solid var(--app-border-medium);
+        border-radius: 20px;
+        background: var(--app-surface-subtle);
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    &__row {
+        width: 100%;
+        min-height: 39px;
+        font-size: 28px;
+        line-height: 39px;
+        font-weight: 400;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    &__label { color: var(--app-text-muted); }
+
+    &__selection {
+        gap: 12px;
+        img { width: 14px; height: auto; }
+    }
+
+    &__summary { margin-top: 40px; }
+
+    &__amount-row { gap: 20px; }
+
+    &__amount-title {
+        flex-shrink: 0;
+        font-size: 28px;
+        line-height: 39px;
+        font-weight: 400;
+    }
+
+    &__balance {
+        font-size: 24px;
+        line-height: 34px;
+        text-align: right;
+        color: var(--app-text-secondary);
+    }
+
+    &__amount-input {
+        margin-top: 30px;
+
+        .app-input {
+            --app-input-background: var(--app-surface-subtle);
+            min-height: 0;
+            height: 103px;
+            padding: 0 29px;
+            border-radius: 20px;
+            border-color: transparent;
+            &::before { opacity: 1; }
+            input {
+                height: 39px;
+                padding: 0;
+                line-height: 39px;
+            }
+        }
+    }
+
+    &__all {
+        font-size: 24px;
+        line-height: 34px;
+        color: var(--app-cyan);
+        cursor: pointer;
+    }
+
+    &__fee {
+        margin-top: 30px;
+        font-size: 24px;
+        line-height: 34px;
+        text-align: right;
+    }
+
+    &__submit {
+        @include full-button(88px, 999px, var(--app-text), var(--app-action-gradient));
+        margin-top: 60px;
+        font-size: 28px;
+        line-height: 39px;
+        font-weight: 400;
+        -webkit-text-stroke: 1px var(--app-text);
+        cursor: pointer;
+    }
+
+    button:focus-visible { outline: 2px solid var(--app-color); outline-offset: 4px; }
+}

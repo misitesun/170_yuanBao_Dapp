@@ -1,5 +1,9 @@
 # Router
 
+元宝使用独立钱包授权页/login，根入口和/login均显示HU风格自动授权开屏；邀请入口/ref/:ref沿用HU_CHAIN方式传入邀请码。AuthSessionRuntime管理被动会话恢复，RequireAuthentication只在status=authenticated时显示业务路由，checking显示加载，未登录跳到/login并保存目标地址。MainLayout结构保留，公告列表/详情为公开路由，showcase继续仅用于开发。授权页不包裹PagePullRefresh，业务分页在各页面内部注册真实刷新。路由与浏览器历史入口仍接受带/不带/h5前缀，不手动拼部署前缀。
+
+公告/announcements及/announcements/:id已使用真实API；团队/team与资产/assets也已接入。充值/deposit、提现/withdraw及其/records页面、排行榜/ranking、卡包/card-pack、抢拍/auction保留既有静态业务边界，不新增提交请求。未知路由回到根授权入口。详细接口与会话边界见docs/yuanbao-api-integration.md。
+
 The app uses browser history through `AppBrowserRouter`. It accepts incoming URLs both with and without the configured `/h5` prefix, while internal route constants always stay prefix-free.
 
 应用通过 `AppBrowserRouter` 使用 browser history。入口地址可带或不带 `/h5` 前缀；应用内部路由常量始终不带前缀。
@@ -7,6 +11,8 @@ The app uses browser history through `AppBrowserRouter`. It accepts incoming URL
 Use `useAppNavigate()` inside React components and `buildRouteHref()` only when code outside React needs an href. Never prepend `/h5` manually.
 
 React 组件内使用 `useAppNavigate()`；只有组件外代码需要链接时才使用 `buildRouteHref()`。不要手动拼接 `/h5`。
+
+对外分享邀请链接是独立的根路径入口：`buildInvitationLink()`使用当前站点origin与前缀无关的`/ref/:ref`生成URL，侧栏及团队页展示/复制均不带`/h5`。服务器负责把根邀请请求转发至H5；这条对外URL规则不改变内部导航、资源base或浏览器历史兼容行为。
 
 ```tsx
 import { ROUTE_PATH, useAppNavigate } from '@/router'
@@ -23,9 +29,9 @@ function Demo() {
 }
 ```
 
-The blank production route table intentionally contains only `/home`. Add confirmed routes in `routes.ts` and `AppRouter.tsx`. Component and style showcases are isolated under development-only `/showcase` routes.
+The project production routes include `/home` and `/auction`. Add confirmed routes in `routes.ts` and `AppRouter.tsx`. Component and style showcases are isolated under development-only `/showcase` routes.
 
-空白模板的生产路由表有意只保留 `/home`。确认页面后再在 `routes.ts` 与 `AppRouter.tsx` 添加路由；组件和样式演示只存在于开发环境 `/showcase`。
+项目生产路由包含 `/home` 与 `/auction`；首页进入抢拍和侧栏抢拍卡片均导航到后者。确认页面后再在 `routes.ts` 与 `AppRouter.tsx` 添加路由；组件和样式演示只存在于开发环境 `/showcase`。
 
 During static UI development, opening `/h5` redirects directly to `/home` without a wallet, signature, Token, or backend request. When a project's documented login is integrated, its startup gate may take over the root route and send users to the home page only after session validation. Keep this change in the real project, not in the blank template.
 
@@ -34,3 +40,7 @@ During static UI development, opening `/h5` redirects directly to `/home` withou
 Every normalized pathname change resets the shared window scroll position to the top before the destination route is painted. This applies to first-level navigation, secondary pages, redirects, and browser back or forward navigation. Search-parameter and hash-only updates keep the current scroll position because they do not represent a page change.
 
 每次标准化后的 pathname 变化都会在目标路由绘制前，把共用 window 滚动位置重置到页面顶部。一级导航、二级页面、重定向以及浏览器前进/后退都遵循该规则；仅 query 或 hash 变化时保留当前位置，因为它们不视为页面切换。
+
+## 多语言
+
+登录验证加载标签使用当前语言；鉴权、重定向和独立开屏路由保持。

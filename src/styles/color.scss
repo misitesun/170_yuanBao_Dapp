@@ -1,11 +1,12 @@
 :root {
-    // Sidebar visual tokens; global project theme stays independently configurable.
-    --app-sidebar-bg: #1F0006;
-    --app-sidebar-accent: #DC143C;
-    --app-sidebar-wallet-bg: #3A0C15;
+    // Project theme; retained sidebar aliases protect existing consumers.
+    --app-sidebar-bg: var(--app-bg);
+    --app-sidebar-accent: var(--app-color);
+    --app-sidebar-wallet-bg: var(--app-box-bg);
     --app-sidebar-connected: #00FF48;
+    --app-sidebar-badge-bg: #11022B;
 
-    --app-color: #F934FF;
+    --app-color: #AB44FF;
     --app-btn-color: #FFFFFF;
     --app-green: #34B926;
     --app-red: #F1463D;
@@ -15,15 +16,90 @@
     --app-gradient-blue: #008CFF;
     --app-cyan: #41DEFF;
     --app-violet: #5039FE;
-    --app-bg: #14133F;
+    --app-bg: #150336;
     --app-text: #FFFFFF;
-    --app-text-secondary: rgb(255 255 255 / 60%);
+    --app-text-secondary: #D1B7FB;
     --app-text-muted: rgb(255 255 255 / 50%);
     --app-text-inactive: rgb(255 255 255 / 40%);
     --app-text-notice: rgb(255 255 255 / 72%);
-    --app-secondary-header-bg: #14133F;
+    --app-secondary-header-bg: var(--app-bg);
     --app-card-bg: rgb(255 255 255 / 10%);
-    --app-box-bg: #24214E;
+    --app-box-bg: #22065A;
+    --app-team-surface: #24184A;
+    --app-team-level-color: #45FF67;
+    --app-team-level-background: rgb(69 255 103 / 10%);
+    --app-team-input-background: rgb(255 255 255 / 6%);
+    --app-team-input-border: rgb(246 238 255 / 20%);
+    --app-assets-yuanqi: rgb(0% 51.66666507720947% 100%);
+    --app-assets-baoqi: rgb(100% 54.75113391876221% 0%);
+    --app-assets-credit: #00DAFD;
+    --app-assets-debit: #FB3820;
+    --app-assets-record-highlight: rgb(167 217 255 / 10%);
+    --app-assets-balance-border: linear-gradient(180deg, rgb(255 255 255 / 50%) 0%, rgb(255 255 255 / 10%) 100%);
+    --app-assets-usdt-background: linear-gradient(180deg,
+        rgb(3.529411926865578% 70.19608020782471% 16.862745583057404% / 20%) 0%,
+        rgb(1.5182387083768845% 30.19607961177826% 7.253807038068771% / 20%) 100%);
+    --app-assets-yuanqi-background: linear-gradient(180deg,
+        rgb(3.529411926865578% 42.41830110549927% 70.19608020782471% / 20%) 0%,
+        rgb(1.5182387083768845% 12.511411309242249% 30.19607961177826% / 20%) 100%);
+    --app-assets-baoqi-background: linear-gradient(180deg,
+        rgb(70.19608020782471% 39.08496797084808% 3.529411926865578% / 20%) 0%,
+        rgb(30.19607961177826% 21.592727303504944% 1.5182387083768845% / 20%) 100%);
+    --app-assets-action-background: linear-gradient(180deg, rgb(255 255 255 / 0%) 0%, rgb(255 255 255 / 10%) 100%);
+    --app-assets-action-border: linear-gradient(180deg, rgb(255 255 255 / 20%) 0%, rgb(255 255 255 / 0%) 100%);
+    --app-assets-transfer-gradient: linear-gradient(90deg, #F934FF 0%, #5039FE 50%, rgb(25.461989641189575% 87.1168851852417% 100%) 100%);
+    --app-selection-bg: #22086E;
+    --app-selection-item-bg: #311280;
+    --app-card-selected-border: #F6DAFF;
+    --app-card-selected-border-soft: rgb(246 218 255 / 20%);
+    --app-accent-soft: rgb(104 21 255 / 20%);
+    --app-accent-glow: rgb(171 68 255 / 60%);
+    --app-accent-border: rgb(134 68 255 / 20%);
+    --app-card-red-tint: rgb(255 0 4 / 40%);
+    --app-card-blue-tint: rgb(0 183 255 / 40%);
+    --app-card-green-tint: rgb(0 255 77 / 40%);
+    --app-mask-opaque: #000000;
+    --app-shadow: rgb(0 0 0 / 25%);
+    --app-text-shadow-color: rgb(0 0 0 / 30%);
+    --app-auction-title-accent: #FB00FF;
+    --app-card-pack-title-accent: rgb(98.333340883255% 0% 100%);
+    --app-card-pack-inactive: #8644FF;
+    --app-card-pack-selected-glow: rgb(251 0 255 / 60%);
+    --app-card-pack-surface: rgb(34 6 90 / 50%);
+    --app-card-pack-border-gradient: linear-gradient(180deg, rgb(171 68 255 / 50%) 0%, rgb(251 0 255 / 50%) 50%, rgb(171 68 255 / 50%) 100%);
+    --app-card-pack-red: rgb(100% 27.199143171310425% 27.199143171310425%);
+    --app-card-pack-blue: rgb(41.08135402202606% 61.7683470249176% 100%);
+    --app-card-pack-green: rgb(27.199143171310425% 100% 40.54596722126007%);
+    --app-card-pack-release-baoqi: rgb(71.76470756530762% 100% 17.64705926179886%);
+    --app-ranking-first: rgb(100% 88.33333253860474% 0%);
+    --app-ranking-first-bg: rgb(71.07121348381042% 62.70989179611206% 0% / 40.00000059604645%);
+    --app-ranking-second: rgb(67.54432320594788% 80.64045906066895% 100%);
+    --app-ranking-second-border: rgb(67.45098233222961% 80.78431487083435% 100%);
+    --app-ranking-second-bg: rgb(41.55847132205963% 59.339332580566406% 84.96469259262085% / 40.00000059604645%);
+    --app-ranking-third: rgb(100% 53.18892598152161% 30.292218923568726%);
+    --app-ranking-third-bg: rgb(76.51930451393127% 32.19766616821289% 10.223075747489929% / 40.00000059604645%);
+    --app-ranking-row-bg: rgb(52.54902243614197% 26.66666805744171% 100% / 20.000000298023224%);
+    --app-ranking-row-border: rgb(67.05882549285889% 26.66666805744171% 100% / 20.000000298023224%);
+    --app-auction-price-bg: rgb(21 3 54 / 50%);
+    --app-auction-red-title-gradient: linear-gradient(180deg, #EFF3FB 0%, #FDC4C5 100%);
+    --app-auction-blue-title-gradient: linear-gradient(180deg, #EFF3FB 0%, #C4CEFD 100%);
+    --app-auction-green-title-gradient: linear-gradient(180deg, #EFF3FB 0%, #CEFDC4 100%);
+    --app-auction-bid-gradient: linear-gradient(0deg,
+        rgb(88.77140879631042% 76.67012810707092% 44.75080668926239%) 24.99999940866401%,
+        #FFF1BF 76.38889059481535%);
+    --app-gold: #FFCD48;
+    --app-gold-light: #FFF1BF;
+    --app-gold-deep: #E2C472;
+    --app-control-gradient: linear-gradient(180deg, #CB78FD 0%, #B1E7FE 50%, #2F6CFE 100%);
+    --app-control-soft-gradient: linear-gradient(180deg, rgb(203 120 253 / 20%) 0%, rgb(177 231 254 / 20%) 50%, rgb(47 108 254 / 20%) 100%);
+    --app-wallet-soft-gradient: linear-gradient(180deg, rgb(203 120 253 / 20%) 0%, rgb(177 203 254 / 20%) 50%, rgb(47 108 254 / 20%) 100%);
+    // Artwork gradients are centralized too; the homepage consumes variables only.
+    --app-premium-title-gradient: linear-gradient(270deg, #773BE6 0%, #FFDBFF 50%, #773BE6 100%);
+    --app-card-platform-background:
+        radial-gradient(ellipse at 50% 35%, rgb(255 219 255 / 85%) 0%, rgb(171 68 255 / 55%) 27%, transparent 48%),
+        radial-gradient(ellipse at 50% 35%, transparent 40%, rgb(249 52 255 / 90%) 42%, rgb(209 183 251 / 75%) 44%, transparent 46%),
+        linear-gradient(180deg, var(--app-selection-bg), var(--app-bg));
+    --app-auction-room-background: linear-gradient(90deg, rgb(94 46 182 / 80%) 0%, rgb(52 0 147 / 0%) 75%);
     --app-tab-bg: #302E5B;
     --app-surface-subtle: rgb(255 255 255 / 4%);
     --app-border-medium: rgb(255 255 255 / 20%);
@@ -34,7 +110,7 @@
     --app-toast-shadow: 0 12px 40px rgb(0 0 0 / 30%);
     --app-border: rgb(255 255 255 / 10%);
     --app-border-strong: rgb(255 255 255 / 40%);
-    --app-header-bg: rgb(20 19 63 / 35%);
+    --app-header-bg: rgb(0 0 0 / 20%);
     --app-cyan-soft: rgb(65 222 255 / 20%);
     --app-text-shadow: 0 4px 10px rgb(0 0 0 / 30%);
     --app-action-gradient: linear-gradient(90deg, var(--app-color), var(--app-violet) 50%, var(--app-cyan));

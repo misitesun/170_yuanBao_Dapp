@@ -64,7 +64,7 @@ test('omits the authorization header when local token storage is empty', async (
     assert.equal(captured.headers.has('Authorization'), false)
 })
 
-test('wallet authentication sends Address and Bearer only for a verified current wallet', async () => {
+test('current wallet address is independent of Bearer credentials', async () => {
     const storage = createStorage('token-value')
     storage.setItem('WALLET_ADDRESS', '0x0000000000000000000000000000000000000001')
     globalThis.window = { localStorage: storage }
@@ -101,7 +101,7 @@ test('wallet authentication sends Address and Bearer only for a verified current
         verifiedAddress = '0x0000000000000000000000000000000000000003'
         headers = await requestHeaders()
         assert.equal(headers.has('Authorization'), false)
-        assert.equal(headers.has('Address'), false)
+        assert.equal(headers.get('address'), verifiedAddress)
     } finally {
         unregister()
     }
@@ -219,8 +219,71 @@ test('normalizes 401 and removes the cached token', async () => {
         },
     })
     assert.equal(headersAfter401.has('Authorization'), false)
-    assert.equal(headersAfter401.has('Address'), false)
+    assert.equal(headersAfter401.get('address'), '0x0000000000000000000000000000000000000001')
     unregister()
     unregisterAddress()
     clearHttpErrorNotification()
+})
+
+test('public login suppresses a saved token and stale 401 does not invalidate a newer session', async () => {
+    const storage = createStorage('old-token')
+    globalThis.window = { localStorage: storage }
+    let unauthorized = 0
+    const unregister = registerHttpUnauthorizedHandler(() => unauthorized++)
+    try {
+        await httpClient.request({ url: '/api/auth/login', authentication: 'none', adapter: async (config) => {
+            assert.equal(config.headers.has('Authorization'), false)
+            assert.equal(config.headers.has('Address'), false)
+            return { data: {}, status: 200, headers: {}, statusText: 'OK', config }
+        } })
+        await assert.rejects(httpClient.request({ url: '/old-request', adapter: async (config) => {
+            storage.setItem('TOKEN', 'new-token')
+            throw new AxiosError('Unauthorized', 'ERR_BAD_REQUEST', config, undefined,
+                { data: 'Unauthorized.', status: 401, headers: {}, statusText: 'Unauthorized', config })
+        } }))
+        assert.equal(storage.getItem('TOKEN'), 'new-token')
+        assert.equal(unauthorized, 0)
+    } finally { unregister() }
+})
+
+test('recovery sends Bearer only before the wallet/token owner check succeeds', async () => {
+    globalThis.window = { localStorage: createStorage('saved-token') }
+    const unregister = registerHttpWalletAddressProvider(() => undefined)
+    try {
+        await httpClient.request({ url: '/api/users/my', authentication: 'bearer', adapter: async (config) => {
+            assert.equal(config.headers.get('Authorization'), 'Bearer saved-token')
+            assert.equal(config.headers.has('Address'), false)
+            return { data: {}, status: 200, headers: {}, statusText: 'OK', config }
+        } })
+    } finally { unregister() }
+})
+
+
+test('all request modes send the live wallet address before login and after account switching', async () => {
+    const storage = createStorage()
+    globalThis.window = { localStorage: storage }
+    let address = '0x0000000000000000000000000000000000000001'
+    const unregister = registerHttpWalletAddressProvider(() => address)
+    try {
+        for (const mode of [undefined, 'none', 'bearer']) {
+            await httpClient.request({ url: '/api/auth/login', authentication: mode, adapter: async (config) => {
+                assert.equal(config.headers.get('address'), address)
+                assert.equal(config.headers.has('Authorization'), false)
+                return { data: {}, status: 200, headers: {}, statusText: 'OK', config }
+            } })
+        }
+        storage.setItem('TOKEN', 'token')
+        address = '0x0000000000000000000000000000000000000002'
+        await httpClient.request({ url: '/api/users/my', authentication: 'bearer', adapter: async (config) => {
+            assert.equal(config.headers.get('address'), address)
+            assert.equal(config.headers.get('Authorization'), 'Bearer token')
+            return { data: {}, status: 200, headers: {}, statusText: 'OK', config }
+        } })
+        address = undefined
+        await httpClient.request({ url: '/api/notices', authentication: 'none', headers: { address: 'stale' }, adapter: async (config) => {
+            assert.equal(config.headers.has('address'), false)
+            assert.equal(config.headers.has('Authorization'), false)
+            return { data: {}, status: 200, headers: {}, statusText: 'OK', config }
+        } })
+    } finally { unregister() }
 })

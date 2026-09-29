@@ -1,6 +1,12 @@
 # Compatibility-sensitive behavior
 # 兼容性敏感行为
 
+## 元宝卡包分页与刷新（2026-09-28）
+
+卡包路由局部复用PagePullRefresh，默认列表为两页有限设计样本，未接入真实API。第一页或Tab替换期间同步清空列表/页码/hasMore并关闭加载更多；generation阻止旧请求结果和错误写入新Tab。首次滚动追加3→6，空Tab只展示Empty，恢复默认Tab先保留第一页3项。观察器与fallback注册均从未启用开始，历史window.scrollY不触发下一页。新增运行组件与页面状态行为测试，覆盖新scroll启用、重复事件防重和下拉等待真实Promise；实体手机触摸仍未验证。
+
+750与375视口均无横向溢出，图片全部加载，首页与侧栏卡包跳转关闭导航并恢复body滚动。该路由通过html:has(.card-pack-page)隐藏桌面常驻滚动条，避免其占宽影响vw还原；其它页面样式保持不变。精确量测、默认微软雅黑设计差异和截图见docs/yuanbao-card-pack-checklist.md。
+
 This file records runtime behavior that is known to differ across browser, wallet, host, or H5 deployment environments. Do not add speculative entries; each entry needs observed evidence, a regression test, or a reproducible manual verification.
 本文记录已知会随浏览器、钱包、宿主或 H5 部署环境变化的运行时行为。不要添加猜测性条目；每项都需要已观察到的证据、回归测试或可复现的人工验证。
 
@@ -88,6 +94,20 @@ Record the affected runtime, trigger, observed behavior, source file, chosen wor
 
 ### Sidebar motion and viewport
 
-The right sidebar fills the viewport below the existing 100px design header. Its local transparent Popup overlay is an explicit sidebar-only exception; shared Popup defaults remain intact. Popup retains body-scroll locking during exit. Menu icon reverses within 250ms; reduced-motion snaps the icon and disables wallet/header decorative animations. Wallet address copying uses the existing centralized clipboard fallback.
+The right sidebar fills the viewport below the existing 100px design header. Its local transparent Popup overlay is an explicit sidebar-only exception; shared Popup defaults remain intact. Popup retains body-scroll locking during exit. Menu icon reverses within 250ms; reduced-motion snaps the icon and disables wallet decorative animation. The header divider travels continuously left to right in a three-second loop; its one-viewport displacement matches the repeat-x tile for a seamless wrap and stays centered under reduced motion. The wallet card is always visible, and its invitation link defaults to empty with copying disabled; supplied links use the centralized clipboard fallback.
 
 Manual regression: at 375px and 750px check header/panel alignment, no horizontal overflow, connected/disconnected wallet, five language widths, rapid menu reversal, Escape/menu close, body scroll restoration and reduced-motion. Tabbar remains the alternative navigation mode.
+
+### YuanBao verified wallet session
+
+元宝钱包授权页为/login，恢复仅被动读取eth_accounts并查询/users/my，不触发签名；签名消息严格为Login-{timestamp}。钱包事件淘汰所有旧授权结果，HTTP旧Token的401不能清理新会话。React StrictMode清理会增加generation并移除监听/回调，保留Token供第二次mount重新验证。回归位于tests/yuanbao-auth.test.mjs与tests/http-client.test.mjs。
+
+人工验收：带邀请码打开/ref/:ref；取消签名后重试；在签名弹窗/请求期间切账号；刷新页面恢复已登录钱包；更换账号后确认团队/资产不会继续显示旧数据；关闭钱包授权与Token过期都应返回授权页。浏览器无钱包时显示提示与重试按钮。实际钱包签名与真实账号数据仍需钱包浏览器验收，Mock测试不代表后端E2E通过。
+
+开屏匹配 HU 的品牌/星空/底部提示，1 秒后自动授权，没有输入框；有 Token 先被动恢复。HTTP address 全局使用真实连接账号，与 Bearer 独立：无 Token 登录仍发送，401 保留连接地址，钱包切换更新、断开移除。回归补充 tests/yuanbao-splash-runtime.test.mjs 与 HTTP/session 测试。
+
+登录跳转回归：开发者实测 /users/my 返回 created_at=-0001-11-30 00:00:00，旧时间正则拒绝该信息字段，导致 token 已取得而会话未进入 authenticated。用户注册时间现保留原文本，不参与授权校验；对应真实形状测试覆盖解析、会话完成与开屏跳转。
+
+## 元宝多语言
+
+五种语言按需加载；页面 :lang 规则为英文、日文、韩文提供长文本换行。保持既有语言切换后的刷新、新 lang 请求头及金额/钱包原值。范围与移动端验收见 docs/yuanbao-i18n-checklist.md。

@@ -19,8 +19,8 @@ The normal initialization flow is wallet environment check, chain check, then fe
 钱包拒签识别沿 viem 的 `cause` 链查找 `4001`，返回钱包原始消息；消息缺失时返回空字符串，其他错误返回 `undefined`。页面据此显示普通取消提示，并保留其他错误的原有处理。
 正常初始化流程是先检查钱包环境，再检查网络，最后再执行具体功能调用。
 
-`initializeDappWallet()` does not bind account or chain listeners by default. Authentication flows should bind them only after an authenticated DApp session exists.
-`initializeDappWallet()` 默认不绑定账户和网络监听。认证流程应仅在 DApp 登录态建立后绑定监听。
+`initializeDappWallet()` does not bind account or chain listeners by default. Project authentication may bind temporary account/chain listeners after connection and before signing to invalidate an in-flight login; authenticated recovery binds them before profile validation.
+`initializeDappWallet()` 默认不绑定账户和网络监听。元宝鉴权在连接后、签名前绑定临时账号/网络监听，以淘汰过期授权；登录恢复在资料验证前绑定监听。
 
 Development mode skips chain switching by default, because local projects often connect to a LAN test RPC.
 开发环境默认跳过强制切链，因为本地项目通常会连接局域网测试 RPC。
@@ -209,3 +209,7 @@ await ensureErc20Allowance(spenderAddress, rawAmount, tokenAddress)
 
 `signDappMessage()` signs the supplied text exactly; it never invents a prefix, timestamp or nonce. Business login should be built only after the backend authentication contract is documented.
 `signDappMessage()` 会原样签署传入文本，不会自行拼接前缀、时间戳或 nonce。业务登录只能在后端鉴权契约文档确认后继续封装。
+
+## Passive account recovery
+
+getAuthorizedDappAddress()仅调用钱包getAddresses（eth_accounts），无账号时返回undefined，不调用requestAddresses，不弹权限。鉴权恢复先使用此方法，再用后端用户资料核对地址；主动授权继续使用connectDappWallet。钱包原文与timestamp由业务feature制定，不放入通用签名助手。

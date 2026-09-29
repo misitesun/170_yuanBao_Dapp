@@ -52,3 +52,7 @@ Before writing page SCSS, state the section order, the Flex/Grid relationship, s
 ### Sidebar shell positioning exceptions
 
 The first-level sidebar is a viewport overlay below the fixed 100px design header. Its wallet badge may overlap the card edge; the header decorative divider is absolutely positioned inside the existing header bounds. These scoped layout exceptions preserve normal-flow page composition and do not apply to business pages or other Popup consumers.
+
+### YuanBao splash positioning exceptions
+
+HU 风格开屏的品牌动画与底部欢迎/错误提示为 viewport-overlay；星空 canvas 为 background-art。所有例外只适用于独立开屏，不用于业务页面。移除星空后品牌与提示仍可正常显示。

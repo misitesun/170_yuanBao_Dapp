@@ -47,3 +47,7 @@ import { LanguageSwitch } from '@/components/LanguageSwitch'
     <button type="button">切换语言</button>
 </LanguageSwitch>
 ```
+
+## 多语言
+
+触发器具有当前语言的切换语言无障碍标签，包括使用自定义图片 children 时；菜单名称继续按 APP_LANGUAGES 原生名称显示。

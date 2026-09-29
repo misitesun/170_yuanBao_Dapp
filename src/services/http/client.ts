@@ -14,6 +14,13 @@ import {
 import { toHttpError } from './error.ts'
 import { reportHttpError } from './feedback.ts'
 
+declare module 'axios' {
+    interface AxiosRequestConfig {
+        /** Controls Bearer credentials independently of the current wallet address header. */
+        authentication?: 'none' | 'bearer'
+    }
+}
+
 export const httpClient = axios.create({
     baseURL: import.meta.env?.VITE_BASE_URL,
     timeout: HTTP_CONFIG.timeout,
@@ -36,7 +43,7 @@ export function registerHttpUnauthorizedHandler(
     }
 }
 
-/** Registers the current wallet address checked against the Token's owner. */
+/** Registers the live wallet address, independently of login status. */
 export function registerHttpWalletAddressProvider(
     provider: HttpWalletAddressProvider,
 ): () => void {
@@ -51,7 +58,7 @@ httpClient.interceptors.request.use((config) => {
     const token = getToken()
     const walletAddress = walletAddressProvider?.()?.trim()
 
-    if (token && (!walletAddressProvider || walletAddress)) {
+    if (config.authentication !== 'none' && token && (config.authentication === 'bearer' || !walletAddressProvider || walletAddress)) {
         config.headers.set(
             HTTP_HEADER.authorization,
             `${HTTP_AUTH.scheme} ${token}`,
@@ -60,7 +67,7 @@ httpClient.interceptors.request.use((config) => {
         config.headers.delete(HTTP_HEADER.authorization)
     }
 
-    if (token && walletAddress) {
+    if (walletAddress) {
         config.headers.set(HTTP_HEADER.walletAddress, walletAddress)
     } else {
         config.headers.delete(HTTP_HEADER.walletAddress)
@@ -88,7 +95,10 @@ httpClient.interceptors.response.use(
 
         reportHttpError(httpError)
 
-        if (httpError.status === HTTP_STATUS.unauthorized) {
+        const sentAuthorization = axios.isAxiosError(error) ? error.config?.headers?.get(HTTP_HEADER.authorization) : undefined
+        const currentToken = getToken()
+        if (httpError.status === HTTP_STATUS.unauthorized && currentToken
+            && sentAuthorization === `${HTTP_AUTH.scheme} ${currentToken}`) {
             removeToken()
             unauthorizedHandler?.()
         }

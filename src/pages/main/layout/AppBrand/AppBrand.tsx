@@ -9,12 +9,16 @@ type AppBrandProps = {
     staticPreview?: boolean
     className?: string
     onClick?: () => void
+    logoSrc?: string
+    showName?: boolean
 }
 
 export function AppBrand({
     staticPreview = false,
     className = '',
     onClick,
+    logoSrc,
+    showName = true,
 }: AppBrandProps) {
     const location = useLocation()
     const { pushRoute } = useAppNavigate()
@@ -37,13 +41,13 @@ export function AppBrand({
     return (
         <button type="button" className={brandClassName} onClick={handleBrandClick}>
             <img
-                src={`${APP_CONFIG.routeBase}brand/app-logo.png`}
+                src={logoSrc ?? `${APP_CONFIG.routeBase}brand/app-logo.png`}
                 className="app-brand__logo"
                 alt=""
             />
-            <div className="ml-10 size-24 bold-6">
+            {showName ? <div className="ml-10 size-24 bold-6">
                 {APP_CONFIG.name || 'DApp'}
-            </div>
+            </div> : null}
         </button>
     )
 }

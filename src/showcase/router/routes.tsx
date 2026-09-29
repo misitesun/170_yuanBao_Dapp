@@ -9,6 +9,10 @@ import { Route } from 'react-router'
 import { SHOWCASE_ROUTE_PATH } from './config.ts'
 
 function createShowcaseRouteElements(): ReactElement[] {
+    const sidebarPage = lazy(async () => {
+        const page = await import('@/showcase/components/sidebar/SidebarShowcasePage')
+        return { default: page.SidebarShowcasePage }
+    })
     const showcaseRoutePage = lazy(async () => {
         const page = await import('@/showcase/Showcase.tsx')
 
@@ -86,6 +90,8 @@ function createShowcaseRouteElements(): ReactElement[] {
     })
 
     return [
+        <Route key={SHOWCASE_ROUTE_PATH.sidebar} path={SHOWCASE_ROUTE_PATH.sidebar}
+            element={<Suspense fallback={null}>{createElement(sidebarPage)}</Suspense>} />,
         <Route key={SHOWCASE_ROUTE_PATH.gradientText} path={SHOWCASE_ROUTE_PATH.gradientText}
             element={<Suspense fallback={null}>{createElement(gradientTextPage)}</Suspense>} />,
         <Route

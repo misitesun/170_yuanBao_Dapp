@@ -56,3 +56,9 @@ Use a feature-local file when one page owns the behavior. Promote code only afte
 ### Sidebar shell presentation
 
 MainLayout owns sidebar visibility and passes `sidebarOpen` to HeaderBar. MenuToggleIcon reverses from the current animation frame; SidebarMenu remains a consumer of MAIN_PAGE_ITEMS and the wallet store. WalletOrbitBorder is decorative only. Clipboard access continues through shared/clipboard; no authentication, referral API, route, storage or contract boundary is added.
+
+## 元宝业务接入
+
+features/auth管理独立授权、Token恢复与跨页面用户状态；user/notices/team/assets是已确认PHP契约的业务边界。路由依赖已验证会话，公告公开；MainLayout只在原邀请链接插槽传入真实链接，不改变共享布局。通用HTTP提供显式公开/恢复模式，不依赖业务feature；DApp增加被动账户查询，不包含Login原文或PHP字段。邀请码存储仍由services/storage封装。详情见docs/yuanbao-api-integration.md。
+
+HTTP address 提供者现在独立于已验证会话，返回实际 provider 连接账号；登录/公开/恢复请求均携带当前地址。根入口与/login复用 HU 风格开屏，动画后自动授权，邀请码仅读取链接。Token 验证与受保护业务门槛继续由 features/auth 管理。

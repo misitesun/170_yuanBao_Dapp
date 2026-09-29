@@ -13,3 +13,7 @@ import { DropletLoading } from '@/components/DropletLoading'
 
 <DropletLoading size="small" ariaLabel="订单加载中" />
 ```
+
+## 多语言
+
+未传 ariaLabel 时默认加载标签使用当前语言；显式 ariaLabel 保持原文，图形与尺寸保持。

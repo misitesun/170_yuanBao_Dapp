@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import {
     useId,
     type CSSProperties,
@@ -19,8 +20,10 @@ export interface DropletLoadingProps {
 export function DropletLoading({
     size = 'regular',
     className = '',
-    ariaLabel = '加载中',
+    ariaLabel: providedAriaLabel,
 }: DropletLoadingProps) {
+    const { t } = useTranslation()
+    const ariaLabel = providedAriaLabel ?? t('加载中')
     const generatedId = useId().replace(/:/g, '')
     const filterId = `droplet-loading-${generatedId}`
     const loadingClassName = [

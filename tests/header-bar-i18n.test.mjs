@@ -11,7 +11,7 @@ test('header bar renders a masked connected wallet address without auth coupling
     assert.match(component, /useDappStore/)
     assert.doesNotMatch(component, /useUserStore/)
     assert.match(component, /maskWalletAddress/)
-    assert.match(component, /className="auto-btn size-24 bold-6 ml-20"/)
+    assert.match(component, /className="app-header-bar__wallet size-24"/)
     assert.match(
         component,
         /!staticPreview && walletAddress/,

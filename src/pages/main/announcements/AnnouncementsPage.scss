@@ -1,0 +1,33 @@
+@use '@/styles/mixins' as *;
+
+html:has(.announcements-page) { @include hide-scrollbar; }
+
+.announcements-page {
+    background: var(--app-bg);
+
+    &__main { padding: 30px 30px 64px; }
+    &__demo { font-size: 20px; color: var(--app-text-muted); white-space: nowrap; }
+    &__list { gap: 20px; }
+
+    &__card {
+        width: 100%;
+        min-height: 202px;
+        gap: 20px;
+        padding: 30px;
+        border: 1px solid var(--app-border-medium);
+        border-radius: 20px;
+        background: var(--app-surface-subtle);
+        color: var(--app-text);
+    }
+
+    &__card:focus-visible {
+        outline: 2px solid var(--app-color);
+        outline-offset: 4px;
+    }
+
+    &__content { min-width: 0; }
+    &__title { line-height: 42px; }
+    &__summary { margin-top: 12px; color: var(--app-text-secondary); line-height: 40px; }
+    &__time { display: block; margin-top: 20px; color: var(--app-text-muted); line-height: 36px; }
+    &__arrow { flex: none; color: var(--app-text-muted); }
+}

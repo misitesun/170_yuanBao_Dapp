@@ -7,6 +7,9 @@ import {
     type LayoutMenuType,
 } from '@/router/config'
 
+import { useSessionStore } from '@/features/auth/state.ts'
+import { buildInvitationLink } from '@/features/auth/referral.ts'
+
 import { HeaderBar } from './HeaderBar/HeaderBar.tsx'
 import { SidebarMenu } from './SidebarMenu.tsx'
 import { TabbarMenu } from './TabbarMenu.tsx'
@@ -23,6 +26,7 @@ export function MainLayout({
     staticPreview = false,
     children,
 }: MainLayoutProps) {
+    const user = useSessionStore((state) => state.user)
     const [showSidebarMenu, setShowSidebarMenu] = useState(false)
     const isSidebarLayout = menuType === LAYOUT_MENU_TYPE.sidebar
     const isTabbarLayout = menuType === LAYOUT_MENU_TYPE.tabbar
@@ -59,6 +63,7 @@ export function MainLayout({
                     show={showSidebarMenu}
                     onClose={handleCloseSidebarMenu}
                     staticPreview={staticPreview}
+                    invitationLink={staticPreview ? '' : buildInvitationLink(user?.referralCode ?? '')}
                 />
             ) : null}
             {isTabbarLayout ? <TabbarMenu /> : null}

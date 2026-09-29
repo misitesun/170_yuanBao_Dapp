@@ -1,0 +1,59 @@
+@use '@/styles/mixins' as *;
+
+html:has(.deposit-records-page) { @include hide-scrollbar; }
+
+.deposit-records-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--app-bg);
+
+    &__demo { font-size: 20px; color: var(--app-text-muted); white-space: nowrap; }
+
+    &__main {
+        padding: 30px 30px 64px;
+    }
+
+    &__list {
+        gap: 20px;
+    }
+
+    &__card {
+        min-height: 202px;
+        padding: 30px;
+        border: 1px solid var(--app-border-medium);
+        border-radius: 20px;
+        background: var(--app-surface-subtle);
+    }
+
+    &__card-heading {
+        gap: 20px;
+        min-height: 42px;
+        line-height: 42px;
+    }
+
+    &__address {
+        min-width: 0;
+        line-height: 42px;
+    }
+
+    &__amount {
+        flex: none;
+        line-height: 42px;
+        white-space: nowrap;
+    }
+
+    &__meta {
+        min-height: 36px;
+        margin-top: 6px;
+        color: var(--app-text-muted);
+        line-height: 36px;
+    }
+
+    &__tx-id {
+        min-height: 36px;
+        margin-top: 20px;
+        color: var(--app-text-muted);
+        line-height: 36px;
+        overflow-wrap: anywhere;
+    }
+}

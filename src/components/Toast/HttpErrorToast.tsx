@@ -2,6 +2,8 @@ import {
     useEffect,
     useSyncExternalStore,
 } from 'react'
+import { useTranslation } from 'react-i18next'
+import { HTTP_ERROR_MESSAGE } from '../../services/http/config.ts'
 
 import {
     clearHttpErrorNotification,
@@ -16,6 +18,7 @@ function getServerHttpErrorNotification(): null {
 }
 
 export function HttpErrorToast() {
+    const { t } = useTranslation()
     const notification = useSyncExternalStore(
         subscribeHttpErrorNotifications,
         getHttpErrorNotification,
@@ -32,5 +35,8 @@ export function HttpErrorToast() {
         return () => clearTimeout(timer)
     }, [notification])
 
-    return <Toast message={notification?.message ?? null} variant="error" />
+    const message = notification?.message ?? null
+    const displayMessage = message && Object.values(HTTP_ERROR_MESSAGE).some((value) => value === message)
+        ? t(message) : message
+    return <Toast message={displayMessage} variant="error" />
 }
