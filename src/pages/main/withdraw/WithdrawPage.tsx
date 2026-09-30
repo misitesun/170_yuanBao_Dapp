@@ -11,7 +11,7 @@ import { ROUTE_PATH, useAppNavigate } from '@/router'
 
 import './WithdrawPage.scss'
 
-const COIN_OPTIONS: PickerOption[] = [{ label: 'USDT', value: 'USDT' }]
+const COIN_OPTIONS = [{ label: '余额', value: 'USDT' }] satisfies PickerOption[]
 const CHAIN_OPTIONS: PickerOption[] = []
 
 export function WithdrawPage() {
@@ -50,7 +50,7 @@ export function WithdrawPage() {
                         onClick={() => setSelector('coin')}
                     >
                         <span className="withdraw-page__label">{t("提现币种")}</span>
-                        <span className="withdraw-page__selection flex items-center">USDT<img src={selectChevron} alt="" /></span>
+                        <span className="withdraw-page__selection flex items-center">{t("余额")}<img src={selectChevron} alt="" /></span>
                     </button>
                     <button
                         type="button"
@@ -68,7 +68,7 @@ export function WithdrawPage() {
                 <form className="withdraw-page__summary" aria-labelledby="withdraw-amount-title" onSubmit={handleSubmit}>
                     <div className="withdraw-page__amount-row flex items-center justify-between">
                         <label id="withdraw-amount-title" htmlFor="withdraw-amount" className="withdraw-page__amount-title">{t("提现数量")}</label>
-                        <p className="withdraw-page__balance">{t("可用：-- USDT")}</p>
+                        <p className="withdraw-page__balance">{t("可用：-- 余额")}</p>
                     </div>
                     <div className="withdraw-page__amount-input">
                         <Input
@@ -93,7 +93,7 @@ export function WithdrawPage() {
             <Picker
                 show={selector !== null}
                 title={selector === 'chain' ? t("选择提现链") : t("选择提现币种")}
-                options={selector === 'chain' ? CHAIN_OPTIONS : COIN_OPTIONS}
+                options={selector === 'chain' ? CHAIN_OPTIONS : COIN_OPTIONS.map(option => ({ ...option, label: t(option.label) }))}
                 value={0}
                 emptyText={t("暂无可用提现链")}
                 onClose={() => setSelector(null)}

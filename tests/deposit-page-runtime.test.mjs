@@ -56,6 +56,7 @@ test('deposit selectors keep missing chain data empty and never expose a usable 
     button('选择充值币种').props.onClick()
     assert.equal(find('picker').props.show, true)
     assert.deepEqual(Array.from(find('picker').props.options, (item) => item.value), ['USDT'])
+    assert.deepEqual(Array.from(find('picker').props.options, (item) => item.label), ['余额'])
     find('picker').props.onClose()
     assert.equal(find('picker').props.show, false)
     button('选择充值链').props.onClick()

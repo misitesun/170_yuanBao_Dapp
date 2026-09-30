@@ -8,7 +8,7 @@ const DESIGN_CARDS: readonly CardPackCardOrder[] = [
 ]
 
 const INCOMING_PRINCIPALS: Record<CardPackColor, Pick<CardPackCardOrder, 'principal' | 'principalLabel'>> = {
-    red: { principal: '109+1', principalLabel: '本金(USDT+宝气）' },
+    red: { principal: '109+1', principalLabel: '本金(余额+宝气）' },
     blue: { principal: '309+3', principalLabel: '本金(元气）' },
     green: { principal: '1030+10', principalLabel: '本金(元气）' },
 }

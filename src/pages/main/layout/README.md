@@ -6,6 +6,8 @@
 
 首页设计适配在Header既有右插槽内按钱包、通知、语言、菜单排列；通知/语言使用手动导出的52px图标，钱包仍取真实store，通知使用useAppNavigate进入`/announcements`，staticPreview不导航。菜单继续使用MenuToggleIcon的连续开关动画，100pxHeader、侧栏控制与Popup契约保持原有结构。公共颜色从color.scss读取，未修改鉴权行为。
 
+2026-09-30 导航图标背景更新：通知使用开发者补充的 `Group 2085666468.png`（`header-notification.png`）；语言现有 `header-language.png` 与补充的 `Group 181.png` 完全一致，无需替换；菜单使用 `Group 286.png`（`header-menu.png`）作为52×52背景，前景继续由 `MenuToggleIcon` 绘制并保持开关动画。三个入口的大小、顺序、交互和无障碍标签不变。
+
 `MainLayout` is the reusable first-level shell. It combines the project brand, language switch, optional wallet-address chip, and exactly one navigation mode: `tabbar` or `sidebar`.
 
 `MainLayout` 是可复用的一级页面外壳，组合项目品牌、多语言切换、可选钱包地址摘要，以及 `tabbar` 或 `sidebar` 二选一的导航模式。

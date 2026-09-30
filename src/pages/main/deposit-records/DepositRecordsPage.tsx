@@ -16,7 +16,7 @@ export function DepositRecordsPage({ records = DEPOSIT_RECORD_PREVIEWS }: { reco
                         <article key={record.id} className="deposit-records-page__card">
                             <div className="deposit-records-page__card-heading flex items-center justify-between">
                                 <h2 className="deposit-records-page__address size-28 bold-5">{record.address === '示例地址' ? t('示例地址') : record.address}</h2>
-                                <strong className="deposit-records-page__amount size-28 bold-5">{record.amount} USDT</strong>
+                                <strong className="deposit-records-page__amount size-28 bold-5">{record.amount} {t("余额")}</strong>
                             </div>
                             <div className="deposit-records-page__meta flex items-center justify-between size-24">
                                 <time dateTime={record.createdAt}>{record.createdAt.slice(0, 10).replaceAll('-', '.')} {record.createdAt.slice(11, 16)}</time>

@@ -26,6 +26,7 @@ test('all five project locales have complete keys, interpolation parameters and 
         assert.deepEqual(Object.keys(project[code]).sort(), keys, code)
         for (const key of keys) {
             assert.ok(project[code][key].trim(), `${code}: ${key}`)
+            assert.ok(!project[code][key].includes('USDT'), `${code}: fixed copy follows the balance glossary`)
             assert.deepEqual(parameters(project[code][key]), parameters(key), `${code}: ${key}`)
             assert.deepEqual(tags(project[code][key]), tags(key), `${code}: ${key}`)
         }
@@ -43,7 +44,10 @@ test('production pages have no untranslated JSX copy and all fixed translation k
     for (const path of paths) {
         const ast = ts.createSourceFile(path, readFileSync(path, 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX)
         function visit(node) {
-            if (ts.isJsxText(node)) assert.ok(!/\p{Script=Han}/u.test(node.text), `${path}: ${node.text}`)
+            if (ts.isJsxText(node)) {
+                assert.ok(!/\p{Script=Han}/u.test(node.text), `${path}: ${node.text}`)
+                assert.ok(!node.text.includes('USDT'), `${path}: fixed copy follows the balance glossary`)
+            }
             if (ts.isJsxAttribute(node) && node.initializer && ts.isStringLiteral(node.initializer)) {
                 const value = node.initializer.text
                 if (node.name.getText(ast) !== 'i18nKey') assert.ok(!/\p{Script=Han}/u.test(value), `${path}: ${value}`)
@@ -88,7 +92,9 @@ test('real React pages switch locale, preserve card names and amounts, and do no
         assert.ok(home.includes('Yuanbao Premium Card'), code)
         assert.ok(home.includes('10:00-15:00'), code)
         assert.ok(home.includes('home-page__amount">--'), code)
-        assert.ok(assets.includes(messages[code]['USDT明细']), code)
+        assert.ok(assets.includes(messages[code]['余额明细']), code)
+        assert.ok(assets.includes(messages[code]['余额']), code)
+        assert.ok(!assets.includes('USDT'), code)
         assert.ok(assets.includes('后端原文 messages.1'), code)
         assert.ok(assets.includes('+1000.010000'), code)
         assert.ok(!home.includes('{{') && !assets.includes('{{'), code)

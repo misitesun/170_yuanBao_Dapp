@@ -27,9 +27,9 @@ import type { CardPackCardOrder, CardPackOrderType, CardPackQuery, CardPackRelea
 import './CardPackPage.scss'
 
 const RELEASE_METRICS = [
-    { key: 'totalUsdtIncome', label: '累计收益(USDT)', tone: 'usdt' },
+    { key: 'totalUsdtIncome', label: '累计收益(元气)', tone: 'usdt' },
     { key: 'totalBaoqiIncome', label: '累计收益(宝气)', tone: 'baoqi' },
-    { key: 'todayUsdtIncome', label: '今日收益(USDT)', tone: 'default' },
+    { key: 'todayUsdtIncome', label: '今日收益(元气)', tone: 'default' },
     { key: 'todayBaoqiIncome', label: '今日收益(宝气)', tone: 'default' },
     { key: 'period', label: '周期(天)', tone: 'default' },
 ] as const
@@ -81,7 +81,7 @@ function ReleaseOrderItem({ order }: { order: CardPackReleaseOrder }) {
             <div className="card-pack-page__surface" aria-hidden="true" />
             <article className="card-pack-page__release-content" aria-label={t("释放订单收益")}>
                 <div className="card-pack-page__release-principal flex flex-column">
-                    <p className="card-pack-page__label">{t("本金(USDT+宝气）")}</p>
+                    <p className="card-pack-page__label">{t("本金(余额+宝气）")}</p>
                     <p className="card-pack-page__amount flex items-center">
                         <DualCurrencyIcon />
                         <span>{order.principal}</span>

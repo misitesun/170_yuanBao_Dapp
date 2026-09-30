@@ -52,7 +52,7 @@ export function RankingPage() {
                 </div>
                 <div className="ranking-page__my-total flex flex-column tr">
                     <p className="ranking-page__my-amount">1,102.345298</p>
-                    <p className="ranking-page__my-label">{t("参与金额(USDT)")}</p>
+                    <p className="ranking-page__my-label">{t("参与金额(余额)")}</p>
                 </div>
             </aside>
         </div>

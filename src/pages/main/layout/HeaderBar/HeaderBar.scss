@@ -22,8 +22,9 @@
         line-height: 30px;
     }
     &__menu {
-        @include gradient-card(999px, var(--app-control-soft-gradient), var(--app-control-gradient));
-        background: var(--app-control-soft-gradient) padding-box, linear-gradient(var(--app-bg), var(--app-bg)) padding-box, var(--app-control-gradient) border-box;
+        border: 0;
+        border-radius: 50%;
+        background: url('@/assets/common/header-menu.png') center / 100% 100% no-repeat;
         flex: none;
         width: 52px;
         height: 52px;

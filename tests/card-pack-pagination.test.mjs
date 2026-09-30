@@ -180,7 +180,7 @@ test('incoming preview preserves source amounts and per-card labels, with two fi
     const second = await loadCardPackPreviewPage(incoming, 2)
     const end = await loadCardPackPreviewPage(incoming, 3)
     assert.deepEqual(first.items.map(({ principal }) => principal), ['109+1', '309+3', '1030+10'])
-    assert.deepEqual(first.items.map(({ principalLabel }) => principalLabel), ['本金(USDT+宝气）', '本金(元气）', '本金(元气）'])
+    assert.deepEqual(first.items.map(({ principalLabel }) => principalLabel), ['本金(余额+宝气）', '本金(元气）', '本金(元气）'])
     assert.ok(first.items.every(({ principalAsset }) => principalAsset === 'usdt-baoqi'))
     assert.equal(first.hasMore, true)
     assert.equal(second.hasMore, false)

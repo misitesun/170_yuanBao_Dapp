@@ -12,7 +12,7 @@ import { ROUTE_PATH, useAppNavigate } from '@/router'
 
 import './DepositPage.scss'
 
-const COIN_OPTIONS: PickerOption[] = [{ label: 'USDT', value: 'USDT' }]
+const COIN_OPTIONS = [{ label: '余额', value: 'USDT' }] satisfies PickerOption[]
 const CHAIN_OPTIONS: PickerOption[] = []
 
 export function DepositPage() {
@@ -44,7 +44,7 @@ export function DepositPage() {
                         onClick={() => setSelector('coin')}
                     >
                         <span className="deposit-page__label">{t("充值币种")}</span>
-                        <span className="deposit-page__selection flex items-center">USDT<img src={selectChevron} alt="" /></span>
+                        <span className="deposit-page__selection flex items-center">{t("余额")}<img src={selectChevron} alt="" /></span>
                     </button>
                     <button
                         type="button"
@@ -91,7 +91,7 @@ export function DepositPage() {
             <Picker
                 show={selector !== null}
                 title={selector === 'chain' ? t("选择充值链") : t("选择充值币种")}
-                options={selector === 'chain' ? CHAIN_OPTIONS : COIN_OPTIONS}
+                options={selector === 'chain' ? CHAIN_OPTIONS : COIN_OPTIONS.map(option => ({ ...option, label: t(option.label) }))}
                 value={0}
                 emptyText={t("暂无可用充值链")}
                 onClose={() => setSelector(null)}

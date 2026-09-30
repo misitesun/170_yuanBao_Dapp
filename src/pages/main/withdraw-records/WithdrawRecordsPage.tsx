@@ -46,7 +46,7 @@ export function WithdrawRecordsPage({ recordsByStatus = WITHDRAW_RECORD_PREVIEWS
                         <article key={record.id} className={`withdraw-records-page__card${status === 'rejected' ? ' withdraw-records-page__card--rejected' : ''}`}>
                             <div className="withdraw-records-page__card-heading flex items-center justify-between">
                                 <h2 className="withdraw-records-page__note size-28 bold-5">{record.address === '示例地址' ? t('示例地址') : record.address}</h2>
-                                <strong className="withdraw-records-page__amount size-28 bold-5">{record.amount} USDT</strong>
+                                <strong className="withdraw-records-page__amount size-28 bold-5">{record.amount} {t("余额")}</strong>
                             </div>
                             <div className="withdraw-records-page__meta flex items-center justify-between size-24">
                                 <time dateTime={record.createdAt}>{record.createdAt.slice(0, 10).replaceAll('-', '.')} {record.createdAt.slice(11, 16)}</time>

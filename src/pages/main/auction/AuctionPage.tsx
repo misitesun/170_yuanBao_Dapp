@@ -39,7 +39,7 @@ export function AuctionPage() {
                                 <h2 id={`auction-${card.id}`} className="auction-page__name tc">{t(card.name)}</h2>
                                 <div className="auction-page__price flex items-center justify-center">
                                     <img src={priceCoins} alt="" />
-                                    <span>{card.usdt}USDT+{card.baoqi}{t('宝气')}</span>
+                                    <span>{card.usdt}{t("余额")}+{card.baoqi}{t('宝气')}</span>
                                 </div>
                                 <button
                                     type="button"

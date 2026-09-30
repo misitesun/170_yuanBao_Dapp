@@ -22,7 +22,7 @@ import './AssetsPage.scss'
 
 
 const BALANCES = [
-    { type: 'usdt', label: 'USDT', icon: usdtIcon },
+    { type: 'usdt', label: '余额', icon: usdtIcon },
     { type: 'yuanqi', label: '元气', icon: yuanqiIcon },
     { type: 'baoqi', label: '宝气', icon: baoqiIcon },
 ] as const
@@ -36,7 +36,7 @@ const ACTIONS = [
 function AssetsContent({ onError, onUnavailable }: { onError: (error?: unknown) => void; onUnavailable: () => void }) {
     const { t } = useTranslation()
     const ASSET_TABS = [
-        { value: 'usdt', label: t('USDT明细') },
+        { value: 'usdt', label: t('余额明细') },
         { value: 'yuanqi', label: t('元气明细') },
         { value: 'baoqi', label: t('宝气明细') },
     ] as const

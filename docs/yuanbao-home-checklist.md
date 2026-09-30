@@ -1,5 +1,17 @@
 # 元宝首页实现清单
 
+## 顶部导航图标背景更新（2026-09-30）
+
+开发者提供三个52×52导出资源及导航栏截图。已核对 `Group 181.png` 与当前 `src/assets/common/header-language.png` 的SHA-256一致；通知改用 `Group 2085666468.png` 覆盖 `header-notification.png`；`Group 286.png` 新增为 `header-menu.png` 并替换菜单按钮原CSS渐变背景。菜单线条继续由 `MenuToggleIcon` 绘制，以保留开关动画。仅修改Header资源、菜单局部背景及布局说明；钱包、通知/语言/菜单入口顺序、点击行为、公共Header尺寸、路由和其他页面保持现状。验证750px/375px图标大小、资源显示、菜单开合及 `pnpm build`、`git diff --check`。
+
+验证：开发预览 `/h5/showcase/components/sidebar` 可显示三个入口，菜单开合后图标恢复三线并保持按钮语义。375px视口三个按钮均约26×26，750px均约52×52；两个视口文档宽等于视口宽，无横向溢出，通知和语言图片加载成功，菜单背景指向 `header-menu.png`。`pnpm build` 通过，包含lint、302项测试、TypeScript与Vite；`git diff --check`通过。静态预览不替代真实钱包首页验收。
+
+## 卡牌底座切图修正（2026-09-30）
+
+开发者补充截图并指出卡牌底座已有原图，覆盖下文早期“平台采用CSS”的选择。已核对 `/Users/sly/Downloads/image 4884.png` 为690×230透明PNG，与原Figma记录的 `image 4884` / `30075:3927`、x30/y568、690×230一致。语义资源为 `src/assets/home/card-pedestal.png`；仅将首页舞台现有绝对定位装饰层的CSS椭圆、渐变、阴影替换为该图片，保留原690×230位置和卡牌/缩略图正常流布局。既有 `background-art` 定位例外继续适用。无需估算新尺寸；不改轮播交互、公共Header、全局颜色、其他页面、API或合约。验证750px设计宽与375px缩放时平台和卡牌相对位置、资源加载及无横向溢出，并运行项目构建门禁与差异检查。
+
+本次 `pnpm build` 通过：lint、302项测试、TypeScript和Vite均成功，产物包含 `card-pedestal` 图片；`git diff --check`通过。本机无已授权钱包会话，访问 `/h5/home` 跳转 `/h5/login`，因此750px/375px实际页面截图对照尚未完成，不将源码尺寸检查写作视觉验收。
+
 ## 最新确认：入口暂未开放与卡名（2026-09-29）
 
 依据开发者两张截图，立即购买、进入抢拍、查看我的卡包三个入口只提示“暂未开放”，保持当前首页、不导航；蓝/红/绿标题分别为Yuanbao Premium Card、Yuanbao Collection Card、Yuanbao Supreme Card。该决定覆盖本文历史入口及颜色标题说明，仅替换文字，不新增截图中的编辑器下划线。价格、轮播、图片、公共样式与其他页面不改；允许首页TSX、README、本清单、已确认首页名称PROJECT_TERMS及聚焦行为测试。验证三个入口和轮播标题、375/750无横向溢出，pnpm verify、pnpm exec tsc -b、git diff --check。

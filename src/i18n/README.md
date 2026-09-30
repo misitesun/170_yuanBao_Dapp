@@ -94,3 +94,5 @@ When i18n is enabled, the request layer reads the current language and sends it 
 英文、日文、韩文的较长标题、Tab 和卡片标签在对应页面内允许换行；中文设计尺寸继续保留。开发默认 zh-Hans、生产默认 en；已有合法语言缓存优先。
 
 验证：tests/i18n-project.test.mjs 检查语言键、插值、富文本标签、固定 JSX 文案，并用真实 React/i18next 渲染首页和资产页，验证切换语言后品牌名称、金额精度与远端记录不变。浏览器验收范围及构建结果见 docs/yuanbao-i18n-checklist.md。
+
+2026-09-30：全局前台固定展示文案中的 USDT 改为“余额”，对应 zh-Hant 餘額、en Balance、ja 残高、ko 잔액。接口/合约字段、选择器值和远端原文保持原值，术语依据见 PROJECT_TERMS.md。

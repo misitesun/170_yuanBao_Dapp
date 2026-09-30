@@ -30,3 +30,9 @@
 - 资产与团队浏览器检查使用未连接钱包状态，余额/统计为占位并显示加载失败，未将此记为真实数据或空列表联调成功。金额与远端记录原样展示由真实 React/i18next 回归测试覆盖。
 - pnpm build 成功，包含 lint、302 项测试全部通过、TypeScript 与 Vite 生产打包；仅保留已有大 chunk 体积提示。dist 已更新，部署路径 /h5/，未部署。
 - 英文首页验收截图：docs/design-reference/yuanbao-i18n-en-home-375.png。临时验收 HTML 已删除，正式路由的鉴权没有放宽。
+
+## 全局 USDT 展示术语更新（2026-09-30）
+
+开发者要求全局固定展示文案中的 USDT 改为“余额”，禁止误改接口与合约字段。范围覆盖资产概览/明细、充值/提现选择器与记录、卡包本金/收益、排行榜参与金额及抢拍金额组合；五种语言对应余额、餘額、Balance、残高、잔액。前端翻译key同步改为余额文案，选择器label在组件渲染时翻译，value仍为USDT。内部usdt、balance_usdt、totalUsdtIncome等字段、资源名、CSS类名、金额与远端原文保持原值。明确术语记录在PROJECT_TERMS.md，覆盖设计稿历史USDT文案。
+
+验证：生产源码剩余大写USDT仅为充值/提现选择器内部value；features/services/config/types及卡包types无Git差异。现有接口映射和金额精度测试通过；真实React资产页在五种语言下显示余额与余额明细，保留远端备注和金额；选择器测试验证显示余额且内部value仍为USDT。pnpm build通过，包含lint、302项测试、TypeScript和Vite；git diff --check通过。本轮未进行真实钱包页面的375px/750px浏览器截图验收。
