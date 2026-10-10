@@ -1,15 +1,5 @@
 # 充值记录
 
-`/deposit/records` 为静态二级页，充值页记录图标进入，复用SecondaryHeader返回。UI迁自HU_CHAIN_Dapp的user-recharge-records模块，保留30px页边距、20px卡间距、202px卡最小高度、30px卡内距、20px圆角、28px主文字和24px次文字。使用当前项目颜色token，不改公共组件。
+`/deposit/records` 已从静态预览切换为登录后的GET /api/recharges，充值页入口与SecondaryHeader返回保留。正常流Header→列表，复用既有卡片/字体/颜色与Empty。from展示复用maskWalletAddress（前5位+****+后4位），接口原始地址保持完整；展示原样amount（前台单位余额）、tx_id；地址和哈希可换行。按浏览器截图使用真实数字id作为卡片key，created_at显示完整年月日时分秒，不进行时区转换；data.ts只保留历史视觉fixture，运行页不引用。
 
-正常流为Header→列表，卡片为article，地址/金额、时间/金额标签用Flex排列，交易哈希允许换行。无新增切图或定位例外。
-
-与现有业务页面相同，通过页面局部html:has规则复用hide-scrollbar mixin，避免桌面滚动条占宽影响vw；保留滚动。
-
-默认data.ts六条静态示例，页头明确标注；地址和哈希不伪造真实链上值。可通过records传空数组验证公共Empty。没有API、鉴权、合约、复制或伪刷新/分页；后续接入以当前项目契约为准。
-
-## 多语言
-
-固定文案、状态和无障碍标签接入五种语言，静态数值与交互边界保持。说明与富文本标题的处理见 docs/yuanbao-i18n-checklist.md。
-
-2026-09-30 展示术语按 `PROJECT_TERMS.md` 统一：固定文案中的 USDT 显示为“余额”，并使用五种语言对应译文；内部资产标识、选择器值、字段名和后端原文保持原值。该规则覆盖本文历史展示文案说明。
+PagePullRefresh支持真实刷新和每页20条分页，初载使用DropletLoading，不将加载或错误显示为空列表。错误时允许重试；取消过时请求并丢弃迟到结果；HTTP错误公共Toast去重。完整接口和字段边界见docs/yuanbao-funds-records-contract.md。沿用原局部hide-scrollbar，不新增切图/定位。固定文案维持五语言。

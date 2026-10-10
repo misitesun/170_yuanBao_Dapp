@@ -1,7 +1,8 @@
 import { Trans, useTranslation } from 'react-i18next'
 import { wasHttpErrorReported } from '@/services/http/index.ts'
 
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import { ROUTE_PATH, useAppNavigate } from '@/router'
 
 import depositIcon from '@/assets/common/action-deposit.png'
 import transferIcon from '@/assets/common/action-transfer.png'
@@ -17,7 +18,8 @@ import { SegmentedTabs } from '@/components/SegmentedTabs'
 import { Toast, useToast } from '@/components/Toast'
 
 import { usePreviewList } from '../pagination/usePreviewList.ts'
-import { loadAssetsPage, type AssetType } from './service.ts'
+import { loadAssetsPage, type AssetQuery } from './service.ts'
+import { TransferPopup } from './TransferPopup'
 import './AssetsPage.scss'
 
 
@@ -33,18 +35,21 @@ const ACTIONS = [
     { type: 'transfer', label: '转账', icon: transferIcon },
 ] as const
 
-function AssetsContent({ onError, onUnavailable }: { onError: (error?: unknown) => void; onUnavailable: () => void }) {
+function AssetsContent({ onError, showToast, onSubmittingChange }: { onError: (error?: unknown) => void; showToast: ReturnType<typeof useToast>['showToast']; onSubmittingChange: (submitting: boolean) => void }) {
+    const { pushRoute } = useAppNavigate()
+    const [showTransfer, setShowTransfer] = useState(false)
     const { t } = useTranslation()
     const ASSET_TABS = [
         { value: 'usdt', label: t('余额明细') },
         { value: 'yuanqi', label: t('元气明细') },
         { value: 'baoqi', label: t('宝气明细') },
+        { value: 'transfers', label: t('转账记录') },
     ] as const
-    const { state, pagination } = usePreviewList(loadAssetsPage, 'usdt' as AssetType, onError)
+    const { state, pagination } = usePreviewList(loadAssetsPage, 'usdt' as AssetQuery, onError)
     const assetType = state.query
     const overview = state.overview ?? { usdt: '—', yuanqi: '—', baoqi: '—' }
 
-    function selectAsset(value: AssetType) {
+    function selectAsset(value: AssetQuery) {
         if (value !== assetType) void pagination.replace(value).catch(onError)
     }
 
@@ -80,7 +85,10 @@ function AssetsContent({ onError, onUnavailable }: { onError: (error?: unknown) 
                             key={action.type}
                             type="button"
                             className={`assets-page__action assets-page__action--${action.type} flex-center`}
-                            onClick={onUnavailable}
+                            onClick={() => {
+                                if (action.type === 'transfer') setShowTransfer(true)
+                                else pushRoute(action.type === 'deposit' ? ROUTE_PATH.deposit : ROUTE_PATH.withdraw)
+                            }}
                         >
                             <img src={action.icon} alt="" />
                             <span>{t(action.label)}</span>
@@ -115,10 +123,13 @@ function AssetsContent({ onError, onUnavailable }: { onError: (error?: unknown) 
                                 <ul className="assets-page__records flex flex-column">
                                     {state.items.map((record) => (
                                         <li key={record.id}>
-                                            <article className="assets-page__record">
+                                            <article className={`assets-page__record${record.transfer ? ' assets-page__record--transfer' : ''}`}>
                                                 <div className="assets-page__record-heading flex justify-between">
-                                                    <h3 className="assets-page__remark">{record.content}</h3>
-                                                    <p className={`assets-page__change assets-page__change--${record.tone}`}>{record.amount}</p>
+                                                    <h3 className="assets-page__remark">{record.transfer ? t(record.tone === 'income' ? '由 {{address}} 转入' : '转出给 {{address}}', { address: record.transfer.address || '--' }) : record.content}</h3>
+                                                    <div className="assets-page__record-total">
+                                                        <p className={`assets-page__change assets-page__change--${record.tone}`}>{record.transfer ? t('{{amount}} 宝气', { amount: record.amount }) : record.amount}</p>
+                                                        {record.transfer ? <p className="assets-page__transfer-fee">{t('手续费：{{amount}} 宝气', { amount: record.transfer.fee })}</p> : null}
+                                                    </div>
                                                 </div>
                                                 <time className="assets-page__date" dateTime={record.createdAt.replace(' ', 'T')}>{record.createdAt.replaceAll('-', '.')}</time>
                                             </article>
@@ -138,18 +149,20 @@ function AssetsContent({ onError, onUnavailable }: { onError: (error?: unknown) 
                     </div>
                 ))}
             </section>
+            <TransferPopup show={showTransfer} onClose={() => setShowTransfer(false)} showToast={showToast} onSuccess={() => pagination.replace()} onSubmittingChange={onSubmittingChange} />
         </div>
     )
 }
 
 export function AssetsPage() {
+    const [transferSubmitting, setTransferSubmitting] = useState(false)
     const { t } = useTranslation()
     const { message, variant, showToast } = useToast()
     const onError = useCallback((error?: unknown) => { if (!wasHttpErrorReported(error)) showToast(t("资产加载失败，请重试"), 'error') }, [showToast, t])
     return (
         <>
-            <PagePullRefresh onError={onError}>
-                <AssetsContent onError={onError} onUnavailable={() => showToast(t("暂未开放"))} />
+            <PagePullRefresh onError={onError} enabled={!transferSubmitting}>
+                <AssetsContent onError={onError} showToast={showToast} onSubmittingChange={setTransferSubmitting} />
             </PagePullRefresh>
             <Toast message={message} variant={variant} />
         </>

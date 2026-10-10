@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import { createCardPackPagination } from '../src/pages/main/card-pack/pagination.ts'
-import { loadCardPackPreviewPage } from '../src/pages/main/card-pack/service.ts'
+import { loadCardPackPreviewPage } from '../src/pages/main/card-pack/preview.ts'
 
 const outgoing = { orderType: 'outgoing', status: 'pending' }
 const incoming = { orderType: 'incoming', status: 'pending' }
@@ -210,9 +210,25 @@ test('ongoing releases preserve all source strings in two finite pages, without 
     for (const item of first.items) {
         assert.equal(item.kind, 'release')
         assert.equal(item.principal, '109+1')
-        assert.equal(item.wonAt, '2026.02.24 12:28')
+        assert.equal(item.createdAt, '2026.02.24 12:28')
         assert.deepEqual([item.totalUsdtIncome, item.totalBaoqiIncome, item.todayUsdtIncome, item.todayBaoqiIncome, item.period], ['286.00', '46.00', '6.124875', '1.293846', '20/180'])
         assert.ok(!('name' in item) && !('color' in item))
     }
     assert.deepEqual(end, { items: [], hasMore: false })
+})
+
+test('replacement and unmount abort actual loader signals and discard obsolete network results', async () => {
+    const requests = []
+    const pagination = createCardPackPagination((query, page, signal) => new Promise((resolve) => requests.push({ query, page, signal, resolve })))
+    const first = pagination.replace()
+    const second = pagination.replace(incoming)
+    assert.equal(requests[0].signal.aborted, true)
+    requests[0].resolve({ items: [], hasMore: true })
+    await first
+    assert.equal(pagination.getSnapshot().hasMore, false)
+    pagination.invalidate()
+    assert.equal(requests[1].signal.aborted, true)
+    requests[1].resolve({ items: [], hasMore: true })
+    await second
+    assert.equal(pagination.getSnapshot().hasMore, false)
 })

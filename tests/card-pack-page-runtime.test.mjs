@@ -14,6 +14,7 @@ function mountPage() {
     const jsx = (type, props) => ({ type, props })
     const load = (query, page) => new Promise((resolve, reject) => requests.push({ query, page, resolve, reject }))
     const modules = {
+        '@/services/http/index.ts': { wasHttpErrorReported: () => false },
         'react-i18next': i18nRuntime,
         react: {
             useCallback: (fn) => fn,
@@ -23,7 +24,7 @@ function mountPage() {
         },
         'react/jsx-runtime': { jsx, jsxs: jsx, Fragment: 'fragment' },
         './pagination.ts': { createCardPackPagination },
-        './service.ts': { loadCardPackPreviewPage: load },
+        './service.ts': { loadCardPackPage: load },
         '@/components/PagePullRefresh': {
             PagePullRefresh: 'refresh-wrapper',
             usePageRefresh: (fn, enabled) => { refresh = fn; refreshEnabled = enabled },
@@ -71,7 +72,7 @@ function mountPage() {
 }
 
 const release = {
-    kind: 'release', id: 'release-one', principal: '109+1', wonAt: '2026.02.24 12:28',
+    kind: 'release', id: 'release-one', principal: '109+1', createdAt: '2026.02.24 12:28',
     totalUsdtIncome: '286.00', totalBaoqiIncome: '46.00', todayUsdtIncome: '6.124875', todayBaoqiIncome: '1.293846', period: '20/180',
 }
 const flush = () => new Promise(setImmediate)
@@ -94,9 +95,9 @@ test('cross-mode page callbacks use valid status defaults and discard previous-m
     await flush()
     const nodes = page.render()
     assert.deepEqual(nodes.filter((node) => node.type === 'dd').map((node) => node.props.children), ['286.00', '46.00', '6.124875', '1.293846', '20/180'])
-    assert.ok(nodes.some((node) => node.type === 'p' && typeof node.props.children === 'string' && node.props.children.startsWith('中奖时间：')))
+    assert.ok(nodes.some((node) => node.type === 'p' && typeof node.props.children === 'string' && node.props.children.startsWith('创建时间：')))
     assert.ok(!nodes.some((node) => node.type === 'h2'))
-    assert.equal(nodes.filter((node) => node.type === 'img' && node.props.src?.includes('/token-')).length, 2)
+    assert.equal(nodes.filter((node) => node.type === 'img' && node.props.src?.includes('/token-')).length, 0)
     assert.deepEqual(Array.from(page.tabs('释放状态').items, (item) => item.value), ['ongoing', 'completed'])
 
     page.tabs('释放状态').onChange('completed')

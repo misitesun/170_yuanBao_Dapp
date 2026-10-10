@@ -54,3 +54,7 @@ If the PHP or ABI contract pack is incomplete, list the missing facts and pause 
 - No legacy API/ABI/address/value was copied as an unverified fact.
 - Project-specific facts remain out of generic DApp services and reusable template documentation.
 - Any demonstrated cross-project improvement is documented before it is promoted into the template.
+
+## Submission interaction contract
+
+For business mutations, wallet authorization or contract writes, read `docs/submit-interactions.md` before implementation or review. Preserve button/page copy, disable pending actions, reuse the ContractLoading water-droplet overlay, and show outcomes only through Toast with HTTP deduplication. Unlock inputs after failure; preserve server-signed raw values and the original order on retries instead of repeating a deduction. Verify pending/success/failure cleanup and keep mutation and refresh errors separate.

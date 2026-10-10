@@ -58,38 +58,25 @@ function mountSidebar(staticPreview = false) {
     return { render, feedback, closeCount: () => closeCount }
 }
 
-test('unavailable sidebar links block navigation while home, assets and community navigate and close the sidebar', () => {
+test('all sidebar page links navigate and close the sidebar', () => {
     const sidebar = mountSidebar()
-    const restricted = ['/auction', '/card-pack', '/ranking']
-    for (const path of restricted) {
-        const link = sidebar.render().find((node) => node.type === 'link' && node.props.to === path)
-        const previousClass = link.props.className({ isActive: true })
-        let prevented = false
-        link.props.onClick({ preventDefault: () => { prevented = true } })
-        assert.equal(prevented, true)
-        assert.equal(sidebar.closeCount(), 0)
-        assert.equal(sidebar.render().find((node) => node.type === 'link' && node.props.to === path).props.className({ isActive: true }), previousClass)
-    }
-    assert.deepEqual(sidebar.feedback, Array(3).fill('暂未开放'))
-    for (const path of ['/home', '/assets', '/team']) {
+    for (const path of ['/home', '/auction', '/card-pack', '/assets', '/team', '/ranking']) {
         let prevented = false
         sidebar.render().find((node) => node.type === 'link' && node.props.to === path).props.onClick({ preventDefault: () => { prevented = true } })
         assert.equal(prevented, false)
     }
-    assert.equal(sidebar.closeCount(), 3)
-    assert.deepEqual(sidebar.feedback, Array(3).fill('暂未开放'))
+    assert.equal(sidebar.closeCount(), 6)
+    assert.deepEqual(sidebar.feedback, [])
 })
 
-test('static sidebar preview also shows unavailable feedback without changing its selected item', () => {
+test('static sidebar preview selects every entry without navigating', () => {
     const sidebar = mountSidebar(true)
     const buttons = () => sidebar.render().filter((node) => node.type === 'button' && node.props['aria-pressed'] !== undefined)
-    buttons()[3].props.onClick()
-    assert.equal(buttons()[3].props['aria-pressed'], true)
-    for (const index of [1, 2, 5]) {
+    for (let index = 0; index < 6; index++) {
         buttons()[index].props.onClick()
-        assert.equal(buttons()[3].props['aria-pressed'], true)
-        assert.equal(buttons()[index].props['aria-pressed'], false)
+        assert.equal(buttons()[index].props['aria-pressed'], true)
+        assert.equal(buttons().filter((node) => node.props['aria-pressed']).length, 1)
     }
-    assert.deepEqual(sidebar.feedback, Array(3).fill('暂未开放'))
+    assert.deepEqual(sidebar.feedback, [])
     assert.equal(sidebar.closeCount(), 0)
 })

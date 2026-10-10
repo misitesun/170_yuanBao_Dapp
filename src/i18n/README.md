@@ -96,3 +96,5 @@ When i18n is enabled, the request layer reads the current language and sends it 
 验证：tests/i18n-project.test.mjs 检查语言键、插值、富文本标签、固定 JSX 文案，并用真实 React/i18next 渲染首页和资产页，验证切换语言后品牌名称、金额精度与远端记录不变。浏览器验收范围及构建结果见 docs/yuanbao-i18n-checklist.md。
 
 2026-09-30：全局前台固定展示文案中的 USDT 改为“余额”，对应 zh-Hant 餘額、en Balance、ja 残高、ko 잔액。接口/合约字段、选择器值和远端原文保持原值，术语依据见 PROJECT_TERMS.md。
+
+2026-10-10 新增业务文案检查：购买/抢拍确认、活动权限与库存提示、卡包状态与释放订单、排行榜、充值二维码、提现和转账结果及记录均已覆盖五种语言。组合金额文案沿用各语言的资产名（en/ja/ko 的 Yuanqi、Baoqi），日语/韩语的抢拍文案与立即抢拍统一；转账方向与提现动作区分。静态检查同时扫描 t/translate 的直接字面量与条件表达式两侧，实际 React/i18next 渲染覆盖转入/转出标题、费用和真实地址二维码标签；金额、脱敏地址和码值保持原值。

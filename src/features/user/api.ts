@@ -33,3 +33,13 @@ export function parseCurrentUser(value: unknown): CurrentUser {
 export async function getCurrentUser(authentication?: 'bearer'): Promise<CurrentUser> {
     return parseCurrentUser(await request<unknown>({ url: '/api/users/my', authentication }))
 }
+
+export function parseRechargeAddress(value: unknown): string {
+    const address = string(object(value).recharge_address)
+    if (!/^0x[0-9a-fA-F]{40}$/.test(address)) throw new Error('充值地址格式错误')
+    return address
+}
+
+export async function getRechargeAddress(signal?: AbortSignal): Promise<string> {
+    return parseRechargeAddress(await request<unknown>({ url: '/api/users/my/recharge_address', signal }))
+}

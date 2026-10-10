@@ -1,55 +1,36 @@
-import type { CardPackCardOrder, CardPackColor, CardPackOrder, CardPackOrderType, CardPackPageLoader, CardPackReleaseOrder } from './types.ts'
+import { getCardOrders, getOrderReleases } from '@/features/orders/api.ts'
+import { API_PAGE_SIZE, formatApiTime } from '@/features/api-fields.ts'
+import type { CardPackCardOrder, CardPackColor, CardPackPageLoader } from './types.ts'
 
-const PAGE_SIZE = 3
-const DESIGN_CARDS: readonly CardPackCardOrder[] = [
-    { kind: 'card', id: 'design-red', color: 'red', name: '元宝典藏卡', principal: '100', principalLabel: '本金(元气）', principalAsset: 'yuanqi', purchasedAt: '2026.02.24 12:28' },
-    { kind: 'card', id: 'design-blue', color: 'blue', name: '元宝尊享卡', principal: '300', principalLabel: '本金(元气）', principalAsset: 'yuanqi', purchasedAt: '2026.02.24 12:28' },
-    { kind: 'card', id: 'design-green', color: 'green', name: '元宝至尊卡', principal: '1,000', principalLabel: '本金(元气）', principalAsset: 'yuanqi', purchasedAt: '2026.02.24 12:28' },
-]
+// IDs and card colors follow the developer-confirmed 1 red / 2 blue / 3 green mapping.
+const ORDER_COLORS: Readonly<Record<number, CardPackColor>> = { 1: 'red', 2: 'blue', 3: 'green' }
+const ORDER_STATUSES = { pending: 0, won: 1, lost: 2 } as const
 
-const INCOMING_PRINCIPALS: Record<CardPackColor, Pick<CardPackCardOrder, 'principal' | 'principalLabel'>> = {
-    red: { principal: '109+1', principalLabel: '本金(余额+宝气）' },
-    blue: { principal: '309+3', principalLabel: '本金(元气）' },
-    green: { principal: '1030+10', principalLabel: '本金(元气）' },
-}
-const INCOMING_DESIGN_CARDS = DESIGN_CARDS.map<CardPackCardOrder>((card) => ({
-    ...card,
-    ...INCOMING_PRINCIPALS[card.color],
-    id: `design-incoming-${card.color}`,
-    principalAsset: 'usdt-baoqi',
-}))
-const DESIGN_RELEASES = Array.from({ length: 3 }, (_, index): CardPackReleaseOrder => ({
-    kind: 'release',
-    id: `design-release-${index + 1}`,
-    principal: '109+1',
-    wonAt: '2026.02.24 12:28',
-    totalUsdtIncome: '286.00',
-    totalBaoqiIncome: '46.00',
-    todayUsdtIncome: '6.124875',
-    todayBaoqiIncome: '1.293846',
-    period: '20/180',
-}))
-
-// Two finite pages of design samples, not wallet assets or documented API DTOs.
-// Winner and completed filters stay empty; their records have no supplied design.
-const PREVIEW_ORDERS: Record<CardPackOrderType, readonly CardPackOrder[]> = {
-    outgoing: [...DESIGN_CARDS, ...DESIGN_CARDS.map((card) => ({ ...card, id: `${card.id}-page-two` }))],
-    incoming: [...INCOMING_DESIGN_CARDS, ...INCOMING_DESIGN_CARDS.map((card) => ({ ...card, id: `${card.id}-page-two` }))],
-    released: [...DESIGN_RELEASES, ...DESIGN_RELEASES.map((order) => ({ ...order, id: `${order.id}-page-two` }))],
-}
-
-export const loadCardPackPreviewPage: CardPackPageLoader = async (query, page) => {
-    // The local preview waits for its data source, exposing the shared loading UI.
-    await new Promise<void>((resolve) => setTimeout(resolve, 250))
-
-    const showPreview = query.orderType === 'released' ? query.status === 'ongoing' : query.status === 'pending'
-    const orders = showPreview
-        ? PREVIEW_ORDERS[query.orderType]
-        : []
-    const start = (page - 1) * PAGE_SIZE
-
-    return {
-        items: orders.slice(start, start + PAGE_SIZE),
-        hasMore: start + PAGE_SIZE < orders.length,
+export const loadCardPackPage: CardPackPageLoader = async (query, page, signal) => {
+    if (query.orderType === 'released') {
+        const orders = await getOrderReleases(query.status === 'ongoing' ? 1 : 0, page, signal)
+        return {
+            items: orders.map((order) => ({
+                kind: 'release', id: String(order.id), principal: order.amount,
+                createdAt: formatApiTime(order.createdAt), totalUsdtIncome: order.releaseUsdt,
+                totalBaoqiIncome: order.releaseBao, todayUsdtIncome: order.todayUsdt,
+                todayBaoqiIncome: order.todayBao, period: `${order.releaseCount}/${order.totalCount}`,
+            })),
+            hasMore: orders.length === API_PAGE_SIZE,
+        }
     }
+    const side = query.orderType === 'outgoing' ? 1 : 2
+    const orders = await getCardOrders(side, ORDER_STATUSES[query.status], page, signal)
+    const items = orders.map<CardPackCardOrder>((order) => {
+        const product = order.product
+        return {
+            kind: 'card', id: String(order.id), color: ORDER_COLORS[order.productId] ?? 'blue',
+            name: product?.name ?? `#${order.productId}`, image: product?.image,
+            principal: side === 1 ? order.amount : `${order.payUsdt}+${order.payBao}`,
+            principalLabel: side === 1 ? '本金(元气）' : '本金(余额+宝气）',
+            principalAsset: side === 1 ? 'yuanqi' : 'usdt-baoqi',
+            purchasedAt: formatApiTime(order.createdAt),
+        }
+    })
+    return { items, hasMore: orders.length === API_PAGE_SIZE }
 }

@@ -14,6 +14,7 @@ export type CardPackQuery = {
 export interface CardPackCardOrder {
     kind: 'card'
     id: string
+    image?: string
     color: CardPackColor
     name: string
     principal: string
@@ -26,7 +27,7 @@ export interface CardPackReleaseOrder {
     kind: 'release'
     id: string
     principal: string
-    wonAt: string
+    createdAt: string
     totalUsdtIncome: string
     totalBaoqiIncome: string
     todayUsdtIncome: string
@@ -41,4 +42,4 @@ export interface CardPackPage {
     hasMore: boolean
 }
 
-export type CardPackPageLoader = (query: CardPackQuery, page: number) => Promise<CardPackPage>
+export type CardPackPageLoader = (query: CardPackQuery, page: number, signal?: AbortSignal) => Promise<CardPackPage>

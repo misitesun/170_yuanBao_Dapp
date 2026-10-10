@@ -102,3 +102,7 @@ For each integrated response parser, cover a valid payload and the meaningful fa
 
 For a mutation whose success body is unused, test an HTTP `2xx` response containing an empty, primitive or deliberately incompatible body and assert that the feature method resolves to `undefined`. Separately preserve coverage that non-`2xx` responses reject through the shared HTTP error path. For a consumed mutation response, keep parser failure tests for every required downstream field.
 对于不使用成功响应体的提交接口，测试 HTTP `2xx` 返回空值、原始值或故意不兼容的响应体，并断言 feature 方法仍以 `undefined` 完成。另行保留非 `2xx` 通过公共 HTTP 错误链路抛出的覆盖。对于会消费提交响应的流程，继续为每个下游必需字段保留解析失败测试。
+
+提交交互遵循 `docs/submit-interactions.md`：保持原文案，处理期间禁用并使用 ContractLoading 水滴遮罩，结果只 Toast，不增加页面提交提示；签名恢复与接口事实以当前项目契约为准。
+
+充值/提现记录按开发者明确授权先进行增量接入，已确认字段和待浏览器数据结构确认边界记录于 `docs/yuanbao-funds-records-contract.md`；已按浏览器截图确认数字ID、created_at时间和数字status，不从旧静态UI猜测未提供的提现地址或失败原因。

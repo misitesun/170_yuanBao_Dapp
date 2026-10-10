@@ -111,3 +111,25 @@ test('the actual backend placeholder registration date cannot block a valid user
     assert.equal(user.balances.usdt, '1006.010000')
     assert.throws(() => load('src/features/user/api.ts').parseCurrentUser({ ...payload, address: 'invalid' }))
 })
+
+test('transfer asset tab uses its own endpoint and keeps reported amount separate from fee', async () => {
+    let userReads = 0
+    const balances = { usdt: '1', yuanqi: '2', baoqi: '3' }
+    const row = { id: 12, ccy: 'balance_bao', amount: '100', fee: '2', type: 2, address: '0x529...9EE7', created_at: '2026-10-10 14:00:00' }
+    let rows = [row, { ...row, id: 11, type: 1 }]
+    const { calls, load } = apiRuntime(() => ({ transfers: rows }), { 'src/features/auth/session.ts': { refreshCurrentUser: async () => { userReads++; return { balances } } } })
+    const loader = load('src/pages/main/assets/service.ts').loadAssetsPage
+    const first = await loader('transfers', 1)
+    assert.equal(first.overview, balances)
+    assert.equal(first.items[0].amount, '+100')
+    assert.equal(first.items[0].content, '转入')
+    assert.equal(first.items[0].transfer.fee, '2')
+    assert.equal(first.items[1].amount, '-100')
+    assert.equal(first.items[1].tone, 'expense')
+    assert.equal(first.hasMore, false)
+    rows = Array.from({ length: 20 }, (_, index) => ({ ...row, id: index + 1 }))
+    assert.equal((await loader('transfers', 2)).hasMore, true)
+    assert.equal(userReads, 1)
+    assert.ok(calls.every(call => call.url === '/api/transfers'))
+    assert.deepEqual({ ...calls[1].params }, { page_no: 2, page_size: 20 })
+})

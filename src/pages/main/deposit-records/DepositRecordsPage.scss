@@ -33,6 +33,7 @@ html:has(.deposit-records-page) { @include hide-scrollbar; }
 
     &__address {
         min-width: 0;
+        overflow-wrap: anywhere;
         line-height: 42px;
     }
 

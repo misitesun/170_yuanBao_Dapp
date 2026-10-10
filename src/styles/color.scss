@@ -100,6 +100,9 @@
         radial-gradient(ellipse at 50% 35%, transparent 40%, rgb(249 52 255 / 90%) 42%, rgb(209 183 251 / 75%) 44%, transparent 46%),
         linear-gradient(180deg, var(--app-selection-bg), var(--app-bg));
     --app-auction-room-background: linear-gradient(90deg, rgb(94 46 182 / 80%) 0%, rgb(52 0 147 / 0%) 75%);
+    --app-pack-red-bg: linear-gradient(180deg, rgb(255 0 4 / 40%), rgb(255 255 0 / 0%));
+    --app-pack-blue-bg: linear-gradient(180deg, rgb(0 183 255 / 40%), rgb(0 183 255 / 0%));
+    --app-pack-green-bg: linear-gradient(180deg, rgb(0 255 77 / 40%), rgb(0 255 77 / 0%));
     --app-tab-bg: #302E5B;
     --app-surface-subtle: rgb(255 255 255 / 4%);
     --app-border-medium: rgb(255 255 255 / 20%);

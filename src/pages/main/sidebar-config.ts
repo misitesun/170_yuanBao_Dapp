@@ -25,9 +25,9 @@ export type SidebarItem = {
 
 export const SIDEBAR_ITEMS: readonly SidebarItem[] = [
     ...MAIN_PAGE_ITEMS.map((item) => ({ ...item, id: item.path, image: homeImage, activeImage: homeActiveImage })),
-    { id: 'auction', title: '抢拍卡片', image: auctionImage, activeImage: auctionActiveImage, path: ROUTE_PATH.auction, unavailable: true },
-    { id: 'card-pack', title: '我的卡包', image: cardPackImage, activeImage: cardPackActiveImage, path: ROUTE_PATH.cardPack, unavailable: true },
+    { id: 'auction', title: '抢拍卡片', image: auctionImage, activeImage: auctionActiveImage, path: ROUTE_PATH.auction },
+    { id: 'card-pack', title: '我的卡包', image: cardPackImage, activeImage: cardPackActiveImage, path: ROUTE_PATH.cardPack },
     { id: 'assets', title: '全部资产', image: assetsImage, activeImage: assetsActiveImage, path: ROUTE_PATH.assets },
     { id: 'community', title: '社区', image: communityImage, activeImage: communityActiveImage, path: ROUTE_PATH.team },
-    { id: 'ranking', title: '排行榜', image: rankingImage, activeImage: rankingActiveImage, path: ROUTE_PATH.ranking, unavailable: true },
+    { id: 'ranking', title: '排行榜', image: rankingImage, activeImage: rankingActiveImage, path: ROUTE_PATH.ranking },
 ]

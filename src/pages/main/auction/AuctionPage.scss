@@ -143,3 +143,29 @@
     .auction-page__name { width: 100%; height: auto; min-height: 55px; font-size: 28px; line-height: 1.4; }
     .auction-page__price { font-size: 30px; }
 }
+
+.auction-page__participation {
+    margin: 12px auto 0;
+    color: var(--app-text-secondary);
+    font-size: 24px;
+    line-height: 1.5;
+}
+
+.auction-confirm-popup {
+    &__body { display: flex; flex-direction: column; gap: 20px; font-size: 28px; line-height: 1.5; color: var(--app-text); }
+    &__name { overflow-wrap: anywhere; }
+    &__actions { display: flex; gap: 20px; margin-top: 10px; > button { flex: 1; } }
+}
+
+.auction-confirm-popup.popup-content--center {
+    background-color: var(--app-box-bg);
+    background-image: linear-gradient(145deg, var(--app-surface-subtle), transparent 65%);
+    border: 1px solid var(--app-border-medium);
+    box-shadow: 0 20px 60px var(--app-shadow), inset 0 1px 0 var(--app-border-medium);
+
+    @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+        background-color: color-mix(in srgb, var(--app-box-bg) 84%, transparent);
+        -webkit-backdrop-filter: blur(18px) saturate(130%);
+        backdrop-filter: blur(18px) saturate(130%);
+    }
+}

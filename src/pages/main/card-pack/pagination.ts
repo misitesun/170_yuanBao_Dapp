@@ -13,6 +13,7 @@ export interface CardPackSnapshot {
 /** Page-local state; synchronous replacement guards also protect in-flight callbacks. */
 export function createCardPackPagination(loadPage: CardPackPageLoader) {
     let generation = 0
+    let controller: AbortController | undefined
     let snapshot: CardPackSnapshot = {
         query: { orderType: 'outgoing', status: 'pending' },
         items: [],
@@ -31,10 +32,13 @@ export function createCardPackPagination(loadPage: CardPackPageLoader) {
 
     async function replace(query: CardPackQuery = snapshot.query): Promise<void> {
         const requestGeneration = ++generation
+        controller?.abort()
+        const requestController = new AbortController()
+        controller = requestController
         update({ query, items: [], page: 0, hasMore: false, isFirstLoading: true, isLoadingMore: false, loadError: false })
 
         try {
-            const result = await loadPage(query, 1)
+            const result = await loadPage(query, 1, requestController.signal)
             if (requestGeneration !== generation) return
 
             update({ ...snapshot, items: result.items, page: 1, hasMore: result.hasMore, isFirstLoading: false })
@@ -50,12 +54,14 @@ export function createCardPackPagination(loadPage: CardPackPageLoader) {
         if (snapshot.isFirstLoading || snapshot.isLoadingMore || !snapshot.hasMore) return
 
         const requestGeneration = generation
+        const requestController = new AbortController()
+        controller = requestController
         const nextPage = snapshot.page + 1
         const query = snapshot.query
         update({ ...snapshot, isLoadingMore: true, loadError: false })
 
         try {
-            const result = await loadPage(query, nextPage)
+            const result = await loadPage(query, nextPage, requestController.signal)
             if (requestGeneration !== generation) return
 
             update({ ...snapshot, items: [...snapshot.items, ...result.items], page: nextPage, hasMore: result.hasMore, isLoadingMore: false })
@@ -75,6 +81,6 @@ export function createCardPackPagination(loadPage: CardPackPageLoader) {
         },
         replace,
         loadMore,
-        invalidate() { generation += 1 },
+        invalidate() { generation += 1; controller?.abort() },
     }
 }

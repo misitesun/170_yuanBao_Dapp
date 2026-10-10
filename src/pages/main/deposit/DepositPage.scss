@@ -106,7 +106,7 @@
         display: grid;
         width: 360px;
         height: 360px;
-        img { grid-area: 1 / 1; place-self: center; }
+        img, svg { grid-area: 1 / 1; place-self: center; }
     }
 
     &__qr-background { width: 360px; height: 360px; }
@@ -130,4 +130,9 @@
     }
 
     button:focus-visible { outline: 2px solid var(--app-color); outline-offset: 4px; }
+}
+
+// Picker mounts in a body portal, outside the page root.
+.deposit-page__coin-picker.picker {
+    background-color: var(--app-bg);
 }

@@ -1,3 +1,4 @@
+import { wasHttpErrorReported } from '@/services/http/index.ts'
 import { Trans, useTranslation } from 'react-i18next'
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 
@@ -22,7 +23,7 @@ import { SegmentedTabs } from '@/components/SegmentedTabs'
 import { Toast, useToast } from '@/components/Toast'
 
 import { createCardPackPagination } from './pagination.ts'
-import { loadCardPackPreviewPage } from './service.ts'
+import { loadCardPackPage } from './service.ts'
 import type { CardPackCardOrder, CardPackOrderType, CardPackQuery, CardPackReleaseOrder, CardPackReleaseStatus, CardPackStatus } from './types.ts'
 import './CardPackPage.scss'
 
@@ -31,7 +32,7 @@ const RELEASE_METRICS = [
     { key: 'totalBaoqiIncome', label: '累计收益(宝气)', tone: 'baoqi' },
     { key: 'todayUsdtIncome', label: '今日收益(元气)', tone: 'default' },
     { key: 'todayBaoqiIncome', label: '今日收益(宝气)', tone: 'default' },
-    { key: 'period', label: '周期(天)', tone: 'default' },
+    { key: 'period', label: '释放次数', tone: 'default' },
 ] as const
 const CARD_IMAGES = {
     red: { card: redCard, emblem: redEmblem, energy: redEnergyIcon },
@@ -55,11 +56,11 @@ function CardPackItem({ order }: { order: CardPackCardOrder }) {
     return (
         <li className={`card-pack-page__card card-pack-page__card--${order.color}`}>
             <div className="card-pack-page__surface" aria-hidden="true" />
-            <img className="card-pack-page__card-image" src={images.card} alt={t(order.name)} />
+            <img className="card-pack-page__card-image" src={(order.image ?? images.card) || undefined} alt={order.name} />
             <div className="card-pack-page__details">
                 <h2 className="card-pack-page__name flex items-center">
                     <img src={images.emblem} alt="" />
-                    <span>{t(order.name)}</span>
+                    <span>{order.name}</span>
                 </h2>
                 <div className="card-pack-page__principal flex flex-column">
                     <p className="card-pack-page__label">{t(order.principalLabel)}</p>
@@ -81,12 +82,11 @@ function ReleaseOrderItem({ order }: { order: CardPackReleaseOrder }) {
             <div className="card-pack-page__surface" aria-hidden="true" />
             <article className="card-pack-page__release-content" aria-label={t("释放订单收益")}>
                 <div className="card-pack-page__release-principal flex flex-column">
-                    <p className="card-pack-page__label">{t("本金(余额+宝气）")}</p>
+                    <p className="card-pack-page__label">{t("订单金额")}</p>
                     <p className="card-pack-page__amount flex items-center">
-                        <DualCurrencyIcon />
                         <span>{order.principal}</span>
                     </p>
-                    <p className="card-pack-page__date">{t('中奖时间：{{time}}', { time: order.wonAt })}</p>
+                    <p className="card-pack-page__date">{t('创建时间：{{time}}', { time: order.createdAt })}</p>
                 </div>
                 <dl className="card-pack-page__release-metrics">
                     {RELEASE_METRICS.map((metric) => (
@@ -101,13 +101,15 @@ function ReleaseOrderItem({ order }: { order: CardPackReleaseOrder }) {
     )
 }
 
-function CardPackContent({ onError }: { onError: () => void }) {
+function CardPackContent({ onError }: { onError: (error?: unknown) => void }) {
     const { t } = useTranslation()
     const ORDER_TYPES = [
         { value: 'outgoing', label: t('拍出订单') },
         { value: 'incoming', label: t('拍入订单') },
         { value: 'released', label: t('释放订单') },
     ] as const
+    const [pagination] = useState(() => createCardPackPagination(loadCardPackPage))
+    const state = useSyncExternalStore(pagination.subscribe, pagination.getSnapshot, pagination.getSnapshot)
     const STATUSES = [
         { value: 'pending', label: <><img src={pendingIcon} alt="" /><span>{t('待开奖')}</span></> },
         { value: 'won', label: <><img src={wonIcon} alt="" /><span>{t('已中奖')}</span></> },
@@ -117,8 +119,6 @@ function CardPackContent({ onError }: { onError: () => void }) {
         { value: 'ongoing', label: <><img src={pendingIcon} alt="" /><span>{t('进行中')}</span></> },
         { value: 'completed', label: <><img src={wonIcon} alt="" /><span>{t('已完成')}</span></> },
     ] as const
-    const [pagination] = useState(() => createCardPackPagination(loadCardPackPreviewPage))
-    const state = useSyncExternalStore(pagination.subscribe, pagination.getSnapshot, pagination.getSnapshot)
     const query = state.query
     const isRelease = query.orderType === 'released'
     const statusPrefix = isRelease ? 'card-pack-release-status' : 'card-pack-status'
@@ -210,7 +210,7 @@ function CardPackContent({ onError }: { onError: () => void }) {
 export function CardPackPage() {
     const { t } = useTranslation()
     const { message, variant, showToast } = useToast()
-    const onError = useCallback(() => showToast(t("卡包加载失败，请重试"), 'error'), [showToast, t])
+    const onError = useCallback((error?: unknown) => { if (!wasHttpErrorReported(error)) showToast(t("卡包加载失败，请重试"), 'error') }, [showToast, t])
 
     return (
         <PagePullRefresh className="card-pack-refresh" onError={onError}>

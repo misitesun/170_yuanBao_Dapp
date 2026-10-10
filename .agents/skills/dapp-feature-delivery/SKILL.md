@@ -46,3 +46,7 @@ If a needed change is outside that contract, stop and request a new scope or use
 - Tests cover behavior rather than incidental markup or visual values.
 - Figma-derived visual values are measured when available; every estimate is disclosed and the page has been compared at the design frame width.
 - Lint, test, and build results are reported accurately.
+
+## Submission interaction contract
+
+For business mutations, wallet authorization or contract writes, read `docs/submit-interactions.md` before implementation or review. Preserve button/page copy, disable pending actions, reuse the ContractLoading water-droplet overlay, and show outcomes only through Toast with HTTP deduplication. Unlock inputs after failure; preserve server-signed raw values and the original order on retries instead of repeating a deduction. Verify pending/success/failure cleanup and keep mutation and refresh errors separate.

@@ -42,3 +42,7 @@ Tab 复用公共水滴组件；数字复用 CountUp；卡片转圈复用 orbit-b
 ## Validation
 
 Add focused behavior tests for non-trivial logic. Pagination changes must cover both `IntersectionObserver` and fallback arming, prove registration does not auto-load from historical scroll, and verify replacement page one cannot overlap page two. Run the requested UI verification when applicable, then run lint, test, and the build gate. Report the exact outcome of each command.
+
+## Submission interaction contract
+
+For business mutations, wallet authorization or contract writes, read `docs/submit-interactions.md` before implementation or review. Preserve button/page copy, disable pending actions, reuse the ContractLoading water-droplet overlay, and show outcomes only through Toast with HTTP deduplication. Unlock inputs after failure; preserve server-signed raw values and the original order on retries instead of repeating a deduction. Verify pending/success/failure cleanup and keep mutation and refresh errors separate.

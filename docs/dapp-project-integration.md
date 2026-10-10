@@ -94,3 +94,5 @@ For a read whose result depends on `msg.sender`, pass the connected account thro
 
 When handing a real project back to this template, contribute only a demonstrated generic improvement: a documented service boundary, a reusable test pattern, a stable workflow rule, or a compatibility record. Keep project addresses, ABI bodies, endpoint fields, UI copy, and business transaction rules inside the real project.
 真实项目反哺模板时，只沉淀已经验证过的通用改进：文档化的服务边界、可复用测试模式、稳定工作流规则或兼容性记录。项目地址、ABI 内容、接口字段、页面文案和业务交易规则应留在真实项目中。
+
+提交交互遵循 `docs/submit-interactions.md`：保持原文案，处理期间禁用并使用 ContractLoading 水滴遮罩，结果只 Toast，不增加页面提交提示；签名恢复与接口事实以当前项目契约为准。

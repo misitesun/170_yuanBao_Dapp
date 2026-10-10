@@ -1,5 +1,9 @@
 # 我的卡包
 
+释放列表已接入 GET /api/order_releases：进行中 status=1、已完成 status=0，每页20条。仅使用该接口，无商品关联请求；amount 显示为订单金额，created_at 显示为创建时间，release_count/total_count 显示为释放次数。累计／今日收益分别来自 release_usdt/release_bao/today_usdt/today_bao，金额保留原字符串，收益展示单位沿用开发者已确认术语。接口缺少中奖时间与余额／宝气本金拆分，不猜测、也不借用其他接口。本段覆盖下方历史释放预览说明；preview.ts 仅供既有设计测试，不再用于页面数据。
+
+拍出／拍入已接入 GET /api/orders，side 分别为 1／2，pending/won/lost 对应 status=0/1/2。按开发者最新文案要求，拍出与拍入Tab均将status=1显示“已中奖”、2显示“未中奖”；仅展示标签统一，接口状态及后端退款/匹配语义保持原值。每页20条，满页继续加载；第一页替换同步清空列表和门控，取消旧请求，离开页面也取消。拍出本金取 amount，拍入取 pay_usdt+pay_bao，字符串不转浮点；购买时间取 created_at。卡名和图片直接取订单内product，不再请求/api/products；product=null时显示#product_id并沿用已有卡牌装饰，颜色按已确认 1红2蓝3绿，未知 ID 暂用蓝色。释放已接入 /api/order_releases。本段覆盖下方拍出／拍入历史示例说明。
+
 星空背景已按开发者要求提升到 `src/assets/common/account-background.png`，供卡包和资产页引用同一份文件。此页仅更新资源URL，图片字节、背景尺寸和布局保持原样。
 
 `CardPackPage` 对应 `/card-pack`，由首页卡包入口和侧栏“我的卡包”进入，保持公共 MainLayout/Header 的结构与交互。视觉来源为 Figma 拍出`30183:311`、拍入`30204:4176`、释放`30204:4308`，精确参数、资源及设计差异见 `docs/yuanbao-card-pack-checklist.md`、`docs/yuanbao-card-pack-incoming-checklist.md`与`docs/yuanbao-card-pack-release-checklist.md`。
@@ -25,3 +29,7 @@ PagePullRefresh只包裹此业务页面。usePageRefresh等候第一页真实重
 2026-09-30 展示术语按 `PROJECT_TERMS.md` 统一：固定文案中的 USDT 显示为“余额”，并使用五种语言对应译文；内部资产标识、选择器值、字段名和后端原文保持原值。该规则覆盖本文历史展示文案说明。
 
 同日开发者红框更正：释放订单中 `totalUsdtIncome`、`todayUsdtIncome` 的展示标签分别为“累计收益(元气)”“今日收益(元气)”，同步五种语言；该局部规则覆盖前述余额术语。本金、宝气收益、金额和内部字段保持现状。
+
+订单名称胶囊按开发者截图调整为fit-content、最大100%详情区宽度；不再固定202px或按语言拉满宽度。图标不收缩，长名称在可用空间内换行，名称最小高度58px沿用原设计。
+
+后台尚未配置图片时接受image空字符串，不进行HTTP/图片加载探测，不添加onError判断或替代图片；渲染时空src省略以避免React警告。首页卡包保留logo位置，不以#ID替代空图片。

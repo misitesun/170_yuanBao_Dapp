@@ -1,17 +1,5 @@
 # 提现记录
 
-`/withdraw/records` 为静态二级页，提现页记录图标进入。UI迁自HU_CHAIN_Dapp的user-withdraw-records模块；当前项目使用“提现”文案，不迁入源项目“提取”的术语规则。
+`/withdraw/records` 已从静态预览切换为登录后的GET /api/claims。正常流SecondaryHeader→SegmentedTabs→tabpanel列表，复用既有卡片和样式token。三个Tab按文档显示提币中/成功/失败，分别发送status=1/2/3。卡片展示tamount申请金额、amount到账金额、fee手续费，全部保留字符串，前台币种用余额。
 
-正常流为SecondaryHeader→SegmentedTabs→列表。保留750px样式源值：页左右30、顶部28、Tab高度68/间距15、列表顶部30/卡间距20、卡内距30/圆角20、标准卡最小高度146/拒绝卡202、主文字28/次文字24；审核中卡继续包含源项目60px取消按钮和20px间距，实际高度随内容扩展。卡片及Tab全部使用当前公共颜色token，无新增定位例外或切图。
-
-三个Tab为审核中、已通过、未通过，复用SegmentedTabs的选中动效及键盘交互。data.ts沿用源静态预览9/9/5条、金额与时间示例，页头明确标注；示例地址不用真实钱包。取消按钮只提示待接入，不删除数据、不请求接口。通过recordsByStatus传空列表时使用公共Empty。
-
-仅迁UI，不带入源项目API、审核状态数字映射、鉴权、合约或分页刷新。当前项目业务规则未确认，后续由当前API文档决定。
-
-与现有业务页面相同，通过页面局部html:has规则复用hide-scrollbar mixin，避免桌面滚动条占宽影响vw；保留滚动。
-
-## 多语言
-
-固定文案、状态和无障碍标签接入五种语言，静态数值与交互边界保持。说明与富文本标题的处理见 docs/yuanbao-i18n-checklist.md。
-
-2026-09-30 展示术语按 `PROJECT_TERMS.md` 统一：固定文案中的 USDT 显示为“余额”，并使用五种语言对应译文；内部资产标识、选择器值、字段名和后端原文保持原值。该规则覆盖本文历史展示文案说明。
+取消接口未提供，移除原静态取消操作；按浏览器截图使用数字id作为卡片key，补齐created_at时间展示，status严格按数字1/2/3校验；截图没有提现地址和失败原因，不猜测。data.ts保留为历史fixture，不用于运行页面。PagePullRefresh支持等待真实请求的刷新和20条分页；切Tab同步重置列表/游标/hasMore，取消旧请求，第一页期间禁用加载更多。初载水滴/失败重试/Empty分开，HTTP Toast去重。只读列表不调用POST申请或合约。接口与字段边界见docs/yuanbao-funds-records-contract.md，固定文案维持五语言。

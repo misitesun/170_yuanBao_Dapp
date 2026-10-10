@@ -42,3 +42,7 @@ Do not use a cross-cutting task as a reason to migrate the project to a new arch
 - Existing consumers either retain behavior or have an explicit migration path.
 - No new external side effect, dependency, remote Git action, or production endpoint was introduced without developer authorization.
 - The final report separates passed checks from expected environmental blocks.
+
+## Submission interaction contract
+
+For business mutations, wallet authorization or contract writes, read `docs/submit-interactions.md` before implementation or review. Preserve button/page copy, disable pending actions, reuse the ContractLoading water-droplet overlay, and show outcomes only through Toast with HTTP deduplication. Unlock inputs after failure; preserve server-signed raw values and the original order on retries instead of repeating a deduction. Verify pending/success/failure cleanup and keep mutation and refresh errors separate.

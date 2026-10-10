@@ -91,18 +91,19 @@ function mountPage(kind) {
 }
 const flush = () => new Promise(setImmediate)
 
-test('all three asset actions only show unavailable feedback without navigation, popup or extra requests', () => {
+test('asset actions navigate to deposit and withdraw and open the existing transfer popup without extra requests', () => {
     const page = mountPage('assets')
     const actions = page.render().filter((node) => node.type === 'button' && node.props.className?.includes('assets-page__action--'))
-    assert.equal(actions.length, 3)
     const initialRequests = page.requests.length
-    for (const action of actions) {
-        action.props.onClick()
-        assert.deepEqual(page.routes, [])
-        assert.equal(page.render().some((node) => node.type === 'transfer-popup'), false)
-        assert.equal(page.requests.length, initialRequests)
-    }
-    assert.deepEqual(page.errors, [['暂未开放'], ['暂未开放'], ['暂未开放']])
+    assert.equal(page.render().find((node) => node.type === 'transfer-popup').props.show, false)
+    for (const action of actions) action.props.onClick()
+    assert.deepEqual(page.routes, ['/deposit', '/withdraw'])
+    const popup = page.render().find((node) => node.type === 'transfer-popup')
+    assert.equal(popup.props.show, true)
+    popup.props.onClose()
+    assert.equal(page.render().find((node) => node.type === 'transfer-popup').props.show, false)
+    assert.equal(page.requests.length, initialRequests)
+    assert.deepEqual(page.errors, [])
     page.cleanup()
 })
 
@@ -183,5 +184,41 @@ test('asset Tab switching immediately closes append and discards an older pendin
     const nodes = page.render()
     assert.ok(nodes.some((node) => node.type === 'empty'))
     assert.ok(!nodes.some((node) => node.type === 'article' && node.props.className?.startsWith('assets-page__record')))
+    page.cleanup()
+})
+
+test('transfer records tab clears old balance rows, displays counterparty and fee and keeps pagination isolated', async () => {
+    const page = mountPage('assets')
+    page.requests[0].resolve({ items: [{ id: 1, amount: '+1', tone: 'income', content: '余额旧记录', createdAt: '2026-10-10 12:00:00' }], hasMore: true })
+    await flush()
+    const tabs = page.render().find(node => node.type === 'tabs')
+    assert.equal(tabs.props.items.at(-1).label, '转账记录')
+    tabs.props.onChange('transfers')
+    page.render()
+    assert.equal(page.requests[1].query, 'transfers')
+    assert.equal(page.settings().options.hasMore, false)
+    assert.ok(!page.render().some(node => node.props.children === '余额旧记录'))
+    page.requests[1].resolve({ items: [
+        { id: 2, amount: '-10', tone: 'expense', content: '转出', createdAt: '2026-10-10 14:00:00', transfer: { address: '0x529...9EE7', fee: '0.5' } },
+        { id: 3, amount: '+100', tone: 'income', content: '转入', createdAt: '2026-10-10 13:00:00', transfer: { address: '0xf39...2266', fee: '0' } },
+        { id: 4, amount: '+1', tone: 'income', content: '转入', createdAt: '2026-10-10 12:00:00', transfer: { address: '', fee: '0' } },
+    ], hasMore: true })
+    await flush()
+    const nodes = page.render()
+    assert.ok(nodes.some(node => node.type === 'h3' && node.props.children === '转出给 0x529...9EE7'))
+    assert.ok(nodes.some(node => node.type === 'h3' && node.props.children === '由 0xf39...2266 转入'))
+    assert.ok(nodes.some(node => node.type === 'h3' && node.props.children === '由 -- 转入'))
+    assert.ok(nodes.some(node => node.props.children === '-10 宝气'))
+    assert.ok(nodes.some(node => node.props.children === '手续费：0.5 宝气'))
+    const more = page.more()
+    assert.equal(page.requests[2].query, 'transfers')
+    assert.equal(page.requests[2].page, 2)
+    tabs.props.onChange('baoqi')
+    page.requests[2].resolve({ items: [{ id: 3, content: '过期转账' }], hasMore: false })
+    await more
+    page.requests[3].resolve({ items: [], hasMore: false })
+    await flush()
+    assert.ok(!page.render().some(node => node.props.children === '过期转账'))
+    assert.ok(page.render().some(node => node.type === 'empty'))
     page.cleanup()
 })

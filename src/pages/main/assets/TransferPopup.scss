@@ -58,6 +58,12 @@
         font-size: 28px;
         line-height: 39px;
         font-weight: 600;
+
+        &[aria-disabled='true'] {
+            opacity: .5;
+            cursor: default;
+            &:active { transform: none; }
+        }
     }
     button:focus-visible { outline: 2px solid var(--app-color); outline-offset: 4px; }
 }

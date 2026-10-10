@@ -3,7 +3,7 @@ import test from 'node:test'
 import { runtime, deferred } from './helpers/yuanbao-runtime.mjs'
 
 function splash(options = {}) {
-    const hooks = [], effects = [], timers = new Map(), calls = []
+    const hooks = [], effects = [], timers = new Map(), calls = [], feedback = []
     let cursor = 0, nextTimer = 1, referral = '', state = { status: options.status ?? 'signedOut', error: '' }
     const jsx = (type, props) => ({ type, props })
     const react = {
@@ -26,7 +26,9 @@ function splash(options = {}) {
     const load = runtime({ react, 'react/jsx-runtime': { jsx, jsxs: jsx },
         'react-router': { useParams: () => ({ ref: options.ref }), useLocation: () => ({ search: options.search ?? '', state: options.from ? { from: options.from } : undefined }), Navigate: 'navigate' },
         '@/assets/common/yuanbao-logo.png': 'logo',
-        'src/components/Icon': { Icon: 'icon' },
+        'src/components/ContractLoading': { ContractLoading: 'loading-overlay' },
+        'src/components/Toast': { Toast: 'toast', useToast: () => ({ showToast: (...args) => feedback.push(args) }) },
+        'src/services/http/index.ts': { wasHttpErrorReported: () => false },
         'src/features/auth/session.ts': { authorizeWallet: async (ref) => { calls.push(ref); return options.authorize?.() } },
         'src/features/auth/state.ts': { useSessionStore: () => state },
         'src/services/storage/referral.ts': { getReferralCode: () => referral, setReferralCode: (value) => { referral = value } },
@@ -49,7 +51,7 @@ function splash(options = {}) {
     }
     const cleanup = () => hooks.forEach((hook) => hook?.cleanup?.())
     render()
-    return { render, calls, timers, cleanup, setStatus: (status) => { state = { status, error: '' } },
+    return { render, calls, feedback, timers, cleanup, setStatus: (status) => { state = { status, error: '' } },
         strictReplay: () => { cleanup(); hooks.forEach((hook) => { if (hook?.effect) hook.cleanup = hook.effect() }) },
         start: () => { const [id, timer] = [...timers.entries()][0]; timers.delete(id); timer.run() },
     }
@@ -89,7 +91,11 @@ test('cancelled automatic signing offers a retry with no editable fields and dis
     const button = ui.render().find((node) => node.type === 'button')
     assert.equal(button.props.children, '重新授权')
     button.props.onClick()
-    assert.equal(ui.render().some((node) => node.type === 'button'), false)
+    assert.equal(ui.render().find(node => node.type === 'button').props.disabled, true)
+    assert.equal(ui.render().find(node => node.type === 'loading-overlay').props.show, true)
+    button.props.onClick()
+    assert.ok(!ui.render().some(node => node.props.children === '已取消钱包授权，可再次尝试'))
+    assert.deepEqual(ui.feedback, [['已取消钱包授权，可再次尝试', 'error']])
     assert.deepEqual(ui.calls, ['invite88', 'invite88'])
     pending.resolve(); await flush(); ui.cleanup()
 })

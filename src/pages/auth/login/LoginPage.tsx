@@ -2,7 +2,9 @@ import { useTranslation } from 'react-i18next'
 import { useEffect, useRef, useState } from 'react'
 import { Navigate, useLocation, useParams } from 'react-router'
 import logo from '@/assets/common/yuanbao-logo.png'
-import { Icon } from '@/components/Icon'
+import { ContractLoading } from '@/components/ContractLoading'
+import { Toast, useToast } from '@/components/Toast'
+import { wasHttpErrorReported } from '@/services/http/index.ts'
 import { authorizeWallet } from '@/features/auth/session.ts'
 import { useSessionStore } from '@/features/auth/state.ts'
 import { getDappUserRejectionMessage } from '@/services/dapp/error.ts'
@@ -18,6 +20,8 @@ export function LoginPage() {
     const location = useLocation()
     const { status, error } = useSessionStore()
     const started = useRef(false)
+    const pending = useRef(false)
+    const { message: toastMessage, variant, showToast } = useToast()
     const [submitting, setSubmitting] = useState(false)
     const [message, setMessage] = useState('')
     const [GalaxyBackground, setGalaxyBackground] = useState<GalaxyComponent | null>(null)
@@ -28,15 +32,18 @@ export function LoginPage() {
     }, [routeReferral, location.search])
 
     async function authorize() {
-        setMessage('')
+        if (pending.current) return
+        pending.current = true
         setSubmitting(true)
         try {
             await authorizeWallet(getReferralCode())
+            setMessage('')
         } catch (failure) {
-            setMessage(getDappUserRejectionMessage(failure) !== undefined
-                ? '已取消钱包授权，可再次尝试'
-                : failure instanceof Error ? failure.message : '授权失败，请重试')
-        } finally { setSubmitting(false) }
+            const text = getDappUserRejectionMessage(failure) !== undefined
+                ? '已取消钱包授权，可再次尝试' : '授权失败，请重试'
+            setMessage(text)
+            if (!wasHttpErrorReported(failure)) showToast(t(text), 'error')
+        } finally { pending.current = false; setSubmitting(false) }
     }
 
     useEffect(() => {
@@ -75,11 +82,12 @@ export function LoginPage() {
             </div>
             <div className="splash-page__tips animate__animated animate__slideInUp" aria-live="polite">
                 <div className="splash-page__status">
-                    <span role={failure ? 'alert' : undefined}>{failure ? t(failure) : t("欢迎来到元宝拍卖")}</span>
-                    {loading ? <Icon name="loading" size={15} ariaLabel={t("正在授权")} /> : null}
+                    <span>{t("欢迎来到元宝拍卖")}</span>
                 </div>
-                {failure && !loading ? <button type="button" onClick={() => void authorize()}>{t("重新授权")}</button> : null}
+                {failure ? <button type="button" disabled={loading} onClick={() => void authorize()}>{t("重新授权")}</button> : null}
             </div>
+            <Toast message={toastMessage} variant={variant} />
+            <ContractLoading show={submitting} />
         </main>
     )
 }

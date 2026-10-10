@@ -52,6 +52,15 @@ For a real PHP-and-contract flow, read `docs/dapp-project-integration.md` and us
 Keep changes narrow. Do not add dependencies, alter remote Git state, migrate architecture, or rewrite unrelated modules unless the developer explicitly requests it.
 保持改动范围收敛。除非开发者明确要求，不要新增依赖、修改远程 Git 状态、迁移架构或重写无关模块。
 
+## Submission and on-chain interaction standard
+## 提交与链上交互统一规范
+
+Before implementing or reviewing any business mutation, wallet authorization or contract write, read `docs/submit-interactions.md` and follow it together with the current API/ABI contract.
+实现或审查任何业务提交、钱包授权或写合约前，必须阅读 `docs/submit-interactions.md`，与当前 API/ABI 契约一起执行。
+
+Keep button/page copy unchanged; disable actions and show the shared water-droplet overlay while pending; use Toast only for results and never add inline submission errors/status text. Unlock inputs after failure without discarding a signed order or silently repeating a deduction.
+保持按钮/页面原文案，处理期间禁用操作并显示公共水滴遮罩，结果仅使用 Toast，不增加提交错误/状态文本。失败后恢复输入，但不能丢弃已签名单或静默重复扣款。
+
 ## New project setup
 ## 新项目初始化
 

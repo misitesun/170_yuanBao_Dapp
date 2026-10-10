@@ -144,7 +144,7 @@ html:has(.assets-page) {
     }
 
     &__details { margin: 40px 30px 0; }
-    &__tabs.segmented-tabs { width: auto; height: 50px; gap: 30px; align-items: center; }
+    &__tabs.segmented-tabs { width: auto; height: 50px; gap: 30px; align-items: center; flex-wrap: nowrap; overflow-x: auto; @include hide-scrollbar; }
     &__tabs .segmented-tabs__item {
         flex: none;
         min-width: 0;
@@ -178,8 +178,23 @@ html:has(.assets-page) {
         background: var(--app-team-surface);
 
         &--highlighted { background: var(--app-assets-record-highlight); }
+        &--transfer {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            align-items: start;
+            gap: 10px 20px;
+            height: auto;
+            min-height: 148px;
+        }
     }
+    &__record--transfer &__record-heading { display: contents; }
+    &__record--transfer &__remark { grid-column: 1; grid-row: 1; overflow-wrap: anywhere; }
+    &__record--transfer &__record-total { grid-column: 2; grid-row: 1 / 3; min-width: 0; text-align: right; }
+    &__record--transfer &__change { white-space: normal; overflow-wrap: anywhere; }
+    &__record--transfer &__date { grid-column: 1; grid-row: 2; height: auto; margin: 0; white-space: normal; }
+    &__transfer-fee { margin-top: 10px; color: var(--app-text-secondary); font-size: 24px; line-height: 1.4; overflow-wrap: anywhere; }
     &__record-heading { height: 42px; align-items: flex-start; gap: 20px; }
+    &__record-total { flex: none; }
     &__remark { font-size: 28px; font-weight: 600; line-height: 39.20000076293945px; }
     &__change {
         flex: none;
@@ -226,6 +241,6 @@ html:has(.assets-page) {
     .assets-page__action { gap: 8px; font-size: 24px; }
     .assets-page__action img { flex: none; }
     .assets-page__tabs.segmented-tabs { height: auto; min-height: 50px; gap: 16px; align-items: stretch; }
-    .assets-page__tabs .segmented-tabs__item { flex: 1; height: auto; white-space: normal; font-size: 26px; line-height: 1.4; }
+    .assets-page__tabs .segmented-tabs__item { flex: none; height: auto; white-space: nowrap; font-size: 26px; line-height: 1.4; }
     .assets-page__tabs .segmented-tabs__item--active { font-size: 30px; }
 }

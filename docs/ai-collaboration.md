@@ -88,3 +88,7 @@ For a DApp read that depends on the caller, pass `account`; for a public read, d
 
 Report the implemented outcome first, then the files or contracts changed, validation commands and their actual results, known blocks, and the smallest safe next step. Never label a build as passed when a required environment guard prevented it.
 汇报时先给出实现结果，再说明改动的文件或契约、验证命令及真实结果、已知阻塞和最小安全下一步。必需环境护栏阻断构建时，不能将构建标记为通过。
+
+## 提交接口与链上交互
+
+业务提交、钱包授权和写合约必须先读 [提交接口与链上交互规范](submit-interactions.md)。范围声明和验收需覆盖按钮原文案、同步防重锁、ContractLoading 水滴遮罩、Toast 去重、失败后输入恢复、提交/刷新错误分离与服务端签名原值/同单重试。该规范适用于后续功能，不只用于元宝提现；项目接口和部署事实仍以各自契约为准。决策记录见 [ADR 0008](decisions/0008-submit-interaction-standard.md)。

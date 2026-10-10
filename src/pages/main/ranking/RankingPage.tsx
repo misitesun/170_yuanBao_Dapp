@@ -1,4 +1,11 @@
+import { useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { DropletLoading } from '@/components/DropletLoading'
+import { Empty } from '@/components/Empty'
+import { Toast, useToast } from '@/components/Toast'
+import { wasHttpErrorReported } from '@/services/http/index.ts'
+import { useDappStore } from '@/stores/dapp/index.ts'
+import { maskWalletAddress } from '@/shared/formatters/maskWalletAddress.ts'
 import titleDivider from '@/assets/common/title-divider.png'
 import firstMedal from '@/assets/ranking/rank-first.png'
 import secondMedal from '@/assets/ranking/rank-second.png'
@@ -6,17 +13,14 @@ import thirdMedal from '@/assets/ranking/rank-third.png'
 import myRankIcon from '@/assets/ranking/my-rank-icon.png'
 
 import './RankingPage.scss'
+import { useRanking } from './useRanking.ts'
 
-// Design fixtures only; replace with documented ranking data during API integration.
-const ranks = Array.from({ length: 9 }, (_, index) => ({
-    rank: index + 1,
-    address: '0xec***36c3',
-    amount: '$12,874.29',
-}))
 const medals = [firstMedal, secondMedal, thirdMedal]
 
-export function RankingPage() {
+function RankingContent({ onError }: { onError: (error?: unknown) => void }) {
     const { t } = useTranslation()
+    const { data, loading, failed, reload } = useRanking(onError)
+    const walletAddress = useDappStore((state) => state.walletAddress)
     return (
         <div className="ranking-page">
             <header className="ranking-page__hero flex flex-column items-center tc">
@@ -25,9 +29,12 @@ export function RankingPage() {
                 <img className="ranking-page__divider" src={titleDivider} alt="" />
             </header>
 
-            <section className="ranking-page__results" aria-label={t("累计参与金额排行榜")}>
+            <section className="ranking-page__results" aria-label={t("当日团队业绩排行榜")} aria-busy={loading}>
+                {loading ? <div className="flex-center"><DropletLoading size="small" ariaLabel={t('排行榜加载中')} /></div> : null}
+                {!loading && failed ? <div className="tc"><p>{t('排行榜加载失败，请重试')}</p><button className="auto-btn" type="button" onClick={() => void reload()}>{t('重新加载')}</button></div> : null}
+                {!loading && data?.list.length === 0 ? <Empty /> : null}
                 <ol className="ranking-page__list flex flex-column">
-                    {ranks.map(({ rank, address, amount }) => (
+                    {data?.list.map(({ rank, address, teamKpi }) => (
                         <li key={rank} className={`ranking-page__row ranking-page__row--${rank <= 3 ? rank : 'regular'}`}>
                             {rank <= 3 ? (
                                 <img className="ranking-page__medal" src={medals[rank - 1]} alt={t('第{{rank}}名', { rank })} />
@@ -37,7 +44,7 @@ export function RankingPage() {
                                 </span>
                             )}
                             <span className="ranking-page__address">{address}</span>
-                            <span className="ranking-page__amount tr">{amount}</span>
+                            <span className="ranking-page__amount tr">{teamKpi}</span>
                         </li>
                     ))}
                 </ol>
@@ -47,14 +54,23 @@ export function RankingPage() {
                 <div className="ranking-page__glow" aria-hidden="true" />
                 <img className="ranking-page__my-icon" src={myRankIcon} alt="" />
                 <div className="ranking-page__my-identity flex flex-column">
-                    <p className="ranking-page__my-title">{t("我的排名：--")}</p>
-                    <p className="ranking-page__my-address">0xec***36c3</p>
+                    <p className="ranking-page__my-title">{t('我的排名：{{rank}}', { rank: data ? (data.me.rank === 0 ? t('未上榜') : data.me.rank) : '—' })}</p>
+                    <p className="ranking-page__my-address">{maskWalletAddress(walletAddress)}</p>
                 </div>
                 <div className="ranking-page__my-total flex flex-column tr">
-                    <p className="ranking-page__my-amount">1,102.345298</p>
-                    <p className="ranking-page__my-label">{t("参与金额(余额)")}</p>
+                    <p className="ranking-page__my-amount">{data?.me.teamKpi ?? '—'}</p>
+                    <p className="ranking-page__my-label">{t("团队业绩")}</p>
                 </div>
             </aside>
         </div>
     )
+}
+
+export function RankingPage() {
+    const { t } = useTranslation()
+    const { message, variant, showToast } = useToast()
+    const onError = useCallback((error?: unknown) => {
+        if (!wasHttpErrorReported(error)) showToast(t('排行榜加载失败，请重试'), 'error')
+    }, [showToast, t])
+    return <><RankingContent onError={onError} /><Toast message={message} variant={variant} /></>
 }

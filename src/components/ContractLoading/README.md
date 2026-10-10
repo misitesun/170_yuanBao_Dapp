@@ -15,3 +15,5 @@ import { ContractLoading } from '@/components/ContractLoading'
 
 <ContractLoading show={contractPending} />
 ```
+
+提交交互遵循 `docs/submit-interactions.md`：保持原文案，处理期间禁用并使用 ContractLoading 水滴遮罩，结果只 Toast，不增加页面提交提示；签名恢复与接口事实以当前项目契约为准。

@@ -25,3 +25,7 @@ Use this skill for a read-only review of a current diff, a proposed implementati
 ## Finding format
 
 Each finding should name the affected file or contract, explain the runtime consequence, state the evidence, and give the smallest safe remediation. Do not report speculative risks without a path from the actual diff to the failure.
+
+## Submission interaction contract
+
+For business mutations, wallet authorization or contract writes, read `docs/submit-interactions.md` before implementation or review. Preserve button/page copy, disable pending actions, reuse the ContractLoading water-droplet overlay, and show outcomes only through Toast with HTTP deduplication. Unlock inputs after failure; preserve server-signed raw values and the original order on retries instead of repeating a deduction. Verify pending/success/failure cleanup and keep mutation and refresh errors separate.

@@ -25,3 +25,15 @@
 - 审核中9条、已通过9条、未通过5条及驳回原因正确；非审核中不显示取消操作。取消按钮提示待接入，列表保持9条。运行回归覆盖静态页面允许的依赖边界、空数组Empty、Tab面板关联、取消仅反馈以及两页记录导航。
 - 浏览器error/warn日志为空。截图检查：/private/tmp/yuanbao-deposit-records-375.png、/private/tmp/yuanbao-deposit-records-750.png、/private/tmp/yuanbao-withdraw-records-375.png、/private/tmp/yuanbao-withdraw-records-rejected-750.png。
 - pnpm build前置lint与260项测试通过；pnpm exec tsc -b通过。生产构建被原有Logo未就绪门禁阻止，没有绕过。滚动条局部适配后另跑pnpm lint及git diff --check，不重复无关测试。未修改HU_CHAIN_Dapp源项目、依赖、环境、远程Git，未提交或推送。
+
+## 2026-10-10 增量接口接入
+
+本次范围仅两记录页面、funds-records feature及局部分页辅助、语言资源、测试和文档。依据开发者接口变更说明和“先接接口，后给浏览器数据结构截图”授权。原静态验收仅作为历史记录；当前真实列表及字段缺口见 yuanbao-funds-records-contract.md。保留既有结构/样式，充值增加完整地址换行。提现状态按新契约改为提币中/成功/失败，替换静态地址/时间为已确认申请金额、到账金额、手续费，移除无接口的静态取消动作；未知字段不补假值。
+
+增量验证：8项聚焦运行测试通过，pnpm build成功（包含lint、全量测试、品牌门禁、TypeScript及Vite构建），git diff --check通过。请求/响应测试为fixture验证，尚未核对真实浏览器返回的数据结构。原工作区已有改动保留，未提交/推送。
+
+## 2026-10-10 浏览器返回结构补齐
+
+依据开发者充值/提现Preview截图，两类记录新增严格解析数字id及created_at时间，卡片使用真实id；充值恢复原meta行时间，提现在金额/手续费后展示时间，复用既有SCSS，不新增样式或资源。时间显示YYYY.MM.DD HH:mm:ss，保持后台文本时区，不进行转换。提现status按截图收敛为数字1/2/3；未提供提现地址/失败原因，不伪造。截图样例及缺失/null/错误类型回归覆盖通过：9项聚焦测试，pnpm build（lint、358项全量测试、品牌门禁、TypeScript、Vite）成功，git diff --check通过。真实返回结构依据用户截图，未另行执行登录/钱包/生产接口验收；未提交或推送。
+
+2026-10-10 按开发者充值记录截图要求对from地址打码：复用公共maskWalletAddress，显示前5位+****+后4位（示例0xf39****2266）；仅改变页面展示，接口地址、交易哈希、金额与时间保持原值。
