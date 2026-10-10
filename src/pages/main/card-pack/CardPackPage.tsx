@@ -16,7 +16,6 @@ import redEmblem from '@/assets/card-pack/card-red-emblem.png'
 import blueEmblem from '@/assets/card-pack/card-blue-emblem.png'
 import greenEmblem from '@/assets/card-pack/card-green-emblem.png'
 import redEnergyIcon from '@/assets/card-pack/energy-red.png'
-import { DropletLoading } from '@/components/DropletLoading'
 import { Empty } from '@/components/Empty'
 import { PagePullRefresh, usePageLoadMore, usePageRefresh } from '@/components/PagePullRefresh'
 import { SegmentedTabs } from '@/components/SegmentedTabs'
@@ -187,7 +186,6 @@ function CardPackContent({ onError }: { onError: (error?: unknown) => void }) {
                     aria-labelledby={`${statusPrefix}-${query.status}-tab`}
                     aria-busy={state.isFirstLoading || state.isLoadingMore}
                 >
-                    {state.isFirstLoading ? <div className="card-pack-page__loading flex-center"><DropletLoading size="small" ariaLabel={t("订单加载中")} /></div> : null}
                     <ul className={`card-pack-page__list flex flex-column${isRelease ? ' card-pack-page__list--release' : ''}`} aria-label={t("卡包订单")}>
                         {state.items.map((order) => order.kind === 'release'
                             ? <ReleaseOrderItem key={order.id} order={order} />

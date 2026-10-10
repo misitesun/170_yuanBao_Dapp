@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { Empty } from '@/components/Empty'
 import { SecondaryHeader } from '@/components/SecondaryHeader'
-import { DropletLoading } from '@/components/DropletLoading'
 import { ROUTE_PATH, useAppNavigate } from '@/router'
 import { getNotice, type Notice } from '@/features/notices/api.ts'
 import { NoticeContent } from '@/features/notices/content.tsx'
@@ -32,8 +31,8 @@ export function AnnouncementDetailPage() {
     const notice = state.id === id ? state.notice : null
     return <div className="announcement-detail-page min-vh-100">
         <SecondaryHeader title={t("公告详情")} />
-        <main className="announcement-detail-page__main">
-            {loading ? <div className="flex-center"><DropletLoading size="small" ariaLabel={t("公告加载中")} /></div> : notice ? (
+        <main className="announcement-detail-page__main" aria-busy={loading}>
+            {loading ? null : notice ? (
                 <article className="announcement-detail-page__article">
                     <header className="announcement-detail-page__heading">
                         <h1 className="announcement-detail-page__title size-36 bold-6">{notice.title}</h1>

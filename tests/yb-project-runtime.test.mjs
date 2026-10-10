@@ -83,3 +83,36 @@ test('withdrawal used-ID read is public, verifies network and validates the retu
     await assert.rejects(api.isYbProjectWithdrawalUsed(12n), /31337/)
     assert.equal(reads.length, count)
 })
+
+test('BSC deployment ABI supports withdrawal with signed values and blocks the local chain', async () => {
+    const deployment = JSON.parse(readFileSync('docs/bsc.json', 'utf8'))
+    const project = deployment.contracts.find(contract => contract.name === 'YBProject')
+    const token = deployment.contracts.find(contract => contract.name === 'USDT')
+    const { YB_PROJECT_ABI } = runtime()('src/services/contracts/ybProjectAbi.ts')
+    assert.deepEqual(JSON.parse(JSON.stringify(YB_PROJECT_ABI)), project.abi)
+    const { ERC20_ABI } = runtime({
+        '../storage/common.ts': {}, './config.ts': {}, './contract.ts': {}, './wallet.ts': {},
+    })('src/services/dapp/erc20.ts')
+    for (const method of token.abi.filter(entry => entry.type === 'function')) {
+        const standard = ERC20_ABI.find(entry => entry.name === method.name)
+        assert.equal(standard.stateMutability, method.stateMutability)
+        assert.deepEqual(Array.from(standard.inputs, input => input.type), method.inputs.map(input => input.type))
+        assert.deepEqual(Array.from(standard.outputs, output => output.type), method.outputs.map(output => output.type))
+    }
+    let walletChain = 56
+    const calls = []
+    const api = runtime({
+        './config.ts': { getYbProjectConfig: () => ({ address: project.address, chainId: Number(deployment.chainId) }) },
+        '../dapp/index.ts': {
+            getDappChainId: async () => walletChain,
+            writeDappContract: async call => { calls.push(call); return { status: 'success' } },
+        },
+    })('src/services/contracts/ybProject.ts')
+    const signed = { ...params, token: token.address }
+    await api.withdrawYbProject(signed)
+    assert.equal(calls[0].address, project.address)
+    assert.deepEqual(Array.from(calls[0].args), [signed.id, signed.token, signed.amount, signed.deadline, signed.signature])
+    walletChain = 31337
+    await assert.rejects(api.withdrawYbProject(signed), /56/)
+    assert.equal(calls.length, 1)
+})

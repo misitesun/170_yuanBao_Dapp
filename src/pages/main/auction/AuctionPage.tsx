@@ -14,7 +14,6 @@ import { wasHttpErrorReported } from '@/services/http/index.ts'
 import { useOrderConfig } from '@/features/orders/useOrderConfig.ts'
 import { useProducts } from '@/features/products/useProducts.ts'
 import { Empty } from '@/components/Empty'
-import { DropletLoading } from '@/components/DropletLoading'
 
 import './AuctionPage.scss'
 
@@ -92,10 +91,10 @@ export function AuctionPage() {
                     <Trans i18nKey="<0>限时</0>抢拍元宝卡" components={[<span key="accent" />]} /></h1>
             </section>
 
-            {loading ? <div className="flex-center"><DropletLoading ariaLabel={t('商品加载中')} /></div> : failed ? (
+            {loading ? null : failed ? (
                 <div className="tc"><p>{t('商品加载失败')}</p><button className="auto-btn" type="button" onClick={retry}>{t('重新加载')}</button></div>
             ) : products.length === 0 ? <Empty /> : null}
-            <ul className="auction-page__list flex flex-column" aria-label={t("可抢拍卡牌")}>
+            <ul className="auction-page__list flex flex-column" aria-busy={loading} aria-label={t("可抢拍卡牌")}>
                 {products.map((card) => (
                     <li key={card.id}>
                         <article className={`auction-page__card auction-page__card--${CARD_BACKGROUNDS[card.id] ?? 'blue'}`} aria-labelledby={`auction-${card.id}`}>

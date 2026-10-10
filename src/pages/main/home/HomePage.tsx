@@ -23,7 +23,6 @@ import type { Product } from '@/features/products/api.ts'
 import { buyCard, getParticipationMessage } from '@/features/orders/api.ts'
 import { useOrderConfig } from '@/features/orders/useOrderConfig.ts'
 import { useProducts } from '@/features/products/useProducts.ts'
-import { DropletLoading } from '@/components/DropletLoading'
 
 import 'swiper/css'
 import { useHomeCardOrders } from './useHomeCardOrders.ts'
@@ -118,7 +117,7 @@ export function HomePage() {
 
     return (
         <div className="home-page">
-            <section className="home-page__hero flex flex-column items-center" aria-label={t("元宝卡牌展示")}>
+            <section className="home-page__hero flex flex-column items-center" aria-busy={loading} aria-label={t("元宝卡牌展示")}>
                 <div className="home-page__time flex items-center justify-center">
                     <img src={clockIcon} alt="" width={32} height={32} />
                     <span>{t('参与时间 {{time}}', { time: config ? `${config.sellStart}–${config.sellEnd}` : '--' })}</span>
@@ -128,7 +127,7 @@ export function HomePage() {
                     {configFailed ? <button type="button" className="auto-btn" onClick={retryConfig}>{t('重新加载')}</button> : null}
                 </div>
 
-                {loading ? <div className="flex-center"><DropletLoading ariaLabel={t('商品加载中')} /></div> : failed ? (
+                {loading ? null : failed ? (
                     <div className="tc"><p>{t('商品加载失败')}</p><button className="auto-btn" type="button" onClick={retry}>{t('重新加载')}</button></div>
                 ) : products.length === 0 ? <Empty /> : <>
                 <div className="home-page__stage">
@@ -216,7 +215,7 @@ export function HomePage() {
                         </button>
                     </div>
                     <div className="home-page__pack-empty flex-center" aria-busy={homePack.loading}>
-                        {homePack.loading ? <DropletLoading ariaLabel={t('订单加载中')} /> : homePack.failed ? (
+                        {homePack.loading ? null : homePack.failed ? (
                             <div className="tc"><p>{t('卡包加载失败')}</p><button type="button" className="auto-btn" onClick={homePack.retry}>{t('重新加载')}</button></div>
                         ) : homePack.orders.length ? <Swiper className="home-page__pack-cards" modules={[A11y, FreeMode]}
                             slidesPerView="auto" freeMode grabCursor onBeforeInit={syncPackGap} onBeforeResize={syncPackGap}>

@@ -2,7 +2,7 @@
 
 /assets在已验证钱包会话后加载。service.ts组合GET /api/users/my余额与GET /api/balance_logs流水，三Tab分别对应balance_usdt/balance_energy/balance_bao。金额保留字符串与精度，没有小数部分时不显示undefined。备注与时间使用真实字段，增减方向只来自is_inc，不沿用示例高亮分类；首屏未加载显示占位。
 
-PagePullRefresh等待真实第一页与余额；Tab切换同步清空列表、游标与hasMore，旧请求丢弃，追加页不重复获取余额。空状态复用Empty，首次/追加加载复用droplet，空第一页不展示没有更多了。HTTP错误由公共Toast处理，页面仅补非HTTP解析错误。
+PagePullRefresh等待真实第一页与余额；Tab切换同步清空列表、游标与hasMore，旧请求丢弃，追加页不重复获取余额。空状态复用Empty，首次读取不显示加载动画，追加分页复用droplet，空第一页不展示没有更多了。HTTP错误由公共Toast处理，页面仅补非HTTP解析错误。
 
 保留现有Figma 30192:466样式、assets切图与common共享背景资源，量测及批准差异见docs/yuanbao-assets-checklist.md，不重做视觉布局。按开发者最新要求，充值、提现分别正常跳转到 /deposit、/withdraw，转账打开已有 TransferPopup；转账弹窗打开时登录读取GET /api/transfers/config，显示开关、最低额度及手续费；仅转宝气，POST /api/transfers只传to_address/amount。复用session宝气余额和全部功能，6位截断后精确校验最低额度、余额、地址及不可转给本人，到账金额需大于0；地址注册等最终业务校验由后端负责。提交中禁用输入、关闭及资产页下拉刷新，同步ref防止重复提交。成功关闭弹窗并替换当前资产第一页，刷新余额及流水；刷新失败独立反馈，不改报提交失败。失败保留输入供重试。接口成功体不消费，不做链上调用。配置请求支持取消，重新打开重新获取。契约见docs/yuanbao-transfers-contract.md。接口事实与验收边界见docs/yuanbao-api-integration.md。
 

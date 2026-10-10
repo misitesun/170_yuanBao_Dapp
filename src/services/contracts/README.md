@@ -56,8 +56,10 @@ EIP-7702 委托账户需要这条规则，因为 `eth_call` 缺少 `account` / `
 Every new user-context read must include regression tests for business-layer address passing, `readDappContract` forwarding to viem `readContract`, and public reads staying account-free.
 每次新增依赖用户上下文的读取，都必须补回归测试，覆盖业务层传入地址、`readDappContract` 透传给 viem `readContract`，以及公共读取不传 `account`。
 
-## YBProject 测试接入
+## YBProject 合约接入
 
 `ybProjectAbi.ts` 保存开发者部署 JSON 的完整 ABI；`config.ts` 读取 `VITE_YB_PROJECT_ADDRESS`、`VITE_YB_PROJECT_CHAIN_ID`；`withdrawYbProject` 将具名 bigint 参数按 ABI 顺序传递给通用写合约服务，等待回执。调用前校验钱包实际网络，不自动切链。部署事实和限制见 `docs/yuanbao-yb-project-contract.md`。提现页面通过 claims/flow 调用此能力，只有提现使用合约；不新增 USDT 授权或其他业务链上调用。
 
 assertYbProjectNetwork 用于申请前的网络检查；isYbProjectWithdrawalUsed读取公开 usedWithdrawIds(id)，不传account，用于领取前及不明确结果后的核对。
+
+正式部署来源为 `docs/bsc.json`（BSC，链 ID 56）：生产环境配置 USDT 与 YBProject 地址，开发环境保留本地测试地址及链 ID 31337。完整 YBProject ABI 与部署文件一致；USDT 使用现有标准 ERC20_ABI，部署文件中的全部 USDT 方法与该封装兼容。SmartWalletFactory 未接入。

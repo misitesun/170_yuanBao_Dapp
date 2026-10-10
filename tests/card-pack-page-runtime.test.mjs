@@ -79,6 +79,7 @@ const flush = () => new Promise(setImmediate)
 
 test('cross-mode page callbacks use valid status defaults and discard previous-mode data', async () => {
     const page = mountPage()
+    assert.ok(!page.render().some(node => node.type === 'loading' || node.type === 'empty'))
     page.requests[0].resolve({ items: [], hasMore: false })
     await flush()
     page.tabs('开奖状态').onChange('won')

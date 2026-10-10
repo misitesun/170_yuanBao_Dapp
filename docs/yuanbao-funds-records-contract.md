@@ -17,6 +17,6 @@
 
 ## 生命周期与验证
 
-页面内 PagePullRefresh 注册真实加载Promise；切Tab/刷新同步清空列表、游标和hasMore，第一页完成前禁止加载更多。请求使用AbortSignal；替换与卸载取消请求，generation丢弃迟到结果；分页失败不推进游标，可重试相同页。HTTP错误走公共Toast并去重，非HTTP解析错误由页面Toast提示。
+页面内 PagePullRefresh 注册真实加载Promise；切Tab/刷新同步清空列表、游标和hasMore，第一页完成前禁止加载更多。请求使用AbortSignal；替换与卸载取消请求，generation丢弃迟到结果；分页失败不推进游标，可重试相同页。普通第一页读取不显示水滴动画，追加分页保留水滴。HTTP错误走公共Toast并去重，非HTTP解析错误由页面Toast提示。
 
 聚焦测试：`pnpm exec node --test tests/funds-records-runtime.test.mjs tests/funds-records-api-runtime.test.mjs`。完整验证：`pnpm build`（前置执行lint、全量测试、品牌门禁），`git diff --check`。

@@ -83,8 +83,8 @@ test('ranking UI renders remote team values, empty/unranked and error retry with
     let walletAddress = '0xf390000000000000000000000000000000002266'
     const { RankingPage } = runtime({
         react: { useCallback: fn => fn }, 'react/jsx-runtime': { jsx, jsxs: jsx },
-        '@/components/DropletLoading': { DropletLoading: boundary },
-        '@/components/Empty': { Empty: boundary },
+        '@/components/DropletLoading': { DropletLoading: 'loading' },
+        '@/components/Empty': { Empty: 'empty' },
         '@/components/Toast': { Toast: boundary, useToast: () => ({ showToast: () => {} }) },
         '@/services/http/index.ts': { wasHttpErrorReported: () => false },
         './useRanking.ts': { useRanking: () => state },
@@ -108,6 +108,10 @@ test('ranking UI renders remote team values, empty/unranked and error retry with
     all = nodes(render())
     assert.ok(strings(all).includes('我的排名：未上榜'))
     assert.equal(all.filter(node => node.type === 'li').length, 0)
+    state = { data: null, loading: true, failed: false, reload: () => {} }
+    all = nodes(render())
+    assert.ok(all.some(node => node.props?.['aria-busy'] === true))
+    assert.ok(!all.some(node => node.type === 'loading' || node.type === 'empty'))
     let retried = false
     state = { data: null, loading: false, failed: true, reload: () => { retried = true } }
     all = nodes(render())

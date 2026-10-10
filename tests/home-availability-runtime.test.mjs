@@ -170,7 +170,8 @@ test('home pack renders actual product metadata, empty, loading and retry states
     pack.orders = []
     assert.ok(page.render().some(node => node.type === 'empty'))
     pack.loading = true
-    assert.ok(page.render().some(node => node.type === 'loading' && node.props.ariaLabel === '订单加载中'))
+    assert.ok(!page.render().some(node => node.type === 'loading'))
+    assert.ok(!page.render().some(node => node.type === 'empty'))
     pack.loading = false
     pack.failed = true
     nodes = page.render()

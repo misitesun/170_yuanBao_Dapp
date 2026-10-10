@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { DropletLoading } from '@/components/DropletLoading'
 import { Empty } from '@/components/Empty'
 import { Toast, useToast } from '@/components/Toast'
 import { wasHttpErrorReported } from '@/services/http/index.ts'
@@ -30,7 +29,6 @@ function RankingContent({ onError }: { onError: (error?: unknown) => void }) {
             </header>
 
             <section className="ranking-page__results" aria-label={t("当日团队业绩排行榜")} aria-busy={loading}>
-                {loading ? <div className="flex-center"><DropletLoading size="small" ariaLabel={t('排行榜加载中')} /></div> : null}
                 {!loading && failed ? <div className="tc"><p>{t('排行榜加载失败，请重试')}</p><button className="auto-btn" type="button" onClick={() => void reload()}>{t('重新加载')}</button></div> : null}
                 {!loading && data?.list.length === 0 ? <Empty /> : null}
                 <ol className="ranking-page__list flex flex-column">

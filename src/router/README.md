@@ -44,3 +44,5 @@ Every normalized pathname change resets the shared window scroll position to the
 ## 多语言
 
 登录验证加载标签使用当前语言；鉴权、重定向和独立开屏路由保持。
+
+2026-10-10 会话恢复校验为普通读取：checking仅保留等待容器与aria-busy，不显示水滴，不提前放行受保护路由。登录钱包授权提交的ContractLoading保持。

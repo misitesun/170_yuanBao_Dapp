@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DropletLoading } from '@/components/DropletLoading'
 import { Empty } from '@/components/Empty'
 import { PagePullRefresh } from '@/components/PagePullRefresh'
 import { SecondaryHeader } from '@/components/SecondaryHeader'
@@ -33,7 +32,7 @@ function WithdrawRecordsContent({ onError }: { onError: (error?: unknown) => voi
                 <section id={`withdraw-records-${status}-panel`} role="tabpanel"
                     aria-labelledby={`withdraw-records-${status}-tab`}
                     className="withdraw-records-page__list flex flex-column" aria-busy={state.isFirstLoading}>
-                    {state.isFirstLoading ? <DropletLoading size="small" /> : state.items.map((record) => (
+                    {!state.isFirstLoading ? state.items.map((record) => (
                         <article key={record.id} className="withdraw-records-page__card">
                             <div className="withdraw-records-page__card-heading flex items-center justify-between">
                                 <h2 className="withdraw-records-page__note size-28 bold-5">{t('申请金额')}</h2>
@@ -49,7 +48,7 @@ function WithdrawRecordsContent({ onError }: { onError: (error?: unknown) => voi
                                 <time dateTime={record.createdAt.replace(' ', 'T')}>{formatApiTime(record.createdAt)}</time>
                             </p>
                         </article>
-                    ))}
+                    )) : null}
                     {!state.isFirstLoading && state.loadError ? (
                         <button className="auto-btn" type="button" onClick={() => void (state.items.length ? pagination.loadMore() : pagination.replace()).catch(onError)}>{t('重新加载')}</button>
                     ) : null}

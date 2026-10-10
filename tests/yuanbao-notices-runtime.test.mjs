@@ -63,7 +63,7 @@ test('public announcement list fetches real page one, links numeric ids and wait
     assert.equal(ui.requests[0].config.url, '/api/notices')
     assert.equal(ui.requests[0].config.authentication, 'none')
     assert.equal(ui.settings().hasMore, false)
-    assert.ok(ui.render().some((node) => node.type === 'loading'))
+    assert.ok(!ui.render().some((node) => node.type === 'loading'))
     ui.requests[0].resolve({ notices: [NOTICE] })
     await flush()
     const card = ui.render().find((node) => node.type === 'button')

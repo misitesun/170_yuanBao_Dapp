@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DropletLoading } from '@/components/DropletLoading'
 import { Empty } from '@/components/Empty'
 import { PagePullRefresh } from '@/components/PagePullRefresh'
 import { SecondaryHeader } from '@/components/SecondaryHeader'
@@ -20,7 +19,7 @@ function DepositRecordsContent({ onError }: { onError: (error?: unknown) => void
             <SecondaryHeader title={t('充值记录')} />
             <main className="deposit-records-page__main">
                 <section className="deposit-records-page__list flex flex-column" aria-label={t('充值记录列表')} aria-busy={state.isFirstLoading}>
-                    {state.isFirstLoading ? <DropletLoading size="small" /> : state.items.map((record) => (
+                    {!state.isFirstLoading ? state.items.map((record) => (
                         <article key={record.id} className="deposit-records-page__card">
                             <div className="deposit-records-page__card-heading flex items-center justify-between">
                                 <h2 className="deposit-records-page__address size-28 bold-5">{maskWalletAddress(record.from)}</h2>
@@ -32,7 +31,7 @@ function DepositRecordsContent({ onError }: { onError: (error?: unknown) => void
                             </div>
                             <p className="deposit-records-page__tx-id size-24">{t('交易哈希：{{hash}}', { hash: record.txId })}</p>
                         </article>
-                    ))}
+                    )) : null}
                     {!state.isFirstLoading && state.loadError ? (
                         <button className="auto-btn" type="button" onClick={() => void (state.items.length ? pagination.loadMore() : pagination.replace()).catch(onError)}>{t('重新加载')}</button>
                     ) : null}

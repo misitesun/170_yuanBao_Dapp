@@ -8,7 +8,7 @@ GET /api/rankings/team_kpi 提供当日团队业绩前50名，列表取 list.ran
 
 源750px数值保留交给px-to-vw转换；字体沿用已批准微软雅黑。原始浮点颜色保留主题token，底板使用690×144人工PNG，缺少的光晕按原稿圆形图层及裁切参数实现。布局顺序保持标题、列表、本人排名，复用原Grid/Flex及装饰例外。
 
-页面进入加载真实列表，使用共享 DropletLoading/Empty/Toast；失败支持重新加载，公共 HTTP 已提示错误不重复弹出。按开发者要求不包裹 PagePullRefresh、不注册下拉刷新或上拉加载；无分页参数，仅进入页面及失败重试时加载。重新加载清空旧榜与本人数据，卸载、重试替换取消旧请求并忽略晚到响应，不轮询。原文见 docs/yuanbao-rankings-contract.md。
+页面进入加载真实列表，初载不显示加载动画，使用共享 Empty/Toast处理空数据和结果；失败支持重新加载，公共 HTTP 已提示错误不重复弹出。按开发者要求不包裹 PagePullRefresh、不注册下拉刷新或上拉加载；无分页参数，仅进入页面及失败重试时加载。重新加载清空旧榜与本人数据，卸载、重试替换取消旧请求并忽略晚到响应，不轮询。原文见 docs/yuanbao-rankings-contract.md。
 
 验证：pnpm exec tsc -b、pnpm lint、pnpm test、pnpm build（保留品牌门禁）、git diff --check；浏览器在750/375宽度检查路由、侧栏关闭与激活态、固定卡滚动位置、末行可见与遮挡层级。
 

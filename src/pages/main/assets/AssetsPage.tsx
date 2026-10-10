@@ -11,7 +11,6 @@ import titleDivider from '@/assets/common/title-divider.png'
 import baoqiIcon from '@/assets/common/token-baoqi.png'
 import usdtIcon from '@/assets/common/token-usdt.png'
 import yuanqiIcon from '@/assets/common/token-yuanqi.png'
-import { DropletLoading } from '@/components/DropletLoading'
 import { PagePullRefresh } from '@/components/PagePullRefresh'
 import { Empty } from '@/components/Empty'
 import { SegmentedTabs } from '@/components/SegmentedTabs'
@@ -119,7 +118,6 @@ function AssetsContent({ onError, showToast, onSubmittingChange }: { onError: (e
                     >
                         {assetType === tab.value ? (
                             <>
-                                {state.isFirstLoading ? <div className="assets-page__loading flex-center"><DropletLoading size="small" ariaLabel={t("资产明细加载中")} /></div> : null}
                                 <ul className="assets-page__records flex flex-column">
                                     {state.items.map((record) => (
                                         <li key={record.id}>

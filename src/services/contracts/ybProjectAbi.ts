@@ -1,4 +1,4 @@
-// Source: localhost (4).json, deploymentId project-170-localhost-v1.
+// Source: docs/bsc.json, deploymentId project-170-bsc-v1.
 export const YB_PROJECT_ABI = [
     {
         "inputs": [

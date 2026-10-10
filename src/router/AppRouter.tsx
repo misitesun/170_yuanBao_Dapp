@@ -15,7 +15,6 @@ import {
 import { LoginPage } from '@/pages/auth/login/LoginPage'
 import { mountAuthSession } from '@/features/auth/session.ts'
 import { useSessionStore } from '@/features/auth/state.ts'
-import { DropletLoading } from '@/components/DropletLoading'
 import { NoticePopup } from '@/features/notices/NoticePopup'
 
 import { HomePage, MainLayout } from '@/pages/main'
@@ -77,7 +76,7 @@ function RequireAuthentication() {
     const { t } = useTranslation()
     const status = useSessionStore((state) => state.status)
     const location = useLocation()
-    if (status === 'checking') return <div className="min-vh-100 flex-center"><DropletLoading ariaLabel={t('正在验证登录')} /></div>
+    if (status === 'checking') return <div className="min-vh-100" aria-busy="true" aria-label={t('正在验证登录')} />
     if (status !== 'authenticated') return <Navigate to={ROUTE_PATH.login} state={{ from: `${location.pathname}${location.search}` }} replace />
     return <><Outlet /><NoticePopup /></>
 }

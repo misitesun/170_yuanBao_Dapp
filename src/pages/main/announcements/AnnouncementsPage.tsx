@@ -4,7 +4,6 @@ import { Empty } from '@/components/Empty'
 import { Icon } from '@/components/Icon'
 import { SecondaryHeader } from '@/components/SecondaryHeader'
 import { PagePullRefresh } from '@/components/PagePullRefresh'
-import { DropletLoading } from '@/components/DropletLoading'
 import { Toast, useToast } from '@/components/Toast'
 import { ROUTE_PATH, useAppNavigate } from '@/router'
 import { getNotices } from '@/features/notices/api.ts'
@@ -23,7 +22,6 @@ function AnnouncementList({ onError }: { onError: (error?: unknown) => void }) {
     return <div className="announcements-page min-vh-100">
         <SecondaryHeader title={t("公告列表")} />
         <main className="announcements-page__main" aria-busy={state.isFirstLoading}>
-            {state.isFirstLoading ? <div className="flex-center"><DropletLoading size="small" ariaLabel={t("公告加载中")} /></div> : null}
             {state.items.length ? <ul className="announcements-page__list flex flex-column" aria-label={t("公告列表")}>
                 {state.items.map((notice) => <li key={notice.id}>
                     <button type="button" className="announcements-page__card flex items-center tl" onClick={() => pushRoute(`${ROUTE_PATH.announcements}/${notice.id}`)}>

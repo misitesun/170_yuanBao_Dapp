@@ -135,7 +135,7 @@ test('auction renders remote cards and rejects empty stock or unavailable partic
     data = { products: [], loading: false, failed: false }
     assert.ok(render().some((node) => node.type === 'empty'))
     data = { products: [], loading: true, failed: false }
-    assert.ok(render().some((node) => node.type === 'loading'))
+    assert.ok(!render().some((node) => node.type === 'loading'))
     let retries = 0
     data = { products: [], loading: false, failed: true, retry: () => retries++ }
     render().find((node) => node.type === 'button').props.onClick()

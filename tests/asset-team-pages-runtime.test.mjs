@@ -111,7 +111,7 @@ for (const kind of ['assets', 'team']) {
     test(`${kind} registers awaited refresh and append, then distinguishes empty, first-load and failure`, async () => {
         const page = mountPage(kind)
         const loading = page.render()
-        assert.ok(loading.some((node) => node.type === 'loading'))
+        assert.ok(!loading.some((node) => node.type === 'loading'))
         assert.ok(!loading.some((node) => node.type === 'empty'))
         assert.equal(page.settings().refreshEnabled, false)
         assert.equal(page.settings().options.enabled, false)

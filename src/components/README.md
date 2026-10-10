@@ -10,8 +10,8 @@ Keep business-specific components inside their feature or page directory until t
 `PagePullRefresh` is the page-level pull-refresh and load-more container. Add it only when a real page registers asynchronous work through `usePageRefresh()` or `usePageLoadMore()`.
 `PagePullRefresh` 是页面级下拉刷新与上拉加载容器。只有真实页面通过 `usePageRefresh()` 或 `usePageLoadMore()` 注册异步任务后才接入。
 
-`DropletLoading` owns the reusable seven-dot water-droplet animation. Its regular size powers `ContractLoading`; its small 40px size is available for inline list and pagination loading without visible loading copy.
-`DropletLoading` 统一封装七水滴旋转动画。标准尺寸用于 `ContractLoading`，40px 小号尺寸用于不显示文字的列表与分页加载状态。
+`DropletLoading` owns the reusable seven-dot water-droplet animation. Its regular size powers `ContractLoading`; its small 40px size is available for incremental pagination loading without visible loading copy.
+`DropletLoading` 统一封装七水滴旋转动画。标准尺寸用于 `ContractLoading`，40px 小号尺寸用于不显示文字的追加分页加载状态。
 
 `Dropdown` is an anchored option or action menu with a viewport-clamped glass mask. Use it for lightweight local choices; use `Picker` or `Popup` when the interaction needs a bottom sheet or full-screen overlay.
 `Dropdown` 是带视口边界约束和玻璃遮罩的锚定式选项或操作菜单。轻量本地选择使用它；需要底部面板或全屏覆盖层时使用 `Picker` 或 `Popup`。

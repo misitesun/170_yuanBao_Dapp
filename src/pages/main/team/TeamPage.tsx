@@ -6,7 +6,6 @@ import { useCallback } from 'react'
 import invitationCopy from '@/assets/team/invitation-copy.png'
 import walletCopy from '@/assets/team/wallet-copy.svg'
 import codeCopy from '@/assets/team/code-copy.svg'
-import { DropletLoading } from '@/components/DropletLoading'
 import { Empty } from '@/components/Empty'
 import { PagePullRefresh } from '@/components/PagePullRefresh'
 import { Toast, useToast } from '@/components/Toast'
@@ -75,7 +74,6 @@ function TeamContent({ onError, showToast }: { onError: (error?: unknown) => voi
             <section className="team-page__members" aria-labelledby="team-members-title">
                 <h2 id="team-members-title" className="team-page__members-title">{t("直推成员")}</h2>
                 <div aria-busy={state.isFirstLoading || state.isLoadingMore}>
-                    {state.isFirstLoading ? <div className="team-page__loading flex-center"><DropletLoading size="small" ariaLabel={t("团队成员加载中")} /></div> : null}
                     <ul className="team-page__member-list flex flex-column">
                         {state.items.map((member) => (
                             <li className="team-page__member" key={member.id}>
