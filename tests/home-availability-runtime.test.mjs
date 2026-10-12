@@ -13,10 +13,11 @@ function mountHome(pack = { orders: [], loading: false, failed: false, retry: ()
     const products = ['A', 'B', 'C'].map((name, index) => ({ id: index + 10, name: `后端${name}`, image: `/products/${index}.png`, price: `${index + 1}.123456` }))
     let activityConfig = { enabled: true, canSell: true, canBuy: false, sellStart: '10:00', sellEnd: '15:00', buyStart: '16:00', buyEnd: '17:00' }
     const modules = {
+        '@/features/orders/quantity.ts': runtime()('src/features/orders/quantity.ts'),
         '@/features/orders/useOrderConfig.ts': { useOrderConfig: () => ({ config: activityConfig, failed: false, retry: () => {} }) },
         '@/features/orders/api.ts': {
             ...runtime({ '@/services/http/index.ts': {} })('src/features/orders/api.ts'),
-            buyCard: (id) => { const pending = deferred(); purchases.push({ id, ...pending }); return pending.promise },
+            buyCard: (id, quantity) => { const pending = deferred(); purchases.push({ id, quantity, ...pending }); return pending.promise },
         },
         '@/features/auth/session.ts': { refreshCurrentUser: () => { const pending = deferred(); refreshes.push(pending); return pending.promise } },
         '@/services/http/index.ts': { wasHttpErrorReported: () => reported },
@@ -25,6 +26,7 @@ function mountHome(pack = { orders: [], loading: false, failed: false, retry: ()
         '@/components/DropletLoading': { DropletLoading: 'loading' },
         '@/components/ContractLoading': { ContractLoading: 'loading-overlay' },
         '@/components/Popup': { Popup: 'popup' },
+        '@/components/Input': { Input: 'input' },
         '@/components/ActionButton': { ActionButton: 'action' },
         '@/router': { ROUTE_PATH: { auction: '/auction', cardPack: '/card-pack' }, useAppNavigate: () => ({ pushRoute: (path) => routes.push(path) }) },
         'react-i18next': i18nRuntime,
@@ -111,6 +113,7 @@ test('home requires confirmation, freezes the selected product, prevents duplica
     page.purchaseButton().props.onClick()
     page.render().find((node) => node.type === 'swiper').props.onRealIndexChange({ realIndex: 2 })
     assert.ok(page.render().some((node) => node.type === 'p' && node.props.children === '后端A'))
+    page.render().find(node => node.type === 'input').props.onChange({ target: { value: '1' } })
     const confirm = page.confirm().props.onClick
     confirm()
     confirm()
@@ -135,6 +138,7 @@ test('home requires confirmation, freezes the selected product, prevents duplica
 test('failed purchases retain confirmation for retry and do not refresh; reported HTTP errors are not duplicated', async () => {
     const page = mountHome()
     page.purchaseButton().props.onClick()
+    page.render().find(node => node.type === 'input').props.onChange({ target: { value: '1' } })
     page.confirm().props.onClick()
     page.purchases[0].reject(new Error('failure'))
     await flush()
@@ -190,4 +194,32 @@ test('unconfigured image URLs stay empty without src warnings or visible ID plac
     const logo = nodes.find(node => node.type === 'button' && node.props['aria-label'] === '未配置图片')
     assert.equal(logo.props.children.type, 'img')
     assert.equal(logo.props.children.props.src, undefined)
+})
+
+
+test('home quantity validates before IO, previews exact totals and preserves failed input', async () => {
+    const page = mountHome()
+    page.purchaseButton().props.onClick()
+    const input = () => page.render().find(node => node.type === 'input')
+    assert.equal(input().props.value, '')
+    for (const value of ['', '0', '101', '-1', '1.5', '1e2', 'abc']) {
+        input().props.onChange({ target: { value } })
+        page.confirm().props.onClick()
+        assert.equal(page.purchases.length, 0)
+        assert.equal(page.feedback.at(-1)[0], '请输入 1–100 的整数数量')
+    }
+    input().props.onChange({ target: { value: '3' } })
+    assert.ok(page.render().some(node => node.props.children === '将扣除 3.370368 元气'))
+    const submit = page.confirm().props.onClick
+    submit(); submit()
+    assert.equal(page.purchases.length, 1)
+    assert.equal(page.purchases[0].quantity, 3)
+    assert.equal(input().props.disabled, true)
+    page.purchases[0].reject(new Error('failure'))
+    await flush()
+    assert.equal(input().props.disabled, false)
+    assert.equal(input().props.value, '3')
+    page.popup().props.onClose()
+    page.purchaseButton().props.onClick()
+    assert.equal(input().props.value, '')
 })

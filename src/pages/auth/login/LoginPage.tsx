@@ -39,8 +39,11 @@ export function LoginPage() {
             await authorizeWallet(getReferralCode())
             setMessage('')
         } catch (failure) {
+            const walletUnavailable = failure instanceof Error
+                && failure.message === '请使用钱包浏览器打开，或启用浏览器钱包扩展'
             const text = getDappUserRejectionMessage(failure) !== undefined
-                ? '已取消钱包授权，可再次尝试' : '授权失败，请重试'
+                ? '已取消钱包授权，可再次尝试'
+                : walletUnavailable ? '请使用钱包浏览器打开，或启用浏览器钱包扩展' : '授权失败，请重试'
             setMessage(text)
             if (!wasHttpErrorReported(failure)) showToast(t(text), 'error')
         } finally { pending.current = false; setSubmitting(false) }

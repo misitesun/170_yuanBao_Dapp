@@ -17,6 +17,8 @@ import { ROUTE_PATH, useAppNavigate } from '@/router'
 
 import { Popup } from '@/components/Popup'
 import { ActionButton } from '@/components/ActionButton'
+import { Input } from '@/components/Input'
+import { orderQuantityTotal, parseOrderQuantity } from '@/features/orders/quantity.ts'
 import { refreshCurrentUser } from '@/features/auth/session.ts'
 import { wasHttpErrorReported } from '@/services/http/index.ts'
 import type { Product } from '@/features/products/api.ts'
@@ -40,6 +42,7 @@ export function HomePage() {
         typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
     ))
     const [purchaseCard, setPurchaseCard] = useState<Product | null>(null)
+    const [quantityInput, setQuantityInput] = useState('')
     const [submitting, setSubmitting] = useState(false)
     const purchasePending = useRef(false)
     const mounted = useRef(true)
@@ -69,6 +72,7 @@ export function HomePage() {
             showToast(t(participationMessage))
             return
         }
+        setQuantityInput('')
         setPurchaseCard(card)
     }
 
@@ -78,6 +82,8 @@ export function HomePage() {
 
     async function confirmPurchase() {
         if (purchasePending.current || !purchaseCard) return
+        const quantity = parseOrderQuantity(quantityInput)
+        if (quantity === null) { showToast(t('请输入 1–100 的整数数量'), 'error'); return }
         if (participationMessage) {
             showToast(t(participationMessage))
             return
@@ -86,7 +92,7 @@ export function HomePage() {
         setSubmitting(true)
         try {
             try {
-                await buyCard(purchaseCard.id)
+                await buyCard(purchaseCard.id, quantity)
             } catch (error: unknown) {
                 if (mounted.current && !wasHttpErrorReported(error)) showToast(t('购买失败，请重试'), 'error')
                 return
@@ -233,8 +239,11 @@ export function HomePage() {
                 closeOnOverlayClick={!submitting} contentClassName="home-purchase-popup">
                 <div className="home-purchase-popup__body" role="dialog" aria-modal="true" aria-label={t('确认购买')}>
                     <p className="home-purchase-popup__name">{purchaseCard?.name}</p>
-                    <p>{t('购买数量：1 张')}</p>
-                    <p>{t('将扣除 {{amount}} 元气', { amount: purchaseCard?.price ?? '--' })}</p>
+                    <label htmlFor="purchase-quantity">{t('购买数量')}</label>
+                    <Input id="purchase-quantity" type="text" inputMode="numeric" value={quantityInput}
+                        placeholder={t('请输入 1–100 的整数数量')} suffix={t('张')} disabled={submitting}
+                        onChange={event => setQuantityInput(event.target.value)} />
+                    <p>{t('将扣除 {{amount}} 元气', { amount: orderQuantityTotal(purchaseCard?.price, quantityInput) })}</p>
                     <div className="home-purchase-popup__actions">
                         <ActionButton type="button" variant="outline" disabled={submitting} onClick={closePurchase}>{t('取消')}</ActionButton>
                         <ActionButton type="button" loading={submitting} onClick={() => void confirmPurchase()}>{t('确认购买')}</ActionButton>

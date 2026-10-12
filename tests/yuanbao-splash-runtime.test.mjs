@@ -28,14 +28,14 @@ function splash(options = {}) {
         '@/assets/common/yuanbao-logo.png': 'logo',
         'src/components/ContractLoading': { ContractLoading: 'loading-overlay' },
         'src/components/Toast': { Toast: 'toast', useToast: () => ({ showToast: (...args) => feedback.push(args) }) },
-        'src/services/http/index.ts': { wasHttpErrorReported: () => false },
+        'src/services/http/index.ts': { wasHttpErrorReported: () => options.reported ?? false },
         'src/features/auth/session.ts': { authorizeWallet: async (ref) => { calls.push(ref); return options.authorize?.() } },
         'src/features/auth/state.ts': { useSessionStore: () => state },
         'src/services/storage/referral.ts': { getReferralCode: () => referral, setReferralCode: (value) => { referral = value } },
         'src/services/dapp/error.ts': { getDappUserRejectionMessage: (failure) => failure.code === 4001 ? 'cancelled' : undefined },
         'src/router': { ROUTE_PATH: { home: '/home' } },
         'src/pages/auth/login/Galaxy.tsx': { default: 'galaxy' },
-    }, { URLSearchParams, window: { setTimeout: (run, delay) => { const id = nextTimer++; timers.set(id, { run, delay }); return id }, clearTimeout: (id) => timers.delete(id) } })
+    }, { Error, URLSearchParams, window: { setTimeout: (run, delay) => { const id = nextTimer++; timers.set(id, { run, delay }); return id }, clearTimeout: (id) => timers.delete(id) } })
     const { LoginPage } = load('src/pages/auth/login/LoginPage.tsx')
     function render() {
         cursor = 0
@@ -105,6 +105,32 @@ test('authenticated splash returns to a safe business destination and rejects lo
         const ui = splash({ status: 'authenticated', from })
         assert.equal(ui.render().find((node) => node.type === 'navigate').props.to, expected)
         assert.equal(ui.timers.size, 0)
+        ui.cleanup()
+    }
+})
+
+test('missing wallet environment shows actionable feedback and unlocks authorization retry', async () => {
+    const text = '请使用钱包浏览器打开，或启用浏览器钱包扩展'
+    const ui = splash({ authorize: () => Promise.reject(new Error(text)) })
+    ui.start(); await flush()
+    const nodes = ui.render()
+    assert.deepEqual(ui.feedback, [[text, 'error']])
+    assert.equal(nodes.find(node => node.type === 'loading-overlay').props.show, false)
+    const retry = nodes.find(node => node.type === 'button')
+    assert.equal(retry.props.children, '重新授权')
+    assert.equal(retry.props.disabled, false)
+    assert.ok(!nodes.some(node => node.props.children === text))
+    retry.props.onClick(); await flush()
+    assert.equal(ui.calls.length, 2)
+    ui.cleanup()
+})
+
+test('unknown authorization failures remain generic and reported HTTP errors are not repeated', async () => {
+    for (const reported of [false, true]) {
+        const ui = splash({ reported, authorize: () => Promise.reject(new Error('private RPC diagnostics')) })
+        ui.start(); await flush()
+        assert.deepEqual(ui.feedback, reported ? [] : [['授权失败，请重试', 'error']])
+        assert.equal(ui.render().find(node => node.type === 'loading-overlay').props.show, false)
         ui.cleanup()
     }
 })

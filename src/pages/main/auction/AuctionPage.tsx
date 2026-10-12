@@ -6,6 +6,8 @@ import priceCoins from '@/assets/auction/price-coins.png'
 import { Toast, useToast } from '@/components/Toast'
 import { Popup } from '@/components/Popup'
 import { ActionButton } from '@/components/ActionButton'
+import { Input } from '@/components/Input'
+import { orderQuantityTotal, parseOrderQuantity } from '@/features/orders/quantity.ts'
 
 import { bidCard, getParticipationMessage } from '@/features/orders/api.ts'
 import type { Product } from '@/features/products/api.ts'
@@ -32,6 +34,7 @@ export function AuctionPage() {
     const participationMessage = configFailed ? '活动配置加载失败' : getParticipationMessage(config, 'buy')
     const [submitting, setSubmitting] = useState(false)
     const [bidProduct, setBidProduct] = useState<Product | null>(null)
+    const [quantityInput, setQuantityInput] = useState('')
     const pending = useRef(false)
     const mounted = useRef(true)
     useEffect(() => {
@@ -43,6 +46,7 @@ export function AuctionPage() {
         if (pending.current) return
         if (card.stock < 1) { showToast(t('该产品已抢购完')); return }
         if (participationMessage) { showToast(t(participationMessage)); return }
+        setQuantityInput('')
         setBidProduct(card)
     }
 
@@ -52,13 +56,16 @@ export function AuctionPage() {
 
     async function confirmBid() {
         if (pending.current || !bidProduct) return
+        const quantity = parseOrderQuantity(quantityInput)
+        if (quantity === null) { showToast(t('请输入 1–100 的整数数量'), 'error'); return }
         const currentProduct = products.find(card => card.id === bidProduct.id)
         if (!currentProduct || currentProduct.stock < 1) { showToast(t('该产品已抢购完')); return }
+        if (currentProduct.stock < quantity) { showToast(t('可抢数量不足'), 'error'); return }
         if (participationMessage) { showToast(t(participationMessage)); return }
         pending.current = true
         setSubmitting(true)
         try {
-            try { await bidCard(bidProduct.id) } catch (error) {
+            try { await bidCard(bidProduct.id, quantity) } catch (error) {
                 if (mounted.current && !wasHttpErrorReported(error)) showToast(t('抢拍失败，请重试'), 'error')
                 return
             }
@@ -123,8 +130,14 @@ export function AuctionPage() {
                 closeOnOverlayClick={!submitting} contentClassName="auction-confirm-popup">
                 <div className="auction-confirm-popup__body" role="dialog" aria-modal="true" aria-label={t('确认抢拍')}>
                     <p className="auction-confirm-popup__name">{bidProduct?.name}</p>
-                    <p>{t('抢拍数量：1 张')}</p>
-                    <p>{t('将扣除 {{usdt}} 余额 + {{bao}} 宝气', { usdt: bidProduct?.purchUsdt ?? '--', bao: bidProduct?.purchBao ?? '--' })}</p>
+                    <label htmlFor="bid-quantity">{t('抢拍数量')}</label>
+                    <Input id="bid-quantity" type="text" inputMode="numeric" value={quantityInput}
+                        placeholder={t('请输入 1–100 的整数数量')} suffix={t('张')} disabled={submitting}
+                        onChange={event => setQuantityInput(event.target.value)} />
+                    <p>{t('将扣除 {{usdt}} 余额 + {{bao}} 宝气', {
+                        usdt: orderQuantityTotal(bidProduct?.purchUsdt, quantityInput),
+                        bao: orderQuantityTotal(bidProduct?.purchBao, quantityInput),
+                    })}</p>
                     <div className="auction-confirm-popup__actions">
                         <ActionButton type="button" variant="outline" disabled={submitting} onClick={closeBid}>{t('取消')}</ActionButton>
                         <ActionButton type="button" loading={submitting} onClick={() => void confirmBid()}>{t('确认抢拍')}</ActionButton>

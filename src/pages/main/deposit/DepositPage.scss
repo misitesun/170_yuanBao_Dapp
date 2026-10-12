@@ -129,6 +129,15 @@
         li { padding-left: 6px; }
     }
 
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        margin-top: 60px;
+        --app-input-background: var(--app-surface-subtle);
+        --app-input-border-color: var(--app-border-medium);
+    }
+
     button:focus-visible { outline: 2px solid var(--app-color); outline-offset: 4px; }
 }
 

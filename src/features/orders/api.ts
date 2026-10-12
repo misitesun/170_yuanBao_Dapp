@@ -1,5 +1,6 @@
 import { request } from '@/services/http/index.ts'
 import { API_PAGE_SIZE, boolean, dateTime, decimal, integer, list, object, string } from '../api-fields.ts'
+import { validateOrderQuantity } from './quantity.ts'
 
 export interface OrderConfig {
     enabled: boolean
@@ -39,15 +40,15 @@ export function getParticipationMessage(config: OrderConfig | null, side: 'sell'
 }
 
 /** Success is HTTP acknowledgement only; the response body is not consumed. */
-export async function buyCard(productId: number): Promise<void> {
-    await request<unknown, { product_id: number }>({
-        url: '/api/orders/sell', method: 'POST', data: { product_id: integer(productId, 1) },
+export async function buyCard(productId: number, quantity = 1): Promise<void> {
+    await request<unknown, { product_id: number; quantity: number }>({
+        url: '/api/orders/sell', method: 'POST', data: { product_id: integer(productId, 1), quantity: validateOrderQuantity(quantity) },
     })
 }
 
-export async function bidCard(productId: number): Promise<void> {
-    await request<unknown, { product_id: number }>({
-        url: '/api/orders/buy', method: 'POST', data: { product_id: integer(productId, 1) },
+export async function bidCard(productId: number, quantity = 1): Promise<void> {
+    await request<unknown, { product_id: number; quantity: number }>({
+        url: '/api/orders/buy', method: 'POST', data: { product_id: integer(productId, 1), quantity: validateOrderQuantity(quantity) },
     })
 }
 

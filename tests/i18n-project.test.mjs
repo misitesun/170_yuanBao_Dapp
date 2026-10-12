@@ -86,9 +86,14 @@ test('real React pages switch locale, preserve card names and amounts, and do no
     let showTransfers = false
     const rechargeAddress = '0xfe2E1731CB06583E143bb64eA3636Ea8D64b748f'
     const mocks = {
+        '@/features/auth/state.ts': { useSessionStore: selector => selector({ user: { address: rechargeAddress } }) },
+        '@/features/deposits/flow.ts': { depositUsdt: async () => {}, getDepositPhase: () => 'idle', subscribeDeposit: () => () => {} },
+        '@/services/contracts/usdt.ts': { normalizeRechargeAmount: value => value || null },
+        '@/services/dapp/index.ts': { waitForDappContractDataSync: async () => {} },
         '@/features/auth/session.ts': { refreshCurrentUser: async () => {} },
         '@/components/ContractLoading': { ContractLoading: () => null },
         '@/components/Popup': { Popup: () => null },
+        '@/components/Input': { Input: () => null },
         '@/components/ActionButton': { ActionButton: () => null },
         'qrcode.react': { QRCodeSVG },
         './useRechargeAddress.ts': { useRechargeAddress: () => ({ address: rechargeAddress, loading: false, failed: false }) },

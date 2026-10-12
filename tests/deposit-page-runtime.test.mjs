@@ -5,7 +5,7 @@ import test from 'node:test'
 import { runInNewContext } from 'node:vm'
 import ts from 'typescript'
 
-test('deposit fixes BSC20, generates a QR for the exact real address and keeps failure retry without sample QR or submit', async () => {
+test('deposit fixes BSC20, generates a QR for the exact real address and keeps failure retry without sample QR and enables transfer only after address loading', async () => {
     const states = [], feedback = [], navigation = []
     let cursor = 0
     let retried = false
@@ -13,9 +13,21 @@ test('deposit fixes BSC20, generates a QR for the exact real address and keeps f
     let data = { address: null, loading: true, failed: false, retry: () => { retried = true } }
     const jsx = (type, props) => ({ type, props })
     const modules = {
+        '@/features/auth/state.ts': { useSessionStore: selector => selector({ user: { address: '0x52908400098527886E0F7030069857D2E4169EE7' } }) },
+        '@/features/auth/session.ts': { refreshCurrentUser: async () => {} },
+        '@/features/deposits/flow.ts': { depositUsdt: async () => {}, getDepositPhase: () => 'idle', subscribeDeposit: () => () => {} },
+        '@/services/contracts/usdt.ts': { normalizeRechargeAmount: value => value || null },
+        '@/services/dapp/index.ts': { waitForDappContractDataSync: async () => {} },
+        '@/services/http/index.ts': { wasHttpErrorReported: () => false },
+        '@/components/Input': { Input: 'input' },
+        '@/components/ActionButton': { ActionButton: 'action' },
+        '@/components/ContractLoading': { ContractLoading: 'overlay' },
         'react-i18next': i18nRuntime,
         'qrcode.react': { QRCodeSVG: 'qrcode' },
         react: {
+            useRef: initial => { const slot = cursor++; if (!(slot in states)) states[slot] = { current: initial }; return states[slot] },
+            useEffect: () => {},
+            useSyncExternalStore: (_, snapshot) => snapshot(),
             useState: (initial) => {
                 const slot = cursor++
                 if (!(slot in states)) states[slot] = initial
@@ -69,6 +81,7 @@ test('deposit fixes BSC20, generates a QR for the exact real address and keeps f
     assert.ok(render().some(node => node.props.children === 'BSC20'))
     assert.equal(button('复制充值地址').props.disabled, true)
     assert.equal(find('qrcode'), undefined)
+    assert.equal(find('action').props.disabled, true)
     assert.ok(!render().some(node => node.type === 'img' && node.props.src?.default?.includes('qr-example')))
     data = { ...data, loading: false, failed: true }
     assert.equal(find('qrcode'), undefined)
@@ -82,8 +95,9 @@ test('deposit fixes BSC20, generates a QR for the exact real address and keeps f
     button('复制充值地址').props.onClick()
     await new Promise(setImmediate)
     assert.deepEqual(copied, [data.address])
-    assert.ok(!render().some((node) => ['input', 'form'].includes(node.type)))
-    assert.ok(!render().some((node) => node.type === 'button' && node.props.children === '确认充值'))
+    assert.equal(find('input').props.value, '')
+    assert.equal(find('action').props.children, '确认充值')
+    assert.equal(find('action').props.disabled, false)
     button('充值记录').props.onClick()
     assert.deepEqual(navigation, ['/deposit/records'])
     assert.deepEqual(feedback, ['复制成功'])

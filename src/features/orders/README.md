@@ -4,7 +4,7 @@
 
 ## 买卡提交
 
-buyCard(productId) 使用登录请求 POST /api/orders/sell，只提交 product_id，方法返回 Promise<void>，只等待 request<unknown> 成功，不解析空数组或其他未消费响应体。每次一张、扣面值对应元气，由后端校验阶段、上下架及余额。首页二次确认后调用，余额刷新使用 /api/users/my 并独立处理错误。
+buyCard(productId, quantity=1) 使用登录请求 POST /api/orders/sell，提交 product_id 与 quantity（1–100整数），方法返回 Promise<void>，只等待 request<unknown> 成功，不解析空数组或其他未消费响应体。按面值 × 张数扣元气，由后端校验阶段、上下架及余额。首页数量弹窗确认后调用，余额刷新使用 /api/users/my 并独立处理错误。
 
 ## 卡包订单读取
 
@@ -16,6 +16,8 @@ getOrderReleases 使用登录 GET /api/order_releases，status=0/1 必传，page
 
 ## 抢拍提交
 
-bidCard(productId)使用登录POST /api/orders/buy，每次一张，仅传product_id，不传quantity。返回Promise<void>，忽略未消费成功体。auction先检查商品stock小于1提示已抢购完，再检查can_buy；同步防重，成功触发商品和配置重新读取，余额刷新错误独立处理。服务端负责最终库存与全平台当日数量校验。契约见docs/yuanbao-order-buy-contract.md。
+bidCard(productId, quantity=1)使用登录POST /api/orders/buy，提交product_id与quantity（1–100整数）。返回Promise<void>，忽略未消费成功体。auction先检查商品stock小于1提示已抢购完，确认时检查stock至少为输入张数，再检查can_buy；同步防重，成功触发商品和配置重新读取，余额刷新错误独立处理。服务端负责最终库存与全平台当日数量校验。契约见docs/yuanbao-order-buy-contract.md。
+
+quantity.ts 集中定义输入解析、提交数量校验与总额预览，复用 multiplyDecimalNumbers 保持精确小数。非法数量不提交，总额显示--。新版事实见 docs/yuanbao-card-purchase-contract.md。
 
 getHomeCardOrders(page,signal)为首页卡包提供分页读取，仅传page_no/page_size=20；不复用getCardOrders的side/status参数。复用相同订单解析器，默认登录请求。卡包页getCardOrders仍保留筛选，首页成功买卡后刷新预览。

@@ -63,3 +63,5 @@ Every new user-context read must include regression tests for business-layer add
 assertYbProjectNetwork 用于申请前的网络检查；isYbProjectWithdrawalUsed读取公开 usedWithdrawIds(id)，不传account，用于领取前及不明确结果后的核对。
 
 正式部署来源为 `docs/bsc.json`（BSC，链 ID 56）：生产环境配置 USDT 与 YBProject 地址，开发环境保留本地测试地址及链 ID 31337。完整 YBProject ABI 与部署文件一致；USDT 使用现有标准 ERC20_ABI，部署文件中的全部 USDT 方法与该封装兼容。SmartWalletFactory 未接入。
+
+2026-10-12：usdt.ts新增充值准备封装，config.ts读取VITE_USDT并验证非零地址，不使用默认地址。prepareUsdtRecharge检查当前授权账户和DAPP_CURRENT_CHAIN、验证接口收款地址、读取公开ERC20 decimals（无account）、拒绝金额超精度并精确转整数。features/deposits经既有writeErc20Transfer调用标准transfer并等待回执，未增加approve；此前“只有提现使用合约”的说明由本条增量覆盖。

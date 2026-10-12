@@ -26,7 +26,11 @@ function checkAttempt(attempt: number): void {
 function watchWallet(): void {
     startDappWalletListeners({
         onAccountsChanged: (address) => {
+            const previousAddress = currentWalletAddress
             currentWalletAddress = address
+            // Mobile wallets can announce the initial/same account while connect or signing is pending.
+            if (previousAddress === address || (previousAddress && address && sameAddress(previousAddress, address))) return
+            if (!previousAddress && address && !verifiedAddress && !getToken()) return
             clearSession('钱包账号已变化，请重新授权')
         },
         onChainChanged: () => clearSession('钱包网络已变化，请重新授权'),

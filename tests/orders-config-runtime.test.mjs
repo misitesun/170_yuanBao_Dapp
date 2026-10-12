@@ -59,7 +59,7 @@ test('config hook supports failed retry and aborts obsolete requests without lat
 })
 
 
-test('buyCard sends only product_id and ignores every unused successful response body while HTTP failures reject', async () => {
+test('buyCard sends product_id and default quantity and ignores every unused successful response body while HTTP failures reject', async () => {
     let response, failure
     const calls = []
     const { buyCard } = runtime({ '@/services/http/index.ts': { request: async (config) => {
@@ -72,7 +72,7 @@ test('buyCard sends only product_id and ignores every unused successful response
         assert.equal(await buyCard(3), undefined)
         assert.equal(calls.at(-1).url, '/api/orders/sell')
         assert.equal(calls.at(-1).method, 'POST')
-        assert.deepEqual(Object.keys(calls.at(-1).data), ['product_id'])
+        assert.deepEqual(Object.keys(calls.at(-1).data), ['product_id', 'quantity'])
         assert.equal(calls.at(-1).data.product_id, 3)
         assert.equal(calls.at(-1).authentication, undefined)
     }
@@ -83,7 +83,7 @@ test('buyCard sends only product_id and ignores every unused successful response
     assert.equal(calls.length, count)
 })
 
-test('bidCard submits one product without quantity and ignores unused success bodies', async () => {
+test('bidCard submits default quantity and ignores unused success bodies', async () => {
     const calls = []
     let response
     const api = runtime({ '@/services/http/index.ts': { request: async config => { calls.push(config); return response } } })('src/features/orders/api.ts')
@@ -91,8 +91,32 @@ test('bidCard submits one product without quantity and ignores unused success bo
         assert.equal(await api.bidCard(2), undefined)
         assert.equal(calls.at(-1).url, '/api/orders/buy')
         assert.equal(calls.at(-1).method, 'POST')
-        assert.deepEqual({ ...calls.at(-1).data }, { product_id: 2 })
+        assert.deepEqual({ ...calls.at(-1).data }, { product_id: 2, quantity: 1 })
     }
     const failed = runtime({ '@/services/http/index.ts': { request: async () => { throw new Error('HTTP 400') } } })('src/features/orders/api.ts')
     await assert.rejects(failed.bidCard(2), /HTTP 400/)
+})
+
+
+test('both card mutations forward custom quantities and reject invalid quantities before requesting', async () => {
+    const calls = []
+    const api = runtime({ '@/services/http/index.ts': { request: async config => { calls.push(config); return [] } } })('src/features/orders/api.ts')
+    for (const method of [api.buyCard, api.bidCard]) {
+        for (const quantity of [1, 3, 100]) {
+            await method(2, quantity)
+            assert.deepEqual({ ...calls.at(-1).data }, { product_id: 2, quantity })
+        }
+        const count = calls.length
+        for (const quantity of [0, -1, 101, 1.5, NaN, Infinity, '3', null]) await assert.rejects(method(2, quantity))
+        assert.equal(calls.length, count)
+    }
+})
+
+test('quantity totals keep large decimal values exact and invalid input has no invented total', () => {
+    const { orderQuantityTotal, parseOrderQuantity } = runtime()('src/features/orders/quantity.ts')
+    assert.equal(orderQuantityTotal('9007199254740993.123456', '100'), '900719925474099312.3456')
+    assert.equal(orderQuantityTotal('0.000001', '3'), '0.000003')
+    assert.equal(orderQuantityTotal('10', ''), '--')
+    assert.equal(orderQuantityTotal(undefined, '1'), '--')
+    for (const value of ['', '0', '101', '1.5', '1e2', '-1', ' 1', 'abc']) assert.equal(parseOrderQuantity(value), null)
 })

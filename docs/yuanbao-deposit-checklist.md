@@ -1,5 +1,15 @@
 # 充值页实现清单（已确认）
 
+## 2026-10-12 链上充值增量（覆盖下方历史省略表单范围）
+
+开发者要求金额输入框和确认充值按钮，调用ERC20 transfer向当前接口充值地址转USDT。范围为deposit页面/SCSS/README、features/deposits、contracts/usdt/config/index、VITE_USDT类型声明、五语言与对应测试。保护现有买卡/抢购数量改动及公共钱包底层，不增加依赖、不改env实际地址、不改远程Git。
+
+页面顺序：SecondaryHeader → 信息卡 → 真实二维码 → 金额form（标签/公共Input/ActionButton）→ 提示。form默认空金额；Flex列、gap30、margin-top60采用既有页面尺度，属于功能适配值而非新Figma量测，主题复用既有token，无新切图或定位例外。目标地址以登录GET /api/users/my/recharge_address为准；币种env与网络以现有部署文档、DAPP_CURRENT_CHAIN为准。标准ERC20_ABI的transfer(address to, uint256 amount)按实际ABI顺序使用to/amount，不需授权或native value。
+
+合约decimals为公开读取，不传account；金额精确转换一次，超过精度拒绝而不舍入。检查当前账户/链；余额检查与写入/成功回执等待复用writeErc20Transfer。UI结果只Toast，提交同步防重并使用ContractLoading，失败输入恢复。拒签/明确回退允许手动重试，未知结果不重复发送，跨路由保留按账户内存阶段；刷新浏览器不恢复交易。成功仅表示转账成功，平台入账以索引/记录为准；延迟刷新余额具有独立错误边界。
+
+验证：聚焦充值页/数量与合约/状态编排测试、五语言测试；pnpm build包含lint/test/tsc/Vite，git diff --check。真实钱包签名、BSC回执、平台索引到账与移动端实机尚待联调。
+
 ## 范围
 
 目标：实现元宝项目充值静态页，采用Figma 29534:12578的布局，配色对齐当前元宝主题。开发者明确忽略金额输入框与确认充值按钮，删除它们并收拢其布局空间，不保留空白占位。

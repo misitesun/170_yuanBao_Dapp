@@ -3,14 +3,15 @@ import test from 'node:test'
 import { runtime, ADDRESS, deferred, userWire } from './helpers/yuanbao-runtime.mjs'
 
 function authRuntime(options = {}) {
-    let token = options.token ?? '', referral = options.referral ?? '', address = ADDRESS, listeners, addressProvider
+    let token = options.token ?? '', referral = options.referral ?? '',
+        address = Object.hasOwn(options, 'address') ? options.address : ADDRESS, listeners, addressProvider
     let state = { status: 'checking', user: null, error: '' }
     const calls = [], messages = []
     let connects = 0, passiveReads = 0
     const user = { id: 1, address: ADDRESS, referralCode: 'abc12345', level: null, balances: { usdt: '0', yuanqi: '1', baoqi: '2' } }
     const wallet = {
         initializeDappWallet: async () => true,
-        connectDappWallet: async () => { connects++; return { address } },
+        connectDappWallet: async () => { connects++; if (options.connect) await options.connect(); return { address } },
         getAuthorizedDappAddress: async () => { passiveReads++; return address },
         disconnectDappWallet: () => { listeners = undefined },
         signDappMessage: async (message) => { messages.push(message); return options.sign ? options.sign(message) : { signature: '0xsig' } },
@@ -35,9 +36,68 @@ function authRuntime(options = {}) {
     const session = load('src/features/auth/session.ts')
     return { session, calls, messages, get state() { return state }, get token() { return token }, get referral() { return referral },
         get connects() { return connects }, get passiveReads() { return passiveReads },
-        headers: () => addressProvider?.(), changeAccount: () => listeners?.onAccountsChanged('0x0000000000000000000000000000000000000002'), disconnect: () => listeners?.onAccountsChanged(undefined) }
+        headers: () => addressProvider?.(), changeAccount: () => listeners?.onAccountsChanged('0x0000000000000000000000000000000000000002'), disconnect: () => listeners?.onAccountsChanged(undefined),
+        emitAccount: value => { address = value; listeners?.onAccountsChanged(value) } }
 }
 const flush = () => new Promise(setImmediate)
+
+test('initial mobile wallet connection event before connect resolves does not invalidate login', async () => {
+    const connection = deferred()
+    const app = authRuntime({ address: undefined, connect: () => connection.promise })
+    const dispose = app.session.mountAuthSession()
+    await flush()
+    assert.equal(app.headers(), undefined)
+    const pending = app.session.authorizeWallet()
+    await flush()
+    assert.equal(app.connects, 1)
+    assert.equal(app.messages.length, 0)
+    assert.equal(app.calls.length, 0)
+    app.emitAccount(undefined)
+    app.emitAccount(ADDRESS)
+    assert.equal(app.headers(), ADDRESS)
+    connection.resolve()
+    await pending
+    assert.equal(app.messages.length, 1)
+    assert.equal(app.calls.length, 1)
+    assert.equal(app.state.status, 'authenticated')
+    dispose()
+})
+
+test('duplicate same-account events during signing and after login preserve the session', async () => {
+    const signature = deferred()
+    const app = authRuntime({ sign: () => signature.promise })
+    const dispose = app.session.mountAuthSession()
+    await flush()
+    const pending = app.session.authorizeWallet()
+    await flush()
+    app.emitAccount(ADDRESS.toLowerCase())
+    app.emitAccount(ADDRESS)
+    signature.resolve({ signature: '0xsignature' })
+    await pending
+    app.emitAccount(ADDRESS.toLowerCase())
+    assert.equal(app.state.status, 'authenticated')
+    assert.equal(app.token, 'jwt')
+    assert.equal(app.calls.length, 1)
+    dispose()
+})
+
+test('real account change or disconnect while connecting still prevents signing and login', async () => {
+    for (const next of ['0x0000000000000000000000000000000000000002', undefined]) {
+        const connection = deferred()
+        const app = authRuntime({ connect: () => connection.promise })
+        const dispose = app.session.mountAuthSession()
+        await flush()
+        const pending = app.session.authorizeWallet()
+        await flush()
+        app.emitAccount(next)
+        connection.resolve()
+        await assert.rejects(pending, /变化/)
+        assert.equal(app.calls.length, 0)
+        assert.equal(app.messages.length, 0)
+        assert.equal(app.token, '')
+        dispose()
+    }
+})
 
 test('wallet authorization uses one timestamp for raw message and POST, coalesces submits and verifies user ownership', async () => {
     const app = authRuntime()

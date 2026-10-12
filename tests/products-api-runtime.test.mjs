@@ -94,7 +94,8 @@ test('auction renders remote cards and rejects empty stock or unavailable partic
         '@/features/products/useProducts.ts': { useProducts: () => data },
         '@/assets/common/participation-clock.png': {}, '@/assets/auction/price-coins.png': {},
         '@/components/ContractLoading': { ContractLoading: 'loading-overlay' },
-        '@/components/Popup': { Popup: 'popup' }, '@/components/ActionButton': { ActionButton: 'action' },
+        '@/components/Popup': { Popup: 'popup' }, '@/components/Input': { Input: 'input' },
+        '@/components/ActionButton': { ActionButton: 'action' },
         '@/components/Toast': { Toast: 'toast', useToast: () => ({ showToast: (text) => feedback.push(text) }) },
         '@/components/Empty': { Empty: 'empty' }, '@/components/DropletLoading': { DropletLoading: 'loading' },
     })
@@ -142,12 +143,13 @@ test('auction renders remote cards and rejects empty stock or unavailable partic
     assert.equal(retries, 1)
 })
 
-test('auction submits one card once and distinguishes mutation failure from post-success refresh failure', async () => {
+test('auction submits a custom quantity once and distinguishes mutation failure from post-success refresh failure', async () => {
     const slots = [], calls = [], feedback = []
     let cursor = 0, productRetries = 0, configRetries = 0, failRefresh = false
     const jsx = (type, props) => ({ type, props })
     const config = { enabled: true, canBuy: true, canSell: true, buyStart: '10:00', buyEnd: '17:00' }
     const orderApi = runtime({ '@/services/http/index.ts': {} })('src/features/orders/api.ts')
+    const card = { id: 2, name: '接口卡', image: '/2.png', stock: 1, purchUsdt: '100', purchBao: '1' }
     const { AuctionPage } = runtime({
         react: {
             useState: initial => { const index = cursor++; if (!(index in slots)) slots[index] = initial; return [slots[index], value => { slots[index] = value }] },
@@ -155,14 +157,15 @@ test('auction submits one card once and distinguishes mutation failure from post
             useEffect: () => {},
         },
         'react/jsx-runtime': { jsx, jsxs: jsx },
-        '@/features/orders/api.ts': { ...orderApi, bidCard: id => { const pending = deferred(); calls.push({ id, ...pending }); return pending.promise } },
+        '@/features/orders/api.ts': { ...orderApi, bidCard: (id, quantity) => { const pending = deferred(); calls.push({ id, quantity, ...pending }); return pending.promise } },
         '@/features/orders/useOrderConfig.ts': { useOrderConfig: () => ({ config, failed: false, retry: () => { configRetries++ } }) },
-        '@/features/products/useProducts.ts': { useProducts: () => ({ products: [{ id: 2, name: '接口卡', image: '/2.png', stock: 1, purchUsdt: '100', purchBao: '1' }], loading: false, failed: false, retry: () => { productRetries++ } }) },
+        '@/features/products/useProducts.ts': { useProducts: () => ({ products: [card], loading: false, failed: false, retry: () => { productRetries++ } }) },
         '@/features/auth/session.ts': { refreshCurrentUser: async () => { if (failRefresh) throw new Error('refresh failed') } },
         '@/services/http/index.ts': { wasHttpErrorReported: () => false },
         '@/assets/common/participation-clock.png': {}, '@/assets/auction/price-coins.png': {},
         '@/components/ContractLoading': { ContractLoading: 'loading-overlay' },
-        '@/components/Popup': { Popup: 'popup' }, '@/components/ActionButton': { ActionButton: 'action' },
+        '@/components/Popup': { Popup: 'popup' }, '@/components/Input': { Input: 'input' },
+        '@/components/ActionButton': { ActionButton: 'action' },
         '@/components/Toast': { Toast: 'toast', useToast: () => ({ showToast: text => feedback.push(text) }) },
         '@/components/Empty': { Empty: 'empty' }, '@/components/DropletLoading': { DropletLoading: 'loading' },
     })('src/pages/main/auction/AuctionPage.tsx')
@@ -174,16 +177,33 @@ test('auction submits one card once and distinguishes mutation failure from post
     button().props.onClick()
     assert.equal(calls.length, 0)
     assert.equal(popup().props.show, true)
-    assert.ok(all().some(node => node.props.children === '将扣除 100 余额 + 1 宝气'))
+    assert.ok(all().some(node => node.props.children === '将扣除 -- 余额 + -- 宝气'))
     all().find(node => node.type === 'action' && node.props.children === '取消').props.onClick()
     assert.equal(popup().props.show, false)
     assert.equal(calls.length, 0)
     button().props.onClick()
+    const input = () => all().find(node => node.type === 'input')
+    assert.equal(input().props.value, '')
+    for (const value of ['', '0', '101', '1.5']) {
+        input().props.onChange({ target: { value } })
+        confirm().props.onClick()
+        assert.equal(calls.length, 0)
+        assert.equal(feedback.at(-1), '请输入 1–100 的整数数量')
+    }
+    input().props.onChange({ target: { value: '2' } })
+    assert.ok(all().some(node => node.props.children === '将扣除 200 余额 + 2 宝气'))
+    confirm().props.onClick()
+    assert.equal(calls.length, 0)
+    assert.equal(feedback.at(-1), '可抢数量不足')
+    card.stock = 3
+    input().props.onChange({ target: { value: '3' } })
     const firstClick = confirm().props.onClick
     firstClick()
     firstClick()
     assert.equal(calls.length, 1)
     assert.equal(calls[0].id, 2)
+    assert.equal(calls[0].quantity, 3)
+    assert.equal(input().props.disabled, true)
     assert.equal(button().props.disabled, true)
     assert.equal(all().find(node => node.type === 'loading-overlay').props.show, true)
     assert.equal(confirm().props.children, '确认抢拍')
@@ -196,6 +216,8 @@ test('auction submits one card once and distinguishes mutation failure from post
     assert.equal(button().props.disabled, false)
     assert.equal(all().find(node => node.type === 'loading-overlay').props.show, false)
     assert.equal(popup().props.show, true)
+    assert.equal(input().props.disabled, false)
+    assert.equal(input().props.value, '3')
     failRefresh = true
     confirm().props.onClick()
     calls[1].resolve()

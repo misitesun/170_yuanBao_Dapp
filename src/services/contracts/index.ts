@@ -2,3 +2,4 @@
 // 项目专属合约封装统一从这里导出。
 
 export { assertYbProjectNetwork, isYbProjectWithdrawalUsed, withdrawYbProject, type YbProjectWithdrawParams } from './ybProject.ts'
+export { assertUsdtRechargeContext, normalizeRechargeAmount, prepareUsdtRecharge } from './usdt.ts'
