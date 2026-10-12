@@ -20,6 +20,8 @@
 
 登录复用 DApp provider、链初始化、连接和签名能力。生成秒级 timestamp，对 `Login-{timestamp}` 原文签名，提交 address/signature/timestamp/ref。仅校验并消费必需 token。所有请求均独立携带实际连接的 address，公开登录不携带旧 Bearer。Token 存储后通过 Bearer 与当前 address 读取 `/users/my` 核对钱包地址，成功后显示业务页面。钱包监听在签名开始前安装，账号/网络变化会立即清理会话并淘汰旧签名/HTTP 响应。所有授权请求合并为一个 pending Promise，不重复弹签名或提交。
 
+开发者于 2026-10-12 确认：前端不因链接或本地缓存的邀请码长度、内容错误而阻止钱包授权。非空 ref 去除首尾空白后提交，长度及有效性由 POST /api/auth/login 校验并通过公共 HTTP Toast 提示；空值继续省略。后端的 8 位约束保持，前端不预先拦截。已有 Token 时继续只恢复、验证会话，不因错误邀请码改成重新签名或 POST。
+
 恢复登录使用被动 `eth_accounts` 能力，不请求新权限、不再次签名或 POST。校验失败不进入业务页面；401 清理 Token，网络/解析失败保留 Token 供读接口重试。登录 POST 成功后资料获取失败独立反馈“登录已完成，用户资料验证失败”，下一次授权先重试 GET。HTTP 的旧 Token 请求 401 不得清理当前新 Token。没有临时 Token 或无签名登录路径，即使后端开发环境跳过验签，也仍由钱包签名。
 
 ## 页面字段映射

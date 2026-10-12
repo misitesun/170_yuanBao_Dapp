@@ -179,18 +179,72 @@ test('successful login followed by profile failure retains token and retries GET
     assert.equal(app.state.status, 'authenticated')
 })
 
-test('wrong token owner clears session and invalid invite lengths never call wallet or HTTP', async () => {
+test('wrong token owner clears session', async () => {
     const wrong = authRuntime({ token: 'saved', user: async () => ({ address: '0x0000000000000000000000000000000000000002' }) })
     wrong.session.mountAuthSession()
     await flush()
     assert.equal(wrong.state.status, 'signedOut')
     assert.equal(wrong.token, '')
-    const app = authRuntime()
-    app.session.mountAuthSession()
-    await assert.rejects(app.session.authorizeWallet('short'), /8 位/)
-    assert.equal(app.calls.length, 0)
-    assert.equal(app.messages.length, 0)
+})
+
+test('invalid cached referrals reach backend after signing and a rejected login can be retried', async () => {
+    for (const referral of ['short', 'too-long-invite', 'bad!!!!?']) {
+        const failure = new Error('backend referral validation failed')
+        const app = authRuntime({ referral, login: async (body) => {
+            if (body.ref !== 'abc12345') throw failure
+            return 'jwt'
+        } })
+        const dispose = app.session.mountAuthSession()
+        await assert.rejects(app.session.authorizeWallet(), error => error === failure)
+        assert.equal(app.connects, 1)
+        assert.equal(app.messages.length, 1)
+        assert.equal(app.calls.length, 1)
+        assert.equal(app.calls[0].ref, referral)
+        assert.equal(app.messages[0], `Login-${app.calls[0].timestamp}`)
+        assert.equal(app.token, '')
+        assert.equal(app.state.status, 'signedOut')
+
+        await app.session.authorizeWallet('abc12345')
+        assert.equal(app.calls.length, 2)
+        assert.equal(app.messages.length, 2)
+        assert.equal(app.token, 'jwt')
+        assert.equal(app.state.status, 'authenticated')
+        dispose()
+    }
+})
+
+test('login trims nonempty referrals and omits empty referrals without blocking wallet authorization', async () => {
+    for (const [referral, expected] of [[' short ', 'short'], ['', undefined], ['   ', undefined]]) {
+        const app = authRuntime({ referral })
+        const dispose = app.session.mountAuthSession()
+        await app.session.authorizeWallet()
+        assert.equal(app.connects, 1)
+        assert.equal(app.messages.length, 1)
+        assert.equal(app.calls.length, 1)
+        assert.equal(app.calls[0].ref, expected)
+        assert.equal(Object.hasOwn(app.calls[0], 'ref'), expected !== undefined)
+        dispose()
+    }
+})
+
+test('an invalid cached referral does not block retrying stored-token profile verification', async () => {
+    let failProfile = true
+    const app = authRuntime({ token: 'saved-token', referral: 'short', user: async () => {
+        if (failProfile) throw new Error('network')
+        return { address: ADDRESS, id: 1 }
+    } })
+    const dispose = app.session.mountAuthSession()
+    await flush()
+    assert.equal(app.state.status, 'signedOut')
+    assert.equal(app.token, 'saved-token')
+    failProfile = false
+    await app.session.authorizeWallet()
+    assert.equal(app.state.status, 'authenticated')
+    assert.equal(app.token, 'saved-token')
     assert.equal(app.connects, 0)
+    assert.equal(app.messages.length, 0)
+    assert.equal(app.calls.length, 0)
+    dispose()
 })
 
 test('StrictMode cleanup invalidates old restoration without removing the persisted token', async () => {

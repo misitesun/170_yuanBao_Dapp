@@ -114,7 +114,6 @@ export function mountAuthSession(): () => void {
 async function performAuthorization(ref: string): Promise<void> {
     const attempt = ++generation
     useSessionStore.setState({ error: '' })
-    if (ref.trim() && ref.trim().length !== 8) throw new Error('邀请码须为 8 位')
     setReferralCode(ref)
     // A completed login with a failed profile read is retried through GET, not another login POST.
     if (getToken()) {
