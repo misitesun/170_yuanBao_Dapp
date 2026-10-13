@@ -1,6 +1,7 @@
 import { ContractLoading } from '@/components/ContractLoading'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router'
 import type { Swiper as SwiperInstance } from 'swiper'
 import { A11y, FreeMode } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -8,6 +9,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import previousIcon from '@/assets/home/carousel-previous.png'
 import nextIcon from '@/assets/home/carousel-next.png'
 import clockIcon from '@/assets/common/participation-clock.png'
+import auctionStatusClock from '@/assets/home/auction-status-clock.png'
 import divider from '@/assets/common/title-divider.png'
 import energyIcon from '@/assets/common/energy-icon.png'
 import cardPackArrow from '@/assets/home/card-pack-arrow.png'
@@ -51,6 +53,7 @@ export function HomePage() {
     const homePack = useHomeCardOrders()
     const { config, failed: configFailed, retry: retryConfig } = useOrderConfig()
     const participationMessage = configFailed ? '活动配置加载失败' : getParticipationMessage(config, 'sell')
+    const auctionParticipationMessage = config ? getParticipationMessage(config, 'buy') : null
     const card = products[selectedIndex] ?? products[0]
     const { message, variant, showToast } = useToast()
 
@@ -202,13 +205,16 @@ export function HomePage() {
             </section>
 
             <div className="home-page__sections flex flex-column">
-                <section className="home-page__auction flex flex-column items-start" aria-labelledby="home-auction-title">
+                <Link to={ROUTE_PATH.auction} className="home-page__auction flex flex-column items-start" aria-labelledby="home-auction-title">
                     <h2 id="home-auction-title">{t("抢拍房间")}</h2>
-                    <p>{t('每日 {{time}} 开启', { time: config ? `${config.buyStart}–${config.buyEnd}` : '--' })}</p>
-                    {config && getParticipationMessage(config, 'buy') ? <p role="status">{t(getParticipationMessage(config, 'buy') ?? '')}</p> : null}
-                    <button type="button" className="home-page__auction-button flex-center" onClick={() => pushRoute(ROUTE_PATH.auction)}>
-                        {t("进入抢拍")}</button>
-                </section>
+                    <p className="home-page__auction-time">{t('每日 {{time}} 开启', { time: config ? `${config.buyStart}–${config.buyEnd}` : '--' })}</p>
+                    {auctionParticipationMessage ? <p className="home-page__auction-status flex items-center" role="status">
+                        <img src={auctionStatusClock} alt="" width={24} height={24} />
+                        <span>{t(auctionParticipationMessage)}</span>
+                    </p> : null}
+                    <span className="home-page__auction-button flex-center">
+                        <span>{t("进入抢拍")}</span></span>
+                </Link>
 
                 <section className="home-page__pack" aria-labelledby="home-pack-title">
                     <div className="home-page__pack-heading flex justify-between items-start">

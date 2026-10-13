@@ -1,5 +1,58 @@
 # 元宝首页实现清单
 
+## 首页抢拍房间布局优化（2026-10-13，已确认并实现）
+
+### 范围
+
+- 目标：按开发者最新截图与 Figma 首页还原更高的抢拍房间、红色状态胶囊和全宽装饰按钮。
+- 允许修改：`src/pages/main/home/HomePage.tsx`、`HomePage.scss`、本次新增的 `src/assets/home/` 切图、首页 README 与本清单。
+- 不做：修改 API、活动配置与参与权限判断、抢拍入口跳转、购买流程、主卡轮播、卡包、公共 Header、其他页面、依赖或远程 Git。
+- 依据：Figma 文件 `NVwAAv12WZx1LiCTqPMNWD` 首页 `30064:3168`、开发者截图、项目术语与布局规范。当前工作区无既有未提交改动。
+- 验证：750px 与375px下截图对照、资源加载/几何、提示有无及多语言换行、进入抢拍仍跳转 `/auction`、无横向溢出；`pnpm build`（含 lint、测试、TypeScript、Vite）、`git diff --check`。
+
+### 本次 Figma 实测（750px 源单位）
+
+Figma 设计检查接口本轮未提供可调用工具；通过用户已打开的 Chrome Figma Properties 面板逐层读取。以下为本次可见属性，不沿用历史292px高的旧稿。新首页画板750×2126。
+
+- 背景矩形 `30091:4663`：x30/y1293、690×380、圆角29、内描边2；图片 Scale 为 Crop。填充渐变颜色 `rgba(94,46,182,0.6)` → `rgba(52,0,147,0)`；边框渐变颜色 `#8644FF` → `#FB00FF`。
+- 标题 `30091:4696`：x60/y1333、文字框225×78；Alibaba PuHuiTi Medium500、字号57、Line height100%、Letter spacing0%；保留金色渐变，阴影x0/y4/blur4/spread0、黑色25%。
+- 开启时间 `30121:4708`：x60/y1421、文字框270×36；Alibaba PuHuiTi Medium500、字号26、Line height100%、Letter spacing0%；渐变颜色 `#E2C472` → `#FFF1BF`，阴影同标题。实际时间继续使用配置，不硬编码设计示例15:00–16:00。
+- 状态胶囊 `30204:1321`：x60/y1473、Hug214×46；横向排列，padding上下8/左右12、gap4、圆角999、内描边1 `#FF4545`；底色 `rgba(55,0,11,0.8)`。
+- 状态文字 `30204:1323`：文字框160×28；PingFang SC Regular400、字号20、Line height100%、Letter spacing0%、`#FF4545`。显示条件和文案仍由现有 `getParticipationMessage(config, 'buy')` 决定，状态不是静态常驻文本。
+- 红色时钟 `30682:3589`：24×24；现有 `common/participation-clock.png` 为紫色32×32，不是相同资源。
+- 按钮装饰组 `30682:3587`：x60/y1543、630×110；包含 `image 4899`、`image 4900`、`image 4901`、`image 4902`、`image 4896` 五个图片层。现有250×66的 `common/auction-button.png` 不能按630×110拉伸替代。
+- 按钮文字 `30121:4709`：x312/y1576、文字框126×44；Alibaba PuHuiTi Medium500、字号32、Line height100%、Letter spacing0%；金色渐变与阴影同时间文字；仍使用真实button内容“进入抢拍”。
+- 后续卡包面板x30/y1713，与抢拍卡片底部相距40。修改仅限首页两块section的间距，不重写卡包内部。
+
+面板未暴露完整渐变角度/色标位置及图片裁切变换；使用Figma导出的完整背景矩形保留这些效果。文字渐变复用原有实测参数；字体文件仍缺少Alibaba PuHuiTi，fallback无法保证字形完全一致。Line height100%与文字框高度分别记录，不能把框高直接称为字体行高；浏览器采用78/36/28/44px文字框作为行盒，以保持设计块间距，这是字体回退适配而非新增Figma行高量测。
+
+### 所需导出资源
+
+1. 背景矩形 `Rectangle 346242920` / `30091:4663`：完整690×380 PNG，保留Crop、填充、渐变边框、圆角；不包含标题、时间、提示、按钮。目标 `src/assets/home/auction-room-panel.png`。现有1840×854背景原图保留。
+2. 按钮组 `Group 2085666849` / `30682:3587`：完整630×110透明PNG，五张图片合并导出；不包含外部“进入抢拍”文字。目标 `src/assets/home/auction-room-button.png`。公共250×66切图保留给抢拍页。
+3. 红色时钟 `Frame` / `30682:3589`：24×24透明PNG或SVG，不包含胶囊/文字。目标 `src/assets/home/auction-status-clock.png`（或`.svg`）。公共紫色时钟保持原样。
+
+开发者确认清单并明确授权直接从Figma导出后，已通过Chrome中的Figma导出面板按1x PNG导出上述三个准确节点。文件分别为690×380、630×110、24×24，已核对非空、尺寸及视觉内容并复制到语义路径；背景保留裁切/渐变/描边，按钮不含文字。现有公共按钮、紫色时钟与原始背景保留。
+
+### 语义与复用
+
+- 正常流顺序：section标题 → 动态开启时间 → 条件渲染的`role=status`胶囊 → 导航button；纵向Flex、间距与padding表达实测关系，不用绝对定位正文。
+- 复用 `flex`、`flex-column`、`items-start`、`flex-center`、`gradient-word`、现有i18n、`useAppNavigate`、配置hook与权限提示函数；保留状态隐藏时的最小卡片高度，多语言换行时允许内容增高。
+- 现有Popup、Picker、Header与按钮公共接口无需变更。背景直接作为section装饰背景；无需新增定位例外。
+- 红色胶囊样式独立于开启时间，避免现有`p`通用金色渐变污染提示。局部状态色按实测值使用，既有通用颜色优先复用。
+- 开发者已确认并授权直接导出切图；正文保持正常流。抢拍区padding40/30/20、最小高度380，状态胶囊下间距24，按钮以自动上外边距保持底部位置；卡包与抢拍区间距40。
+
+### 验收结果
+
+- 后续交互要求：整个抢拍区使用一个React Router Link进入`/auction`，标题、时间、提示、按钮装饰与留白均为同一个点击区域；原按钮改为非交互span，避免嵌套控件及重复跳转，链接支持Tab/Enter并提供聚焦轮廓。视觉尺寸和参与状态规则保持。
+- 整区入口验证：浏览器375px下实际点击标题、对卡片链接按Enter均进入`/h5/auction`；聚焦首页运行时测试6项通过，完整`pnpm build`通过，`git diff --check`通过。
+- 750px实际已授权首页：卡片690×380，按钮630×110，时钟成功加载；相对卡片左侧30，标题顶部约40、时间约128、提示约180、按钮250，与Figma实测落点一致（vw转换的亚像素差小于0.03px）。文档宽750，无横向溢出。
+- 375px实际首页：卡片345×约190.98、按钮315×55，文档宽375，无横向溢出。1px胶囊描边按现有px-to-vw规则保留物理像素，使最小内容高度比严格一半增加约1px；不是人为重缩放设计值。
+- 375px英文：首页标题、时间、提示和按钮完整显示，提示与按钮无重叠；入口实际跳转`/h5/auction`，随后返回首页并恢复简体中文。状态渲染沿用现有服务器配置，不设置静态状态，也不以设备时间决定权限。
+- 对照截图：`docs/design-reference/yuanbao-home-auction-layout-750.png`、`yuanbao-home-auction-layout-375.png`、`yuanbao-home-auction-layout-en-375.png`。仅验收本次抢拍区域，不把既有主卡/卡包的不同数据或字体差异归为本次改动。
+- `pnpm build`通过，包含lint、全部现有测试、Logo门禁、TypeScript与Vite。既有LoginPage effect依赖警告、构建大包警告仍在，本次没有新增依赖、绕过门禁或部署。
+- 已知视觉限制：没有Alibaba PuHuiTi文件，标题/时间/按钮使用既有PingFang SC回退；750px标题框实际宽228而设计框225，字形无法保证完全一致。正文保持真实可访问文字，不以截图或文字切图替代。
+
 ## 顶部导航图标背景更新（2026-09-30）
 
 开发者提供三个52×52导出资源及导航栏截图。已核对 `Group 181.png` 与当前 `src/assets/common/header-language.png` 的SHA-256一致；通知改用 `Group 2085666468.png` 覆盖 `header-notification.png`；`Group 286.png` 新增为 `header-menu.png` 并替换菜单按钮原CSS渐变背景。菜单线条继续由 `MenuToggleIcon` 绘制，以保留开关动画。仅修改Header资源、菜单局部背景及布局说明；钱包、通知/语言/菜单入口顺序、点击行为、公共Header尺寸、路由和其他页面保持现状。验证750px/375px图标大小、资源显示、菜单开合及 `pnpm build`、`git diff --check`。

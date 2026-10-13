@@ -30,6 +30,7 @@ function mountHome(pack = { orders: [], loading: false, failed: false, retry: ()
         '@/components/ActionButton': { ActionButton: 'action' },
         '@/router': { ROUTE_PATH: { auction: '/auction', cardPack: '/card-pack' }, useAppNavigate: () => ({ pushRoute: (path) => routes.push(path) }) },
         'react-i18next': i18nRuntime,
+        'react-router': { Link: 'link' },
         react: {
             useState: (initial) => {
                 const slot = cursor++
@@ -87,10 +88,13 @@ test('home navigation and carousel display remote data; inactive purchases show 
     const initial = page.render()
     assert.equal(initial.filter((node) => node.type === 'empty').length, 1)
     assert.equal(initial.filter((node) => node.type === 'swiper').length, 1)
-    for (const className of ['home-page__auction-button', 'home-page__pack-entry']) {
-        page.render().find((node) => node.type === 'button' && node.props.className.includes(className)).props.onClick()
-    }
-    assert.deepEqual(page.routes, ['/auction', '/card-pack'])
+    const auctionLink = initial.find(node => node.type === 'link' && node.props.to === '/auction')
+    assert.ok(auctionLink, 'the entire auction room is a native router link')
+    assert.ok(auctionLink.props.children.some(node => node?.type === 'h2'))
+    assert.ok(auctionLink.props.children.some(node => node?.props.className === 'home-page__auction-button flex-center'))
+    assert.equal(auctionLink.props.children.some(node => node?.type === 'button'), false, 'no nested button or second navigation handler')
+    page.render().find(node => node.type === 'button' && node.props.className.includes('home-page__pack-entry')).props.onClick()
+    assert.deepEqual(page.routes, ['/card-pack'])
     for (const [index, item] of page.products.entries()) {
         page.render().find((node) => node.type === 'swiper').props.onRealIndexChange({ realIndex: index })
         assert.equal(page.render().find((node) => node.type === 'h1').props.children, item.name)

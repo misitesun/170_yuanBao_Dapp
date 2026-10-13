@@ -6,6 +6,7 @@ import i18next from 'i18next'
 import * as React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { I18nextProvider, useTranslation, Trans } from 'react-i18next'
+import { Link, MemoryRouter } from 'react-router'
 import { QRCodeSVG } from 'qrcode.react'
 import ts from 'typescript'
 import { runtime } from './helpers/yuanbao-runtime.mjs'
@@ -107,6 +108,7 @@ test('real React pages switch locale, preserve card names and amounts, and do no
         '@/router': { ROUTE_PATH: { auction: '/auction', cardPack: '/card-pack', deposit: '/deposit', withdraw: '/withdraw' }, useAppNavigate: () => ({ pushRoute: () => {} }) },
         './TransferPopup': { TransferPopup: () => null },
         react: React, 'react/jsx-runtime': await import('react/jsx-runtime'), 'react-i18next': { useTranslation, Trans },
+        'react-router': { Link },
         'swiper/modules': { A11y: {}, FreeMode: {} }, 'swiper/css': {},
         'swiper/react': { Swiper: ({ children }) => React.createElement('div', null, children), SwiperSlide: ({ children }) => React.createElement('div', null, children) },
         '@/components/Empty': { Empty }, '@/components/Toast': { Toast: () => null, useToast: () => ({ showToast: () => {} }) },
@@ -124,13 +126,15 @@ test('real React pages switch locale, preserve card names and amounts, and do no
     const Home = load('src/pages/main/home/HomePage.tsx').HomePage
     const Assets = load('src/pages/main/assets/AssetsPage.tsx').AssetsPage
     const Deposit = load('src/pages/main/deposit/DepositPage.tsx').DepositPage
-    const render = Component => renderToStaticMarkup(React.createElement(I18nextProvider, { i18n }, React.createElement(Component)))
+    const render = Component => renderToStaticMarkup(React.createElement(I18nextProvider, { i18n },
+        React.createElement(MemoryRouter, { basename: '/h5', initialEntries: ['/h5/home'] }, React.createElement(Component))))
     const expected = { 'zh-Hans': '立即购买', 'zh-Hant': '立即購買', en: 'Buy now', ja: '今すぐ購入', ko: '지금 구매' }
     for (const code of codes) {
         await i18n.changeLanguage(code)
         showTransfers = false
         const home = render(Home), assets = render(Assets)
         assert.ok(home.includes(expected[code]), code)
+        assert.ok(home.includes('href="/h5/auction"'), code)
         assert.ok(home.includes('后端商品名称'), code)
         assert.ok(home.includes('10:00–15:00'), code)
         assert.ok(home.includes('home-page__amount">100.123456'), code)
