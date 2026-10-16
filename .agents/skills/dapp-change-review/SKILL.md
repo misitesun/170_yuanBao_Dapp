@@ -22,6 +22,8 @@ Use this skill for a read-only review of a current diff, a proposed implementati
 5. Check for direct use of restricted boundaries, unchecked casts, non-null assertions, stale-request races, missing refresh behavior, duplicate-write risk after misleading failure feedback, and unrequested scope expansion.
 6. Separate blocking correctness issues from optional follow-ups. If no issue is found, say so and list the checks performed.
 
+- 审查钱包登录/HTTP 地址头时，按 `docs/php-api-contracts.md` 的“登录地址一致性与取消”核对同轮签名/body/header 地址快照、真实换号/断开时 AbortController 取消、generation 隔离迟到结果、首次连接/同址事件不误取消及旧 Bearer 隔离；普通请求保持项目已确认的地址策略，不能从缓存推断当前身份。
+
 ## Finding format
 
 Each finding should name the affected file or contract, explain the runtime consequence, state the evidence, and give the smallest safe remediation. Do not report speculative risks without a path from the actual diff to the failure.

@@ -154,6 +154,14 @@ test('signs the exact project-supplied message with the connected wallet address
     assert.equal(provider.requests.at(-1).method, 'personal_sign')
 })
 
+test('an explicit signing address is passed unchanged without re-reading a different account', async () => {
+    const provider = createProvider({ accounts: ['0x0000000000000000000000000000000000000002'], signature: '0xsigned' })
+    setupWalletTest(provider)
+    await signDappMessage('this-attempt', TEST_ADDRESS)
+    assert.deepEqual(provider.requests.map(request => request.method), ['personal_sign'])
+    assert.equal(provider.requests[0].params[1], TEST_ADDRESS)
+})
+
 test('disconnect only clears local wallet state', () => {
     const provider = createProvider({ accounts: [TEST_ADDRESS] })
     setupWalletTest(provider)

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { runtime, ADDRESS, deferred, userWire } from './helpers/yuanbao-runtime.mjs'
+import { HttpError } from '../src/services/http/error.ts'
 
 function authRuntime(options = {}) {
     let token = options.token ?? '', referral = options.referral ?? '',
@@ -23,6 +24,7 @@ function authRuntime(options = {}) {
         'src/services/dapp/wallet.ts': wallet,
         'src/services/dapp/provider.ts': { detectDappProvider: async () => ({}) },
         'src/services/http/index.ts': {
+            HttpError,
             registerHttpWalletAddressProvider: (provider) => { addressProvider = provider; return () => { addressProvider = undefined } },
             registerHttpUnauthorizedHandler: () => () => {},
         },

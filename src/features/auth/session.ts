@@ -1,6 +1,6 @@
 import { connectDappWallet, getAuthorizedDappAddress, initializeDappWallet, signDappMessage, startDappWalletListeners, stopDappWalletListeners } from '../../services/dapp/wallet.ts'
 import { detectDappProvider } from '../../services/dapp/provider.ts'
-import { registerHttpUnauthorizedHandler, registerHttpWalletAddressProvider } from '../../services/http/index.ts'
+import { HttpError, registerHttpUnauthorizedHandler, registerHttpWalletAddressProvider } from '../../services/http/index.ts'
 import { getToken, removeToken, setToken } from '../../services/storage/token.ts'
 import { getReferralCode, setReferralCode } from '../../services/storage/referral.ts'
 import { useDappStore } from '../../stores/dapp/index.ts'
@@ -12,16 +12,33 @@ let generation = 0
 let verifiedAddress = ''
 let currentWalletAddress: string | undefined
 let authorizing: Promise<void> | undefined
+let sessionController: AbortController | undefined
 const sameAddress = (a: string, b: string) => a.toLowerCase() === b.toLowerCase()
 
+function cancelSessionRequests(): void {
+    sessionController?.abort()
+    sessionController = undefined
+    authorizing = undefined
+}
 export function clearSession(error = ''): void {
     generation += 1
+    cancelSessionRequests()
     verifiedAddress = ''
     removeToken()
     useSessionStore.setState({ status: 'signedOut', user: null, error })
 }
 function checkAttempt(attempt: number): void {
-    if (attempt !== generation) throw new Error('钱包账号或登录状态已变化，请重新授权')
+    if (attempt !== generation) throw new HttpError('钱包账号或登录状态已变化，请重新授权', { code: 'ERR_CANCELED' })
+}
+function cancelableAuthorization(work: Promise<void>, signal: AbortSignal): Promise<void> {
+    let cancel = () => {}
+    const cancelled = new Promise<void>((_, reject) => {
+        cancel = () => reject(new HttpError('钱包账号或登录状态已变化，请重新授权', { code: 'ERR_CANCELED' }))
+        signal.addEventListener('abort', cancel, { once: true })
+        if (signal.aborted) cancel()
+    })
+    // Wallet RPC cannot be aborted; observe its late result while releasing the UI immediately.
+    return Promise.race([work, cancelled]).finally(() => signal.removeEventListener('abort', cancel))
 }
 function watchWallet(): void {
     startDappWalletListeners({
@@ -50,7 +67,7 @@ function completeSession(user: CurrentUser, address: string): void {
     useDappStore.getState().setWalletAddress(address)
     useSessionStore.setState({ status: 'authenticated', user, error: '' })
 }
-async function restoreSession(attempt: number): Promise<void> {
+async function restoreSession(attempt: number, signal: AbortSignal): Promise<void> {
     const token = getToken()
     if (!token) return
     await prepareWallet()
@@ -65,7 +82,7 @@ async function restoreSession(attempt: number): Promise<void> {
     currentWalletAddress = address
     useDappStore.getState().setWalletAddress(address)
     watchWallet()
-    const user = await getCurrentUser('bearer')
+    const user = await getCurrentUser('bearer', { signal, walletAddress: address })
     checkAttempt(attempt)
     if (token !== getToken()) throw new Error('登录状态已变化，请重新授权')
     completeSession(user, address)
@@ -73,19 +90,22 @@ async function restoreSession(attempt: number): Promise<void> {
 export async function refreshCurrentUser(): Promise<CurrentUser> {
     const attempt = generation
     const address = verifiedAddress
-    const user = await getCurrentUser()
+    const user = await getCurrentUser(undefined, { signal: sessionController?.signal, walletAddress: address || undefined })
     checkAttempt(attempt)
     completeSession(user, address)
     return user
 }
 export function mountAuthSession(): () => void {
+    cancelSessionRequests()
+    const controller = new AbortController()
+    sessionController = controller
     currentWalletAddress = undefined
     const unregisterAddress = registerHttpWalletAddressProvider(() => currentWalletAddress)
     const unregisterUnauthorized = registerHttpUnauthorizedHandler(() => clearSession('登录已失效，请重新授权'))
     const attempt = ++generation
     if (getToken()) {
         useSessionStore.setState({ status: 'checking', user: null, error: '' })
-        void restoreSession(attempt).catch((error: unknown) => {
+        void restoreSession(attempt, controller.signal).catch((error: unknown) => {
             if (attempt !== generation) return
             verifiedAddress = ''
             useSessionStore.setState({ status: 'signedOut', user: null,
@@ -104,6 +124,7 @@ export function mountAuthSession(): () => void {
     }
     return () => {
         generation += 1
+        cancelSessionRequests()
         verifiedAddress = ''
         currentWalletAddress = undefined
         stopDappWalletListeners()
@@ -111,13 +132,13 @@ export function mountAuthSession(): () => void {
         unregisterUnauthorized()
     }
 }
-async function performAuthorization(ref: string): Promise<void> {
+async function performAuthorization(ref: string, signal: AbortSignal): Promise<void> {
     const attempt = ++generation
     useSessionStore.setState({ error: '' })
     setReferralCode(ref)
     // A completed login with a failed profile read is retried through GET, not another login POST.
     if (getToken()) {
-        await restoreSession(attempt)
+        await restoreSession(attempt, signal)
         return
     }
     await prepareWallet()
@@ -127,18 +148,19 @@ async function performAuthorization(ref: string): Promise<void> {
     currentWalletAddress = address
     watchWallet()
     const timestamp = Math.floor(Date.now() / 1000)
-    const { signature } = await signDappMessage(`Login-${timestamp}`)
+    const { signature } = await signDappMessage(`Login-${timestamp}`, address)
     checkAttempt(attempt)
     const currentAddress = await getAuthorizedDappAddress()
     checkAttempt(attempt)
     if (!currentAddress || !sameAddress(currentAddress, address)) throw new Error('签名钱包已变化，请重新授权')
-    const token = await requestWalletLogin({ address, signature, timestamp, ...(ref.trim() ? { ref: ref.trim() } : {}) })
+    const token = await requestWalletLogin({ address, signature, timestamp, ...(ref.trim() ? { ref: ref.trim() } : {}) }, signal)
     checkAttempt(attempt)
     setToken(token)
     let user: CurrentUser
     try {
-        user = await getCurrentUser('bearer')
+        user = await getCurrentUser('bearer', { signal, walletAddress: address })
     } catch (error) {
+        if (signal.aborted) throw error
         checkAttempt(attempt)
         // The login POST already succeeded; retain its token for a read-only verification retry.
         throw new Error('登录已完成，用户资料验证失败，请重试验证', { cause: error })
@@ -148,6 +170,12 @@ async function performAuthorization(ref: string): Promise<void> {
 }
 export function authorizeWallet(ref = getReferralCode()): Promise<void> {
     if (authorizing) return authorizing
-    authorizing = performAuthorization(ref).finally(() => { authorizing = undefined })
-    return authorizing
+    sessionController?.abort()
+    const controller = new AbortController()
+    sessionController = controller
+    const pending = cancelableAuthorization(performAuthorization(ref, controller.signal), controller.signal).finally(() => {
+        if (authorizing === pending) authorizing = undefined
+    })
+    authorizing = pending
+    return pending
 }

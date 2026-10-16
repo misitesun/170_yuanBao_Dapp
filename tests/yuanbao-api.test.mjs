@@ -28,10 +28,14 @@ test('user and team parsers preserve exact decimals, zero counts, nullable level
 test('login sends exact body without stale credentials and validates its consumed token', async () => {
     const { calls, load } = apiRuntime(() => ({ token: 'jwt' }))
     const body = { address: ADDRESS, timestamp: 123, signature: '0xsig' }
-    assert.equal(await load('src/features/auth/api.ts').requestWalletLogin(body), 'jwt')
+    const controller = new AbortController()
+    assert.equal(await load('src/features/auth/api.ts').requestWalletLogin(body, controller.signal), 'jwt')
     assert.equal(calls[0].authentication, 'none')
     assert.equal(calls[0].url, '/api/auth/login')
     assert.equal(calls[0].data, body)
+    assert.equal(calls[0].walletAddress, body.address)
+    assert.equal(calls[0].walletAddressHeader, 'omit')
+    assert.equal(calls[0].signal, controller.signal)
     assert.equal('ref' in calls[0].data, false)
     for (const response of [null, [], {}, { token: '' }, { token: 1 }]) {
         await assert.rejects(apiRuntime(() => response).load('src/features/auth/api.ts').requestWalletLogin(body))

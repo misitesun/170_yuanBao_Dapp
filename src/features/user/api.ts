@@ -29,9 +29,9 @@ export function parseCurrentUser(value: unknown): CurrentUser {
         level: parseLevel(row.level),
     }
 }
-/** Recovery checks the token owner using Bearer and the independently supplied live wallet address. */
-export async function getCurrentUser(authentication?: 'bearer'): Promise<CurrentUser> {
-    return parseCurrentUser(await request<unknown>({ url: '/api/users/my', authentication }))
+/** Account-bound verification can share its login attempt's address and cancellation signal. */
+export async function getCurrentUser(authentication?: 'bearer', options: { signal?: AbortSignal; walletAddress?: string } = {}): Promise<CurrentUser> {
+    return parseCurrentUser(await request<unknown>({ url: '/api/users/my', authentication, ...options }))
 }
 
 export function parseRechargeAddress(value: unknown): string {

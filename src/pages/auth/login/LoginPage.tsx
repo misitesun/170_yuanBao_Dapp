@@ -4,7 +4,7 @@ import { Navigate, useLocation, useParams } from 'react-router'
 import logo from '@/assets/common/yuanbao-logo.png'
 import { ContractLoading } from '@/components/ContractLoading'
 import { Toast, useToast } from '@/components/Toast'
-import { wasHttpErrorReported } from '@/services/http/index.ts'
+import { HttpError, wasHttpErrorReported } from '@/services/http/index.ts'
 import { authorizeWallet } from '@/features/auth/session.ts'
 import { useSessionStore } from '@/features/auth/state.ts'
 import { getDappUserRejectionMessage } from '@/services/dapp/error.ts'
@@ -39,6 +39,7 @@ export function LoginPage() {
             await authorizeWallet(getReferralCode())
             setMessage('')
         } catch (failure) {
+            if (failure instanceof HttpError && failure.code === 'ERR_CANCELED') return
             const walletUnavailable = failure instanceof Error
                 && failure.message === '请使用钱包浏览器打开，或启用浏览器钱包扩展'
             const text = getDappUserRejectionMessage(failure) !== undefined

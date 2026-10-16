@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { runtime, deferred } from './helpers/yuanbao-runtime.mjs'
+import { HttpError } from '../src/services/http/error.ts'
 
 function splash(options = {}) {
     const hooks = [], effects = [], timers = new Map(), calls = [], feedback = []
@@ -28,7 +29,7 @@ function splash(options = {}) {
         '@/assets/common/yuanbao-logo.png': 'logo',
         'src/components/ContractLoading': { ContractLoading: 'loading-overlay' },
         'src/components/Toast': { Toast: 'toast', useToast: () => ({ showToast: (...args) => feedback.push(args) }) },
-        'src/services/http/index.ts': { wasHttpErrorReported: () => options.reported ?? false },
+        'src/services/http/index.ts': { HttpError, wasHttpErrorReported: () => options.reported ?? false },
         'src/features/auth/session.ts': { authorizeWallet: async (ref) => { calls.push(ref); return options.authorize?.() } },
         'src/features/auth/state.ts': { useSessionStore: () => state },
         'src/services/storage/referral.ts': { getReferralCode: () => referral, setReferralCode: (value) => { referral = value } },
@@ -51,7 +52,7 @@ function splash(options = {}) {
     }
     const cleanup = () => hooks.forEach((hook) => hook?.cleanup?.())
     render()
-    return { render, calls, feedback, timers, cleanup, setStatus: (status) => { state = { status, error: '' } },
+    return { render, calls, feedback, timers, cleanup, setStatus: (status, error = '') => { state = { status, error } },
         strictReplay: () => { cleanup(); hooks.forEach((hook) => { if (hook?.effect) hook.cleanup = hook.effect() }) },
         start: () => { const [id, timer] = [...timers.entries()][0]; timers.delete(id); timer.run() },
     }
@@ -133,4 +134,19 @@ test('unknown authorization failures remain generic and reported HTTP errors are
         assert.equal(ui.render().find(node => node.type === 'loading-overlay').props.show, false)
         ui.cleanup()
     }
+})
+
+test('an invalidated login closes its overlay and allows retry without an obsolete failure Toast', async () => {
+    const pending = deferred()
+    const ui = splash({ authorize: () => pending.promise })
+    ui.start()
+    assert.equal(ui.render().find(node => node.type === 'loading-overlay').props.show, true)
+    ui.setStatus('signedOut', '钱包账号已变化，请重新授权')
+    pending.reject(new HttpError('钱包账号已变化，请重新授权', { code: 'ERR_CANCELED' }))
+    await flush()
+    const nodes = ui.render()
+    assert.deepEqual(ui.feedback, [])
+    assert.equal(nodes.find(node => node.type === 'loading-overlay').props.show, false)
+    assert.equal(nodes.find(node => node.type === 'button').props.disabled, false)
+    ui.cleanup()
 })

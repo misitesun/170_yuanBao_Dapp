@@ -39,6 +39,8 @@ If the PHP or ABI contract pack is incomplete, list the missing facts and pause 
 7. Treat wallet authentication as a project protocol. Implement a challenge, nonce, timestamp, or signature only when the PHP contract explicitly documents it; a timestamp-signing flow inherited from legacy code or a starter adapter is not a new default.
 8. Keep page code semantic and thin: it calls public feature methods and renders known states, but does not import viem, touch `window.ethereum`, parse arbitrary HTTP JSON, or assemble undocumented contract arguments.
 
+- 实现或修改钱包登录/HTTP 地址头时，按 `docs/php-api-contracts.md` 的“登录地址一致性与取消”核对同轮签名/body/header 地址快照、真实换号/断开时 AbortController 取消、generation 隔离迟到结果、首次连接/同址事件不误取消及旧 Bearer 隔离；普通请求保持项目已确认的地址策略，不能从缓存推断当前身份。
+
 ## Required evidence and tests
 
 - PHP parser tests cover valid and meaningful malformed responses separately from request/auth headers.

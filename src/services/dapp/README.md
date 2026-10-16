@@ -197,9 +197,9 @@ import {
 } from '@/services/dapp'
 
 await initializeDappWallet()
-await connectDappWallet()
+const { address } = await connectDappWallet()
 const challenge = await requestProjectWalletChallenge()
-const signInfo = await signDappMessage(challenge.message)
+const signInfo = await signDappMessage(challenge.message, address)
 
 const rawAmount = parseDappAmountUnits('1.23')
 const displayAmount = formatDappAmountUnits(rawAmount)
@@ -209,6 +209,8 @@ await ensureErc20Allowance(spenderAddress, rawAmount, tokenAddress)
 
 `signDappMessage()` signs the supplied text exactly; it never invents a prefix, timestamp or nonce. Business login should be built only after the backend authentication contract is documented.
 `signDappMessage()` 会原样签署传入文本，不会自行拼接前缀、时间戳或 nonce。业务登录只能在后端鉴权契约文档确认后继续封装。
+
+`signDappMessage(message, address?)` 可显式指定本轮连接地址并原样传给钱包签名；不传第二参数时保留现有连接行为。登录 feature 应传入本轮快照，并把同一个地址用于 body 与 HTTP `walletAddress` 的发送前身份校验。元宝登录 POST 通过 `walletAddressHeader: 'omit'` 省略 address 头，后续 GET 等请求仍按自身策略携带地址。通用助手不管理 PHP 登录、Token 或 AbortController；钱包弹窗未必能被取消，feature 仍需在返回后检查本轮是否失效。
 
 ## Passive account recovery
 

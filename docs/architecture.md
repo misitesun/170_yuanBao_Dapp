@@ -61,4 +61,4 @@ MainLayout owns sidebar visibility and passes `sidebarOpen` to HeaderBar. MenuTo
 
 features/auth管理独立授权、Token恢复与跨页面用户状态；user/notices/team/assets是已确认PHP契约的业务边界。路由依赖已验证会话，公告公开；MainLayout只在原邀请链接插槽传入真实链接，不改变共享布局。通用HTTP提供显式公开/恢复模式，不依赖业务feature；DApp增加被动账户查询，不包含Login原文或PHP字段。邀请码存储仍由services/storage封装。详情见docs/yuanbao-api-integration.md。
 
-HTTP address 提供者现在独立于已验证会话，返回实际 provider 连接账号；登录/公开/恢复请求均携带当前地址。根入口与/login复用 HU 风格开屏，动画后自动授权，邀请码仅读取链接。Token 验证与受保护业务门槛继续由 features/auth 管理。
+HTTP address 提供者独立于已验证会话，普通请求使用实际 provider 连接账号；登录 POST 通过显式 `walletAddress` 绑定本轮签名/body 地址供发送前身份校验，并以 `walletAddressHeader: 'omit'` 单独省略 address 请求头，包括清除旧默认头。拦截器仍在发送前核对实时地址，换号或断开即取消；资料 GET 和其他请求的地址策略保持。features/auth 管理每轮 AbortController、generation 和 Token/资料验证，HTTP 只处理显式请求元数据与取消，不导入业务 feature 或解析登录 body。通用 DApp 签名助手支持显式账户但不包含登录协议。根入口与/login复用 HU 风格开屏，动画后自动授权，邀请码仅读取链接；Token 验证与受保护业务门槛继续由 features/auth 管理。详见 ADR 0009。

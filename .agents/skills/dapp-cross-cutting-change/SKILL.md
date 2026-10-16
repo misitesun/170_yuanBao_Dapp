@@ -36,6 +36,8 @@ Do not use a cross-cutting task as a reason to migrate the project to a new arch
 6. Verify each affected layer in dependency order, then run the full mandated quality gates.
 7. For a shared layout or style rule, preserve normal-flow page composition and document any legitimate positioning exception in `docs/layout-standards.md`.
 
+- 实现或修改钱包登录/HTTP 地址头时，按 `docs/php-api-contracts.md` 的“登录地址一致性与取消”核对同轮签名/body/header 地址快照、真实换号/断开时 AbortController 取消、generation 隔离迟到结果、首次连接/同址事件不误取消及旧 Bearer 隔离；普通请求保持项目已确认的地址策略，不能从缓存推断当前身份。
+
 ## Completion checklist
 
 - The impact map is reflected in tests and documentation.

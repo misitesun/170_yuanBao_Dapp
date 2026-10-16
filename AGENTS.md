@@ -376,8 +376,10 @@ Implement authentication only after the current PHP Markdown confirms endpoints,
 When DApp session recovery is implemented, validate and resume the current wallet account before authenticated APIs run. A cached token belonging to another wallet must be cleared before starting the documented login flow.
 实现 DApp 会话恢复后，必须先校验并恢复当前钱包账号，再请求鉴权接口。缓存 Token 属于其他钱包时，应先清理旧会话，再执行文档化的登录流程。
 
-For wallet-authenticated APIs whose confirmed PHP contract requires `Address`, register the currently connected address through the HTTP service only after checking it against the account associated with the Token. Send `Authorization: Bearer <token>` and `Address: <address>` together for session validation; wait for that validation before other protected business requests. Invalidate both on account change or 401. The cached wallet address alone must not be sent as proof; account-only authentication keeps its own Bearer-only behavior.
-若已确认的 PHP 契约要求钱包鉴权接口携带 `Address`，只有将当前连接地址与 Token 关联账号核对后，才能通过 HTTP 服务注册。会话验证请求成对发送 `Authorization: Bearer <token>` 和 `Address: <address>`；验证成功后才发起其他受保护业务请求。账号切换或 401 时令两者失效。缓存地址本身不能作为证明发送；纯账号鉴权保持独立的 Bearer 行为。
+For wallet-authenticated APIs, document the address and Bearer policy separately in the current PHP contract. Validate the connected account against the Token owner before protected business requests; a cached wallet address alone is never proof of current identity. Account-only authentication keeps its own Bearer-only behavior.
+钱包鉴权接口的地址头与 Bearer 策略须分别由当前 PHP 契约明确；受保护业务请求应等待连接账号与 Token 身份核对完成，缓存钱包地址不能作为当前身份的证明。纯账号鉴权保持独立的 Bearer 行为。
+
+登录请求需要地址头时，签名、body 与 header 必须绑定本轮地址快照，换号/断开时取消旧轮请求并隔离迟到结果；首次连接及同址事件不得误取消。完整问题说明与回归要求见 `docs/php-api-contracts.md` 的“登录地址一致性与取消”和 ADR 0009。
 
 ## History route fallback
 ## history 路由 fallback

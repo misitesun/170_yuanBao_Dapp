@@ -18,6 +18,10 @@ declare module 'axios' {
     interface AxiosRequestConfig {
         /** Controls Bearer credentials independently of the current wallet address header. */
         authentication?: 'none' | 'bearer'
+        /** Pins an account-bound request to the wallet used by its operation. */
+        walletAddress?: string
+        /** Explicitly removes the address header for endpoints that must not receive it. */
+        walletAddressHeader?: 'omit'
     }
 }
 
@@ -56,7 +60,13 @@ export function registerHttpWalletAddressProvider(
 
 httpClient.interceptors.request.use((config) => {
     const token = getToken()
-    const walletAddress = walletAddressProvider?.()?.trim()
+    const liveWalletAddress = walletAddressProvider?.()?.trim()
+    const walletAddress = config.walletAddress?.trim() ?? liveWalletAddress
+
+    if (config.walletAddress !== undefined && (!walletAddress || (walletAddressProvider
+        && liveWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()))) {
+        throw new axios.CanceledError('钱包账号已变化，已取消旧请求', config)
+    }
 
     if (config.authentication !== 'none' && token && (config.authentication === 'bearer' || !walletAddressProvider || walletAddress)) {
         config.headers.set(
@@ -67,7 +77,7 @@ httpClient.interceptors.request.use((config) => {
         config.headers.delete(HTTP_HEADER.authorization)
     }
 
-    if (walletAddress) {
+    if (walletAddress && config.walletAddressHeader !== 'omit') {
         config.headers.set(HTTP_HEADER.walletAddress, walletAddress)
     } else {
         config.headers.delete(HTTP_HEADER.walletAddress)

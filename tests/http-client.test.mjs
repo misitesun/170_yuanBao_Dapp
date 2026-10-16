@@ -259,14 +259,14 @@ test('recovery sends Bearer only before the wallet/token owner check succeeds', 
 })
 
 
-test('all request modes send the live wallet address before login and after account switching', async () => {
+test('ordinary requests send the live wallet address before login and after account switching', async () => {
     const storage = createStorage()
     globalThis.window = { localStorage: storage }
     let address = '0x0000000000000000000000000000000000000001'
     const unregister = registerHttpWalletAddressProvider(() => address)
     try {
         for (const mode of [undefined, 'none', 'bearer']) {
-            await httpClient.request({ url: '/api/auth/login', authentication: mode, adapter: async (config) => {
+            await httpClient.request({ url: '/api/notices', authentication: mode, adapter: async (config) => {
                 assert.equal(config.headers.get('address'), address)
                 assert.equal(config.headers.has('Authorization'), false)
                 return { data: {}, status: 200, headers: {}, statusText: 'OK', config }
@@ -286,4 +286,83 @@ test('all request modes send the live wallet address before login and after acco
             return { data: {}, status: 200, headers: {}, statusText: 'OK', config }
         } })
     } finally { unregister() }
+})
+
+test('account-bound reads preserve the explicit address spelling and overwrite stale headers', async () => {
+    globalThis.window = { localStorage: createStorage('old-token') }
+    const address = '0x52908400098527886E0F7030069857D2E4169EE7'
+    const unregister = registerHttpWalletAddressProvider(() => address.toLowerCase())
+    try {
+        await httpClient.request({ url: '/api/users/my', authentication: 'none', walletAddress: address,
+            headers: { address: 'stale' }, adapter: async config => {
+                assert.equal(config.headers.get('address'), address)
+                assert.equal(config.headers.has('Authorization'), false)
+                return { data: {}, status: 200, statusText: 'OK', headers: {}, config }
+            } })
+    } finally { unregister() }
+})
+
+test('an address snapshot cancels before transport when the live account differs or disconnects', async () => {
+    globalThis.window = { localStorage: createStorage() }
+    clearHttpErrorNotification()
+    let sent = 0
+    for (const address of ['0x0000000000000000000000000000000000000002', undefined]) {
+        const unregister = registerHttpWalletAddressProvider(() => address)
+        try {
+            await assert.rejects(httpClient.request({ url: '/api/auth/login', walletAddress: '0x0000000000000000000000000000000000000001',
+                adapter: async config => { sent++; return { data: {}, status: 200, statusText: 'OK', headers: {}, config } },
+            }), error => error instanceof HttpError && error.code === 'ERR_CANCELED')
+        } finally { unregister() }
+    }
+    assert.equal(sent, 0)
+    assert.equal(getHttpErrorNotification(), null)
+})
+
+test('an explicit request address does not require a registered wallet provider', async () => {
+    globalThis.window = { localStorage: createStorage() }
+    const address = '0x0000000000000000000000000000000000000001'
+    await httpClient.request({ url: '/api/users/my', walletAddress: address, adapter: async config => {
+        assert.equal(config.headers.get('address'), address)
+        return { data: {}, status: 200, statusText: 'OK', headers: {}, config }
+    } })
+})
+
+test('omitting the login address header removes stale values while preserving body and other headers', async () => {
+    globalThis.window = { localStorage: createStorage('old-token') }
+    const address = '0x0000000000000000000000000000000000000001'
+    const unregister = registerHttpWalletAddressProvider(() => address)
+    try {
+        await httpClient.request({ url: '/api/auth/login', method: 'POST', authentication: 'none',
+            walletAddress: address, walletAddressHeader: 'omit',
+            data: { address, signature: '0xsig', timestamp: 123 },
+            headers: { Address: 'stale-address', 'X-Request-Test': 'retained' },
+            adapter: async config => {
+                assert.equal(config.headers.has('address'), false)
+                assert.equal(config.headers.has('Authorization'), false)
+                assert.equal(JSON.parse(config.data).address, address)
+                assert.equal(config.headers.get('X-Request-Test'), 'retained')
+                assert.equal(config.headers.getContentType(), 'application/json; charset=UTF-8')
+                return { data: {}, status: 200, statusText: 'OK', headers: {}, config }
+            } })
+        await httpClient.request({ url: '/api/users/my', authentication: 'bearer', adapter: async config => {
+            assert.equal(config.headers.get('address'), address)
+            assert.equal(config.headers.get('Authorization'), 'Bearer old-token')
+            return { data: {}, status: 200, statusText: 'OK', headers: {}, config }
+        } })
+    } finally { unregister() }
+})
+
+test('omitting the address header still cancels a login for a changed or disconnected wallet', async () => {
+    globalThis.window = { localStorage: createStorage() }
+    let sent = 0
+    for (const liveAddress of ['0x0000000000000000000000000000000000000002', undefined]) {
+        const unregister = registerHttpWalletAddressProvider(() => liveAddress)
+        try {
+            await assert.rejects(httpClient.request({ url: '/api/auth/login', authentication: 'none',
+                walletAddress: '0x0000000000000000000000000000000000000001', walletAddressHeader: 'omit',
+                adapter: async config => { sent++; return { data: {}, status: 200, statusText: 'OK', headers: {}, config } },
+            }), error => error instanceof HttpError && error.code === 'ERR_CANCELED')
+        } finally { unregister() }
+    }
+    assert.equal(sent, 0)
 })

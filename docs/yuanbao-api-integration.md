@@ -18,7 +18,7 @@
 
 独立入口 `/h5/login`，根入口也显示同一个开屏；对外邀请入口为 `/ref/:ref`，服务器转发至H5，浏览器路由继续兼容带/不带 `/h5` 的邀请入口，并支持 `/login?ref=...`。团队与侧栏邀请链接由共享buildInvitationLink使用当前站点origin和 `/users/my.referral_code` 组成，不添加 `/h5` 部署前缀；示例 `http://192.168.110.83:5175/ref/Oa0y507g`。邀请码存储键 `YUANBAO_REFERRAL_CODE`，当前链接优先，没有输入框；登录成功、401、钱包切换不清理。没有邀请码时省略 POST 的 ref，不传空字符串。
 
-登录复用 DApp provider、链初始化、连接和签名能力。生成秒级 timestamp，对 `Login-{timestamp}` 原文签名，提交 address/signature/timestamp/ref。仅校验并消费必需 token。所有请求均独立携带实际连接的 address，公开登录不携带旧 Bearer。Token 存储后通过 Bearer 与当前 address 读取 `/users/my` 核对钱包地址，成功后显示业务页面。钱包监听在签名开始前安装，账号/网络变化会立即清理会话并淘汰旧签名/HTTP 响应。所有授权请求合并为一个 pending Promise，不重复弹签名或提交。
+登录复用 DApp provider、链初始化、连接和签名能力。生成秒级 timestamp，对 `Login-{timestamp}` 原文签名，提交 address/signature/timestamp/ref。仅校验并消费必需 token。普通请求独立携带实时连接的 address；只有登录 POST 省略 address 头且不携带旧 Bearer，body 与发送前身份校验仍绑定本轮签名地址。Token 存储后通过 Bearer 与当前 address 读取 `/users/my` 核对钱包地址，成功后显示业务页面。钱包监听在签名开始前安装，真实账号/网络变化会立即清理会话、abort 旧登录和资料验证并淘汰迟到签名/HTTP 响应。相同有效授权合并为一个 pending Promise，不重复弹签名或提交；旧轮清理不得覆盖新轮。
 
 开发者于 2026-10-12 确认：前端不因链接或本地缓存的邀请码长度、内容错误而阻止钱包授权。非空 ref 去除首尾空白后提交，长度及有效性由 POST /api/auth/login 校验并通过公共 HTTP Toast 提示；空值继续省略。后端的 8 位约束保持，前端不预先拦截。已有 Token 时继续只恢复、验证会话，不因错误邀请码改成重新签名或 POST。
 
@@ -65,3 +65,9 @@ HTML 正文转换为白名单 React 元素，保留常用文本排版、图片�
 后续调整：按开发者要求 address 不再与 Token 配对开启，切换地址即时更新、断开移除；401 只清理会话而不伪装钱包断开。入口移除全部输入框，参考 HU 开屏自动授权。新的验证结果见本次完成汇报。
 
 最新验证：293 项自动测试、pnpm lint、pnpm exec tsc -b、git diff --check 通过。登录回归采用开发者截图中的 created_at=-0001-11-30 00:00:00，验证 DTO 解析、会话进入 authenticated 及开屏导航。375px/750px DOM 边界无横向溢出，开屏无输入框，浏览器无 error/warn。截图保存 yuanbao-splash-375.png；浏览器无真实钱包，未重复远端登录，真实钱包需刷新后验收。pnpm build 经完整检查后仍被品牌 Logo 未就绪护栏阻断。
+
+## 2026-10-16 登录地址一致性修复
+
+`requestWalletLogin(body, signal?)` 把 `body.address` 显式传给 HTTP `walletAddress`，并设置 `walletAddressHeader: 'omit'`；`signDappMessage(message, address)` 使用同一轮地址。只有该登录 POST 省略 address 头，拦截器会删除旧默认头或调用方传入的 address；`walletAddress` 仍用于发送前实时地址校验，不读取业务 body。若已注册的实时地址不再相同或已断开，则按取消处理，不发旧 POST。每轮授权 signal 同时传给登录和资料验证，换号/断开/网络变化/清会话/卸载使旧轮 abort，generation 继续防止迟到写入。
+
+资料 GET 和其他普通请求继续携带正确地址；首次连接/同址事件容忍、已存 Token 恢复不重复 POST、邀请码后端校验及登录成功后资料失败保留 Token 等行为保持。成功会话保留 controller，后续 `refreshCurrentUser` 也使用同一生命周期的 signal 与地址快照，换号时一起失效。此前竞态已有本地复现，当前省略登录 address 头的调整按开发者要求执行，尚未证明是客户“地址验证失败”的生产根因；后续核对同次请求的 body、address/Bearer 头是否确已省略和后端验证分支，不能仅从错误文案判断缓存或责任点。规范与取消限制见 [ADR 0009](decisions/0009-wallet-login-address-snapshot.md)。

@@ -123,11 +123,11 @@ export function disconnectDappWallet(): void {
 
 export async function signDappMessage(
     message: string,
+    address?: Address,
 ): Promise<DappSignResult> {
     const walletClient = getDappWalletClient()
-    const address = await getConnectedDappAddress()
     const signature = await walletClient.signMessage({
-        account: address,
+        account: address ?? await getConnectedDappAddress(),
         message,
     })
 

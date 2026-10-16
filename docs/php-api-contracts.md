@@ -45,6 +45,23 @@ When an endpoint participates in wallet login or a contract write, its Markdown 
 If the backend returns a server-signed transaction payload, document every raw field, unit, argument order, expiry/deadline, signature, idempotency or order identifier, and whether the frontend must wait for a receipt or indexing result. The frontend may validate the documented shape, but must pass signed raw contract arguments through unchanged rather than converting them to numbers or rebuilding them from UI state.
 如果后端返回服务端签名的交易 payload，必须文档化每个原始字段、单位、参数顺序、有效期/deadline、签名、幂等或订单标识，以及前端是否需要等待回执或索引结果。前端可以校验文档化的结构，但必须原样透传已签名的合约参数，不能转换为 number，也不能从 UI 状态重建。
 
+## Login address consistency and cancellation
+## 登录地址一致性与取消
+
+签名地址与登录 body 地址必须来自同一次授权的地址快照；若接口要求地址头，请求头也必须使用该快照。不能分别在签名前、组装 body 时和 HTTP 拦截器执行时读取会变化的钱包状态。地址缓存仍为 A、实际钱包已切到 B，或者签名/body 已固定为 A、异步拦截器稍后读取到 B，都可能产生不一致；前者是缓存失效问题，后者即使完全不读缓存也会发生。仅凭后端“地址验证失败”不能确定是哪一种，需要核对同一次请求的 body/header、Bearer 是否存在、钱包事件先后及后端校验位置。
+
+真实项目的钱包登录应遵循以下边界，地址头仅在接口明确要求时发送：
+
+- 连接成功后记录本轮地址，显式用于签名、登录 body 与单次请求的地址元数据。公共 HTTP 层只接受这个显式值，不解析业务 body 来猜地址；若接口要求地址头，不能让实时状态或旧默认 header 覆盖本轮地址；若明确省略地址头，则连旧默认头一并删除，仍保留地址快照供发送前身份校验。字段名和大小写按当前 PHP 契约，不把某项目的请求选项或签名原文作为模板协议。
+- 发出请求前再次核对已注册的实时钱包地址；若已换号或断开，则取消旧请求，不能把旧签名改配新 header 后继续发送。无显式快照的普通请求继续使用当前项目规定的地址策略，不把全部请求冻结为某轮登录地址。
+- 每轮授权使用独立 AbortController，将 signal 传到登录 POST 及该轮资料验证；真实换号、断开、网络变化、清理会话和鉴权卸载时取消旧轮。对外授权 Promise 应与 abort 竞速，失效后立即结束等待，不等无法取消的钱包 RPC 返回；底层 Promise 仍须观察其完成或拒绝，避免迟到错误或旧 4001 触发旧 Toast。保留 generation/生命周期检查，阻止迟到的签名、Token、资料和错误覆盖新会话；取消的旧请求不提示授权失败，也不能清除新 Token。不能只靠忽略最终结果，却仍允许旧 POST 发出。
+- 首次连接事件和同地址重复事件（地址比较忽略大小写）不能被当作换号；旧轮 finally 也不能释放或覆盖新轮的 pending 状态。失效后不得静默重用旧签名为新地址登录。
+- 登录是否携带 Bearer、普通请求是否在无 Token 时携带地址，均以当前项目契约为准。公开登录不得意外继承旧身份的 Bearer；缓存地址本身不能证明当前钱包身份。
+
+取消只能终止客户端等待/传输，不能撤回后端已经收到的登录请求；generation 仍需防止迟到结果回写。钱包已显示的签名弹窗也未必能由 AbortController 关闭，旧签名返回后必须丢弃。真实设备复测与本地 Mock 证据应分别报告。
+
+回归验收至少覆盖：签名/body 同址，要求地址头时 header 同址、明确省略时无 address 头（包括清理旧默认头）；最后一次地址检查后、拦截器前换号时不发旧 POST；已发出的旧 POST/资料 GET 收到 aborted signal；旧响应不写 Token/用户、不触发旧错误反馈；首次连接/同址事件不误取消；资料 GET 和普通请求保持各自已确认的地址策略，断开移除且不读旧缓存；公开登录无旧 Bearer，新一轮不会被旧轮清理覆盖。
+
 ## Implementation pattern
 ## 实现模式
 

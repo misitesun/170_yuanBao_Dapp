@@ -44,9 +44,9 @@ The blank template's `/h5` entry redirects to `/home` for static UI preview. The
 
 ### Wallet authentication headers
 
-In a DApp wallet host, a stored `WALLET_ADDRESS` may outlive the currently authorized account. `src/services/http/client.ts` therefore does not infer the `Address` header from storage or injected-provider presence. A wallet-authenticated project registers an address provider only after matching the current account to the Token owner. While registered, missing Token or missing checked address removes both `Authorization` and `Address`; an account-only project without that provider retains Bearer-only requests. `tests/http-client.test.mjs` covers these states and the post-401 omission.
+A stored `WALLET_ADDRESS` may outlive the authorized account, so HTTP never uses it as current identity. Yuanbao ordinary requests receive the live connected address independently of the Token; disconnect removes the address, while a session 401 keeps the real connection. Only POST /api/auth/login omits the address header, while retaining its explicit signing/body address snapshot for the live-account check before dispatch. Profile GET and other requests retain their address policy.
 
-在 DApp 钱包宿主中，缓存的 `WALLET_ADDRESS` 可能与当前授权账号不同。因此 `src/services/http/client.ts` 不从缓存或注入钱包的存在推断 `Address`。钱包鉴权项目须在核对当前账号与 Token 关联账号后注册地址提供者。注册期间，Token 或已核对地址缺失时两个鉴权头都不发送；未注册该提供者的纯账号项目仍使用 Bearer。`tests/http-client.test.mjs` 覆盖这些状态及 401 后不再发送鉴权头。
+`WALLET_ADDRESS` 缓存可能晚于真实钱包身份失效，HTTP 不将其作为当前身份。元宝普通请求独立于 Token 使用真实连接地址；断开时移除地址头，401 只清会话而保留真实连接。只有 `POST /api/auth/login` 省略 address 头，仍绑定本轮签名/body 地址快照并在发送前核对实时地址；变化即取消，不能用新地址替换旧签名。资料 GET 和其他请求的地址策略保持。回归入口为 `tests/http-client.test.mjs` 与 `tests/yuanbao-auth.test.mjs`。
 
 ### Route scroll reset
 
@@ -146,3 +146,11 @@ YBProject ABI 和提现写入封装已接入，开发环境地址及链 ID 来�
 ## 错误邀请码不阻断钱包授权（2026-10-12）
 
 按开发者要求移除授权前的 8 位邀请码长度拦截。链接或缓存里的非空邀请码去除首尾空白后照常随登录 POST 提交，由后端校验并走既有公共 HTTP 错误提示；空值省略，不丢弃或替换错误邀请码。已有 Token 的恢复验证也不受邀请码格式影响。tests/yuanbao-auth.test.mjs 覆盖错误邀请码签名后提交、后端拒绝原样抛出与后续重试、空白处理及已存 Token 的只读验证重试。
+
+## 登录 header 地址与签名不一致的竞态（2026-10-16）
+
+本地排查复现的是条件性时序：本轮连接/签名/body 为 A，最后账号核对通过之后钱包换到 B，Axios 异步拦截器读取实时 B。该路径不依赖 localStorage，不能简单归因于缓存残留。客户该次生产 POST 只有“地址验证失败”描述，尚未取得 body/header/Bearer 抓包、后端抛错位置或录屏，因此生产原因仍未确认。
+
+当前要求为仅 `POST /api/auth/login` 不传 address 头：登录 feature 将同一地址快照用于签名、body 与 HTTP `walletAddress`，另传 `walletAddressHeader: 'omit'` 删除 address（包括旧默认头）。拦截器仍在实际发送前核对实时地址，变化/断开即取消。每轮 AbortController 覆盖登录 POST 与资料验证，真实换号、断开、网络变化、清会话和卸载时 abort；generation 隔离迟到签名、Token、资料及旧错误。首次连接/同址事件不误取消，资料 GET 与普通请求继续携带正确地址，公开登录仍无旧 Bearer。取消不能撤回后端已收到的请求，也未必能关闭签名弹窗。
+
+回归应覆盖签名/body 同址、登录 POST 无 address/旧 Bearer（含默认头清理）、后续 GET 仍带正确地址、拦截器前换号不发 POST、已发请求 abort、旧响应不回写/不提示、Token 恢复与同地址事件不误取消。人工复测需在钱包浏览器的签名前、签名中、POST 等待和资料验证等待四个阶段换号/断开，确认新账号仍可正常登录；本地 Mock 不替代设备与后端验证。决策见 [ADR 0009](decisions/0009-wallet-login-address-snapshot.md)。
