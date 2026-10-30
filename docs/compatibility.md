@@ -131,9 +131,16 @@ YBProject ABI 和提现写入封装已接入，开发环境地址及链 ID 来�
 
 首页购买、抢拍、转账、提现和钱包重新授权保持按钮原文案，提交中通过同步锁阻止重复并显示 ContractLoading 水滴遮罩，完成/失败关闭。错误通过 Toast，公共 HTTP 已提示时页面不重复提示；不渲染提交错误文案。转账遮罩为 Popup 的同级节点，确认弹窗关闭后资产刷新期间仍可显示。
 
-## YBProject 正式部署（2026-10-10，覆盖前述生产配置留空记录）
+## YBProject 旧正式部署（2026-10-10；当前部署见 2026-10-30 记录）
 
-正式环境使用 `docs/bsc.json` 的 BSC 链 56、YBProject `0x937a802459F941dD0Ed09530bfD1aeeE3c241D37` 和 USDT `0x55d398326f99059fF775485246999027B3197955`，开发环境继续使用本地链 31337。新旧 YBProject ABI 完全一致，提现及公开 usedWithdrawIds 调用契约不变。实际钱包网络必须与当前环境配置一致；签名 token 和金额仍由后台返回并原样透传。回退可恢复上一版本 ABI 与生产 env 配置，部署前后台签名配置必须与目标部署一致。验证覆盖正式链调用及错误网络阻止；没有真实钱包交易或主网回执证据。
+当时正式部署为 `project-170-bsc-v1`：BSC 链 56、YBProject `0x937a802459F941dD0Ed09530bfD1aeeE3c241D37` 和 USDT `0x55d398326f99059fF775485246999027B3197955`，开发环境继续使用本地链 31337。当时正式 ABI 与本地 ABI 完全一致，提现及公开 usedWithdrawIds 调用契约不变。该生产地址现已由下述新部署替换；没有真实钱包交易或主网回执证据。
+
+## YBProject 正式部署更换（2026-10-30）
+
+开发者确认使用新的 `docs/bsc.json`（`project-170-bsc-fresh`），正式 YBProject 更换为 `0x5B17B4b618baFfaF8af8d4aff546c3F85e2160a7`，BSC 链 56 和 USDT 地址不变。完整 YBProject ABI 从 28 项更新为 33 项；提现 `withdraw(uint256,address,uint256,uint256,bytes)` 与公共 `usedWithdrawIds(uint256)` 的接口完全不变。新增 VUSDT、ProjectTokenWallet 及变更后的 SmartWalletFactory 只记录部署事实，前端不增加调用、授权或收款地址硬编码。开发环境、签名原值、同单重试及无 account 的公共读取保持原规则。
+
+`tests/yb-project-runtime.test.mjs` 从当前部署 JSON 验证完整 ABI、提现目标地址与原始参数、无原生币 value、used-ID 读取地址/参数/无 account，以及错误网络阻止读写。生产 env 被 Git 忽略，各构建环境需同步并重新构建；当前本地修改不等于线上发布。上线前核对后台签名、新工厂的充值地址/入账监听及旧未完成提现单；已打开的旧页面仍使用旧地址，刷新会丢失内存签名单，不能重新 POST 代替旧单核对。回退需恢复上一版本部署 JSON、ABI 和生产 env 并协调后台，详见 `docs/yuanbao-yb-project-contract.md`。真实钱包、新部署签名验证、付款及入账同步仍待联调，Mock 或构建通过不能替代这些验收。
+
 ## 登录时缺少钱包环境（2026-10-12）
 
 普通浏览器没有注入可用provider时，features/auth/session.ts的prepareWallet抛出既有“请使用钱包浏览器打开，或启用浏览器钱包扩展”。登录页保留此具体Toast，不再被通用授权失败覆盖；按实际钱包检测结果判断，不按浏览器名称猜测。五语言资源已存在。回归见tests/yuanbao-splash-runtime.test.mjs：无钱包提示、等待释放、重新授权、拒签提示保持、未知诊断不外露及HTTP反馈去重。

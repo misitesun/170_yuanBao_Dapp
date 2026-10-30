@@ -1,10 +1,20 @@
-// Source: docs/bsc.json, deploymentId project-170-bsc-v1.
+// Source: docs/bsc.json, deploymentId project-170-bsc-fresh.
 export const YB_PROJECT_ABI = [
     {
         "inputs": [
             {
                 "internalType": "address",
                 "name": "initialOwner",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "usdt_",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "vusd_",
                 "type": "address"
             }
         ],
@@ -100,6 +110,17 @@ export const YB_PROJECT_ABI = [
             }
         ],
         "name": "StringTooLong",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "code",
+                "type": "uint256"
+            }
+        ],
+        "name": "VenusRedeemFailed",
         "type": "error"
     },
     {
@@ -246,6 +267,29 @@ export const YB_PROJECT_ABI = [
         "type": "function"
     },
     {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "emergencyWithdrawFromWallet",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
         "inputs": [],
         "name": "owner",
         "outputs": [
@@ -306,6 +350,19 @@ export const YB_PROJECT_ABI = [
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "usdt",
+        "outputs": [
+            {
+                "internalType": "contract IERC20",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "internalType": "uint256",
@@ -319,6 +376,19 @@ export const YB_PROJECT_ABI = [
                 "internalType": "bool",
                 "name": "",
                 "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "vusd",
+        "outputs": [
+            {
+                "internalType": "contract IVenusVToken",
+                "name": "",
+                "type": "address"
             }
         ],
         "stateMutability": "view",
@@ -355,6 +425,19 @@ export const YB_PROJECT_ABI = [
         "name": "withdraw",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "withdrawWallet",
+        "outputs": [
+            {
+                "internalType": "contract ProjectTokenWallet",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     }
 ] as const

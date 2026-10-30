@@ -84,7 +84,7 @@ test('withdrawal used-ID read is public, verifies network and validates the retu
     assert.equal(reads.length, count)
 })
 
-test('BSC deployment ABI supports withdrawal with signed values and blocks the local chain', async () => {
+test('BSC deployment ABI supports signed withdrawal and public used-ID reads, and blocks the local chain', async () => {
     const deployment = JSON.parse(readFileSync('docs/bsc.json', 'utf8'))
     const project = deployment.contracts.find(contract => contract.name === 'YBProject')
     const token = deployment.contracts.find(contract => contract.name === 'USDT')
@@ -99,20 +99,34 @@ test('BSC deployment ABI supports withdrawal with signed values and blocks the l
         assert.deepEqual(Array.from(standard.inputs, input => input.type), method.inputs.map(input => input.type))
         assert.deepEqual(Array.from(standard.outputs, output => output.type), method.outputs.map(output => output.type))
     }
-    let walletChain = 56
+    let walletChain = Number(deployment.chainId)
     const calls = []
+    const reads = []
     const api = runtime({
         './config.ts': { getYbProjectConfig: () => ({ address: project.address, chainId: Number(deployment.chainId) }) },
         '../dapp/index.ts': {
             getDappChainId: async () => walletChain,
             writeDappContract: async call => { calls.push(call); return { status: 'success' } },
+            readDappContract: async call => { reads.push(call); return false },
         },
     })('src/services/contracts/ybProject.ts')
     const signed = { ...params, token: token.address }
     await api.withdrawYbProject(signed)
     assert.equal(calls[0].address, project.address)
+    assert.equal(calls[0].functionName, 'withdraw')
+    assert.equal(calls[0].value, undefined)
+    assert.deepEqual(JSON.parse(JSON.stringify(calls[0].abi)), project.abi)
+    assert.equal(calls[0].abi.find(entry => entry.type === 'function' && entry.name === 'withdraw').stateMutability, 'nonpayable')
     assert.deepEqual(Array.from(calls[0].args), [signed.id, signed.token, signed.amount, signed.deadline, signed.signature])
+    assert.equal(await api.isYbProjectWithdrawalUsed(signed.id), false)
+    assert.equal(reads[0].address, project.address)
+    assert.equal(reads[0].functionName, 'usedWithdrawIds')
+    assert.deepEqual(Array.from(reads[0].args), [signed.id])
+    assert.deepEqual(JSON.parse(JSON.stringify(reads[0].abi)), project.abi)
+    assert.equal(Object.hasOwn(reads[0], 'account'), false)
     walletChain = 31337
-    await assert.rejects(api.withdrawYbProject(signed), /56/)
+    await assert.rejects(api.withdrawYbProject(signed), new RegExp(deployment.chainId))
     assert.equal(calls.length, 1)
+    await assert.rejects(api.isYbProjectWithdrawalUsed(signed.id), new RegExp(deployment.chainId))
+    assert.equal(reads.length, 1)
 })
